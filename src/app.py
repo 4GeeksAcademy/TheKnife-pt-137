@@ -7,9 +7,14 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
-from api.routes import api
+from api.routes4geeks import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+
+### Blueprints imports
+from api.routes.producto import producto
+from api.routes.receta import receta
+from api.routes.mesa import mesa
 
 # from models import Person
 
@@ -39,17 +44,16 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(producto)
+app.register_blueprint(receta)
+app.register_blueprint(mesa)
 
 # Handle/serialize errors like a JSON object
-
-
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
-
-
 @app.route('/')
 def sitemap():
     if ENV == "development":
