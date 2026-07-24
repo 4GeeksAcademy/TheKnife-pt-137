@@ -18,6 +18,45 @@ class User(db.Model):
             # do not serialize the password, its a security breach
         }
 
+class Table(db.Model):
+    __tablename__ = "table"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    number: Mapped[int] = mapped_column(nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    location: Mapped[str] = mapped_column(nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "number": self.number,
+            "status": self.status,
+            "location": self.location, 
+        }
+
+class Product(db.Model):
+    __tablename__ = "product"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
+    description: Mapped[str] = mapped_column(String(120), nullable=True)
+    sell_price: Mapped[int | float] = mapped_column(nullable=False)
+    type: Mapped[str] = mapped_column(String(20), nullable=False)
+    active: Mapped[bool] = mapped_column(nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "sell_price": self.sell_price,
+            "type": self.type,
+            "active": self.active,
+        }
+
+
 
 class Recipe(db.Model):
     __tablename__="recipe"
