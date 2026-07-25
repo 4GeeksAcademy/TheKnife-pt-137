@@ -44,7 +44,7 @@ class Product(db.Model):
     description: Mapped[str] = mapped_column(String(120), nullable=True)
     sell_price: Mapped[Decimal] = mapped_column(Numeric(10,2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
-    active: Mapped[bool] = mapped_column(nullable=False)
+    active: Mapped[bool] = mapped_column(nullable=False, default=True)
 
 
     def serialize(self):

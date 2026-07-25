@@ -5,10 +5,16 @@ import {
     createRoutesFromElements,
     Route,
 } from "react-router-dom";
+// 4Geeks imports
 import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
+
+// CocinApp imports
+import Products from "./pages/product/Products";
+import CreateProductForm from "./pages/product/CreateProductForm";
+import EditProductForm from "./pages/product/EditProductForm";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -25,6 +31,11 @@ export const router = createBrowserRouter(
         <Route path= "/" element={<Home />} />
         <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
         <Route path="/demo" element={<Demo />} />
+
+        {/* CocinApp routes */}
+        <Route path="/products" element={<Products />} />
+        <Route path="/create_product" element={<CreateProductForm />} />
+        <Route path="/edit_product/:product_id" element={<EditProductForm />} />
       </Route>
     )
 );

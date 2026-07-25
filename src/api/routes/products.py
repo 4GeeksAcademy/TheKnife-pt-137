@@ -10,7 +10,7 @@ product = Blueprint("productbp", __name__)
 def get_products():
     all_products = db.session.scalars(select(Product)).all()
     all_products_dicts = [product.serialize() for product in all_products]
-    return jsonify(list(all_products_dicts))
+    return jsonify(list(all_products_dicts)), 200
 
 # GET single product
 @product.route("/products/<int:product_id>")
@@ -19,16 +19,16 @@ def get_single_product(product_id):
         select(Product).where(Product.id == product_id))
     if not single_product:
         return jsonify({"message": "Product not found"}), 404
-    return jsonify(single_product.serialize())
+    return jsonify(single_product.serialize()), 200
 
 # POST create a product
 @product.route("/products", methods=["POST"])
 def create_product():
     body = request.get_json()
-    product_mandatory_schema = ["name", "sell_price", "type", "active"]
+    product_mandatory_schema = ["name", "sell_price", "type"]
     for key in product_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type' and 'active'. 'description' is optional for the product"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type'. 'description' is optional for the product"}), 400
     new_product = Product(
         name=body.get("name"),
         description=body.get("description"),
@@ -39,7 +39,7 @@ def create_product():
     # más adelante cuando haya restaurant_id hay que meter comprobación para que no haya dos productos iguales en un mismo restaurante
     db.session.add(new_product)
     db.session.commit()
-    return jsonify(new_product.serialize())
+    return jsonify(new_product.serialize()), 200
 
 # DELETE a product
 @product.route("/products/<int:product_id>", methods=["DELETE"])
@@ -50,7 +50,7 @@ def delete_product(product_id):
         return jsonify({"message": "Product not found"}), 404
     db.session.delete(product_to_delete)
     db.session.commit()
-    return jsonify({"message": "Product deleted successfully"})
+    return jsonify({"message": "Product deleted successfully"}), 200
 
 # PUT: edit a product
 @product.route("/products/<int:product_id>", methods=["PUT"])
@@ -63,8 +63,8 @@ def edit_product(product_id):
     product_mandatory_schema = ["name", "sell_price", "type", "active"]
     for key in product_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type' and 'active'. 'description' is optional for the product"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type'. 'description' is optional for the product"}), 400
     for key in body:
         setattr(product_to_edit, key, body[key])
     db.session.commit()
-    return jsonify(product_to_edit.serialize())
+    return jsonify(product_to_edit.serialize()), 200
