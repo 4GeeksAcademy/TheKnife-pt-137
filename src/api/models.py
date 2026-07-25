@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean
+from sqlalchemy import String, Boolean, Numeric
 from sqlalchemy.orm import Mapped, mapped_column
+from decimal import Decimal
 
 db = SQLAlchemy()
 
@@ -41,7 +42,7 @@ class Product(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(40), nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=True)
-    sell_price: Mapped[int | float] = mapped_column(nullable=False)
+    sell_price: Mapped[Decimal] = mapped_column(Numeric(10,2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False)
 

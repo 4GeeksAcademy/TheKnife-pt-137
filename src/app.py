@@ -7,14 +7,14 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
-from api.routes4geeks import api
+# from api.routes4geeks import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 
 ### Blueprints imports
-from api.routes.producto import producto
-from api.routes.receta import receta
-from api.routes.mesa import mesa
+from api.routes.products import product
+from api.routes.recipes import recipe
+from api.routes.tables import table
 
 # from models import Person
 
@@ -43,10 +43,10 @@ setup_admin(app)
 setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
-app.register_blueprint(api, url_prefix='/api')
-app.register_blueprint(producto)
-app.register_blueprint(receta)
-app.register_blueprint(mesa)
+# app.register_blueprint(api, url_prefix='/api') vamos a usar blueprints propios para organizar en más archivos
+app.register_blueprint(product)
+app.register_blueprint(recipe)
+app.register_blueprint(table)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
