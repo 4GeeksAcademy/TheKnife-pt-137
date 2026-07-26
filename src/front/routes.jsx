@@ -15,6 +15,7 @@ import { Demo } from "./pages/Demo";
 import Products from "./pages/product/Products";
 import CreateProductForm from "./pages/product/CreateProductForm";
 import EditProductForm from "./pages/product/EditProductForm";
+import Recipes from "./pages/recipe/Recipes";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,6 +37,8 @@ export const router = createBrowserRouter(
         <Route path="/products" element={<Products />} />
         <Route path="/create_product" element={<CreateProductForm />} />
         <Route path="/edit_product/:product_id" element={<EditProductForm />} />
+        <Route path="/recipes" element={<Recipes />} />
+
       </Route>
     )
 );
