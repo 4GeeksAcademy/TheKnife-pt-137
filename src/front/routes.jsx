@@ -15,6 +15,7 @@ import { Demo } from "./pages/Demo";
 import Products from "./pages/product/Products";
 import CreateProductForm from "./pages/product/CreateProductForm";
 import EditProductForm from "./pages/product/EditProductForm";
+import SingleProduct from "./pages/product/SingleProduct";
 import Recipes from "./pages/recipe/Recipes";
 import CreateRecipeForm from "./pages/recipe/CreateRecipeForm";
 import SingleRecipe from "./pages/recipe/SingleRecipe";
