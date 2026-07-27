@@ -5,20 +5,31 @@ from decimal import Decimal
 
 db = SQLAlchemy()
 
-class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(nullable=False)
-    is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
+## Restaurant
+class Restaurant(db.Model):
+    __tablename__ = "restaurant"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_restaurant_email"),
+        db.UniqueConstraint("phone", name="unique_restaurant_phone"),
+        db.UniqueConstraint("address", name="unique_restaurant_address"),
+    )
 
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(30), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    phone: Mapped[str] = mapped_column(String(15), nullable=False)
+    address: Mapped[str] = mapped_column(String(100), nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
+            "name": self.name,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            "phone": self.phone,
+            "address": self.address
         }
 
+## Table (mesa)
 class Table(db.Model):
     __tablename__ = "table"
 
@@ -36,6 +47,7 @@ class Table(db.Model):
             "location": self.location, 
         }
 
+## Product
 class Product(db.Model):
     __tablename__ = "product"
 
@@ -57,8 +69,7 @@ class Product(db.Model):
             "active": self.active,
         }
 
-
-
+## Recipe
 class Recipe(db.Model):
     __tablename__="recipe"
 

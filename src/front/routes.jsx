@@ -20,6 +20,10 @@ import Recipes from "./pages/recipe/Recipes";
 import CreateRecipeForm from "./pages/recipe/CreateRecipeForm";
 import SingleRecipe from "./pages/recipe/SingleRecipe";
 import EditRecipeForm from "./pages/recipe/EditRecipeForm";
+import Restaurants from "./pages/restaurant/Restaurants";
+import CreateRestaurantForm from "./pages/restaurant/CreateRestaurantForm";
+import SingleRestaurant from "./pages/restaurant/SingleRestaurant";
+import EditRestaurantForm from "./pages/restaurant/EditRestaurantForm";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,11 +46,16 @@ export const router = createBrowserRouter(
       <Route path="/create_product" element={<CreateProductForm />} />
       <Route path="/edit_product/:product_id" element={<EditProductForm />} />
       <Route path="/single_product/:product_id" element={<SingleProduct />} />
+
       <Route path="/recipes" element={<Recipes />} />
       <Route path="/create_recipe" element={<CreateRecipeForm />} />
       <Route path="/recipe/:recipe_id" element={<SingleRecipe />} />
       <Route path="/edit_recipe/:recipe_id" element={<EditRecipeForm />} />
 
+      <Route path="/restaurants" element={<Restaurants />} />
+      <Route path="/create_restaurant" element={<CreateRestaurantForm />} />
+      <Route path="/single_restaurant/:restaurant_id" element={<SingleRestaurant />} />
+      <Route path="/edit_restaurant/:restaurant_id" element={<EditRestaurantForm />} />
 
     </Route>
   )
