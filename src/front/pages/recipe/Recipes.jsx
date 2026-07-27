@@ -5,18 +5,14 @@ import { Link } from "react-router-dom"
 
 const Recipes = () => {
 
-    // Aquí usamos nuestro hook de recetas
     const { getRecipes, deleteRecipe } = useRecipe()
 
-    // Aquí leemos el store global donde están guardadas las recetas
     const { store } = useGlobalReducer()
 
-    // Cuando el componente se carga, pedimos todas las recetas al backend
     useEffect(() => {
         getRecipes()
     }, [])
 
-    // Aquí convertimos cada receta en un bloque visual
     const recipeList = store.recipes.map((recipe) => {
         return (
             <div key={recipe.id} className="recipe d-flex flex-column gap-2 border p-3">
@@ -25,14 +21,14 @@ const Recipes = () => {
 
                 <div className="d-flex gap-3 mt-2">
                     <button 
-                        className="btn btn-primary"
+                        className="btn btn-danger"
                         onClick={() => deleteRecipe(recipe.id)}
                     >
                         Delete recipe
                     </button>
 
                     <Link to={`/edit_recipe/${recipe.id}`}>
-                        <button className="btn btn-primary">Edit recipe</button>
+                        <button className="btn btn-warning">Edit recipe</button>
                     </Link>
 
                     <Link to={`/recipe/${recipe.id}`}>

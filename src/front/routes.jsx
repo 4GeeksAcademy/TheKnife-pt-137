@@ -16,6 +16,9 @@ import Products from "./pages/product/Products";
 import CreateProductForm from "./pages/product/CreateProductForm";
 import EditProductForm from "./pages/product/EditProductForm";
 import Recipes from "./pages/recipe/Recipes";
+import CreateRecipeForm from "./pages/recipe/CreateRecipeForm";
+import SingleRecipe from "./pages/recipe/SingleRecipe";
+import EditRecipeForm from "./pages/recipe/EditRecipeForm";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -38,6 +41,9 @@ export const router = createBrowserRouter(
         <Route path="/create_product" element={<CreateProductForm />} />
         <Route path="/edit_product/:product_id" element={<EditProductForm />} />
         <Route path="/recipes" element={<Recipes />} />
+        <Route path="/create_recipe" element={<CreateRecipeForm />} />
+        <Route path="/recipe/:recipe_id" element={<SingleRecipe />} />
+        <Route path="/edit_recipe/:recipe_id" element={<EditRecipeForm />} />
 
       </Route>
     )

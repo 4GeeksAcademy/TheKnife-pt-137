@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import { useRecipe } from "../../hooks/useRecipe"
+import { Link } from "react-router-dom"
 
 function CreateRecipeForm() {
 
@@ -33,7 +34,7 @@ function CreateRecipeForm() {
             <form onSubmit={handleSubmit}>
 
                 <label>Nombre de la receta</label>
-                <input 
+                <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -46,6 +47,9 @@ function CreateRecipeForm() {
                 />
 
                 <button type="submit">Crear receta</button>
+                <Link to="/recipes">
+                    Volver a recetas
+                </Link>
             </form>
         </div>
     )
