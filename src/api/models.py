@@ -29,6 +29,26 @@ class Restaurant(db.Model):
             "address": self.address
         }
 
+## Waiter
+class Waiter(db.Model):
+    __tablename__ = "waiter"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_waiter_email"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    ## aquí falta el restaurant_id cuando lo haagamos con relaciones
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email
+        }
+
 ## Table (mesa)
 class Table(db.Model):
     __tablename__ = "table"

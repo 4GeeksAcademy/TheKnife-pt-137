@@ -17,6 +17,7 @@ from api.routes.products import product
 from api.routes.recipes import recipe
 from api.routes.tables import table
 from api.routes.restaurants import restaurant
+from api.routes.waiters import waiter
 
 
 # from models import Person
@@ -52,6 +53,7 @@ app.register_blueprint(product)
 app.register_blueprint(recipe)
 app.register_blueprint(table)
 app.register_blueprint(restaurant)
+app.register_blueprint(waiter)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
