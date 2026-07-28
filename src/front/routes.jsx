@@ -28,6 +28,10 @@ import Waiters from "./pages/waiter/Waiters";
 import CreateWaiterForm from "./pages/waiter/CreateWaiterForm";
 import SingleWaiter from "./pages/waiter/SingleWaiter";
 import EditWaiterForm from "./pages/waiter/EditWaiterForm";
+import Orders from "./pages/order/Orders";
+import CreateOrderForm from "./pages/order/CreateOrderForm";
+import SingleOrder from "./pages/order/SingleOrder";
+import EditOrderForm from "./pages/order/EditOrderForm";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -65,6 +69,11 @@ export const router = createBrowserRouter(
       <Route path="/create_waiter" element={<CreateWaiterForm />} />
       <Route path="/single_waiter/:waiter_id" element={<SingleWaiter />} />
       <Route path="/edit_waiter/:waiter_id" element={<EditWaiterForm />} />
+
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/create_order" element={<CreateOrderForm />} />
+      <Route path="/single_order/:order_id" element={<SingleOrder />} />
+      <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
 
     </Route>
   )

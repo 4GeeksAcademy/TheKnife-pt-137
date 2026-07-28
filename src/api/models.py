@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Numeric
+from sqlalchemy import String, Boolean, Numeric, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from decimal import Decimal
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -104,3 +105,25 @@ class Recipe(db.Model):
             "name": self.name,
             "steps": self.steps,
             }
+
+## Order
+class Order(db.Model):
+    __tablename__ = "order"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    table_id: Mapped[int] = mapped_column() #(ForeignKey("table.id")) AQUÍ HAY QUE AÑADIR ESTAS FOREIGN KEYS CUANDO SE PUEDAN CREAR MESAS PORQUE AHORA MISMO NO PERMITE CREAR COMANDAS AL NO EXISTIR NINGUNA MESA
+    waiter_id: Mapped[int] = mapped_column() #(ForeignKey("waiter.id"))
+    state: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    date_time: Mapped[datetime] = mapped_column(default=datetime.now)
+    people: Mapped[int] = mapped_column(nullable=False)
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "table_id": self.table_id,
+            "waiter_id": self.waiter_id,
+            "state": self.state,
+            "date_time": self.date_time,
+            "people": self.people,
+        }
