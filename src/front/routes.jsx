@@ -32,6 +32,10 @@ import Orders from "./pages/order/Orders";
 import CreateOrderForm from "./pages/order/CreateOrderForm";
 import SingleOrder from "./pages/order/SingleOrder";
 import EditOrderForm from "./pages/order/EditOrderForm";
+import Tables from "./pages/table/Tables";
+import CreateTableForm from "./pages/table/CreateTableForm";
+import SingleTable from "./pages/table/SingleTable";
+import EditTableForm from "./pages/table/EditTableForm";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,6 +78,11 @@ export const router = createBrowserRouter(
       <Route path="/create_order" element={<CreateOrderForm />} />
       <Route path="/single_order/:order_id" element={<SingleOrder />} />
       <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
+
+      <Route path="/tables" element={<Tables />} />
+      <Route path="/create_table" element={<CreateTableForm />} />
+      <Route path="/single_table/:table_id" element={<SingleTable />} />
+      <Route path="/edit_table/:table_id" element={<EditTableForm />} />
 
     </Route>
   )

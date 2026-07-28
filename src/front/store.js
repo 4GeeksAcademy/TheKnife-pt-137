@@ -9,7 +9,9 @@ export const initialStore=()=>{
     waiters: [],
     singleWaiter: {},
     orders: [],
-    singleOrder: {}
+    singleOrder: {},
+    tables: [],
+    singleTable: {}
   }
 }
 
@@ -64,6 +66,16 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store, 
         singleOrder: action.payload
+      }
+    case "set_tables":
+      return {
+        ...store, 
+        tables: action.payload
+      }
+    case "set_single_table":
+      return {
+        ...store, 
+        singleTable: action.payload
       }
     default:
       return store;
