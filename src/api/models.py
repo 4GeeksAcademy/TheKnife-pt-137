@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, Numeric, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
 from datetime import datetime
 
@@ -20,6 +20,9 @@ class Restaurant(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     phone: Mapped[str] = mapped_column(String(15), nullable=False)
     address: Mapped[str] = mapped_column(String(100), nullable=False)
+
+    # Relationships
+    products: Mapped[list["Product"]] = relationship(back_populates="restaurant")
 
     def serialize(self):
         return {
@@ -78,7 +81,13 @@ class Product(db.Model):
     sell_price: Mapped[Decimal] = mapped_column(Numeric(10,2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    # Foreign keys
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
 
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="products")
+    recipe: Mapped["Recipe"] = relationship(back_populates="product")
 
     def serialize(self):
         return {
@@ -98,6 +107,8 @@ class Recipe(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
 
+    # Relationships
+    product: Mapped["Product"] = relationship(back_populates="recipe")
 
     def serialize(self):
         return {
