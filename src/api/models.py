@@ -97,6 +97,8 @@ class Product(db.Model):
             "sell_price": self.sell_price,
             "type": self.type,
             "active": self.active,
+            "restaurant_id": self.restaurant_id,
+            "recipe_id": self.recipe_id
         }
 
 ## Recipe
