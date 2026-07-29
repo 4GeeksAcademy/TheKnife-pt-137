@@ -5,7 +5,9 @@ export const initialStore=()=>{
     recipes: [], 
     single_recipe: {},
     restaurants: [],
-    singleRestaurant: {}
+    singleRestaurant: {}, 
+    ingredients: [],
+    singleIngredient: {}
   }
 }
 
@@ -40,6 +42,16 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store, 
         singleRestaurant: action.payload
+      }
+    case "set_ingredients":
+      return {
+        ...store,
+        ingredients: action.payload
+      }
+    case "set_single_ingredient":
+      return {
+        ...store,
+        singleIngredient: action.payload
       }
     default:
       return store;

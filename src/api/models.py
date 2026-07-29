@@ -5,7 +5,7 @@ from decimal import Decimal
 
 db = SQLAlchemy()
 
-## Restaurant
+# Restaurant
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     __table_args__ = (
@@ -29,7 +29,7 @@ class Restaurant(db.Model):
             "address": self.address
         }
 
-## Table (mesa)
+# Table (mesa)
 class Table(db.Model):
     __tablename__ = "table"
 
@@ -38,26 +38,24 @@ class Table(db.Model):
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     location: Mapped[str] = mapped_column(nullable=False)
 
-
     def serialize(self):
         return {
             "id": self.id,
             "number": self.number,
             "status": self.status,
-            "location": self.location, 
+            "location": self.location,
         }
 
-## Product
+# Product
 class Product(db.Model):
     __tablename__ = "product"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(40), nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=True)
-    sell_price: Mapped[Decimal] = mapped_column(Numeric(10,2), nullable=False)
+    sell_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
-
 
     def serialize(self):
         return {
@@ -69,18 +67,35 @@ class Product(db.Model):
             "active": self.active,
         }
 
-## Recipe
+# Recipe
 class Recipe(db.Model):
-    __tablename__="recipe"
+    __tablename__ = "recipe"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
-
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
+            }
+
+# Ingredients
+class Ingredient(db.Model):
+    __tablename__ = "ingredient"
+    __table_args__ = (
+        db.UniqueConstraint("name", name="unique_ingredient_name"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    active: Mapped[bool] = mapped_column(nullable=False, default=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "active": self.active,
             }
