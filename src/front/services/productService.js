@@ -22,7 +22,9 @@ export async function createProductService(productData) {
         name: productData.name,
         description: productData.description,
         sell_price: productData.sellPrice,
-        type: productData.type
+        type: productData.type,
+        restaurant_id: productData.restaurant_id,
+        recipe_id: productData.recipe_id
     }
     const response = await fetch(`${backendURL}/products`, {
         method: "POST",

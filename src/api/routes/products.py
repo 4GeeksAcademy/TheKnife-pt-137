@@ -25,16 +25,18 @@ def get_single_product(product_id):
 @product.route("/products", methods=["POST"])
 def create_product():
     body = request.get_json()
-    product_mandatory_schema = ["name", "sell_price", "type"]
+    product_mandatory_schema = ["name", "sell_price", "type", "restaurant_id", "recipe_id"]
     for key in product_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type'. 'description' is optional for the product"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type', 'restaurant_id', 'recipe_id'. 'description' is optional for the product"}), 400
     new_product = Product(
         name=body.get("name"),
         description=body.get("description"),
         sell_price=body.get("sell_price"),
         type=body.get("type"),
-        active=body.get("active")
+        active=body.get("active"),
+        restaurant_id=body.get("restaurant_id"),
+        recipe_id=body.get("recipe_id")
     )
     # más adelante cuando haya restaurant_id hay que meter comprobación para que no haya dos productos iguales en un mismo restaurante
     db.session.add(new_product)
