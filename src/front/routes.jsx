@@ -32,6 +32,10 @@ import Orders from "./pages/order/Orders";
 import CreateOrderForm from "./pages/order/CreateOrderForm";
 import SingleOrder from "./pages/order/SingleOrder";
 import EditOrderForm from "./pages/order/EditOrderForm";
+import Chefs from "./pages/chef/Chefs";
+import CreateChefForm from "./pages/chef/CreateChefForm";
+import EditChefForm from "./pages/chef/EditChefForm";
+import SingleChef from "./pages/chef/SingleChef";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,6 +78,11 @@ export const router = createBrowserRouter(
       <Route path="/create_order" element={<CreateOrderForm />} />
       <Route path="/single_order/:order_id" element={<SingleOrder />} />
       <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
+
+      <Route path="/chefs" element={<Chefs />} />
+      <Route path="/create_chef" element={<CreateChefForm />} />
+      <Route path="/single_chef/:chef_id" element={<SingleChef />} />
+      <Route path="/edit_chef/:chef_id" element={<EditChefForm />} />
 
     </Route>
   )

@@ -23,6 +23,7 @@ class Restaurant(db.Model):
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(back_populates="restaurant")
+    chef: Mapped["Chef"] = relationship(back_populates="restaurant")
 
     def serialize(self):
         return {
@@ -51,6 +52,32 @@ class Waiter(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email
+        }
+
+## Chef
+class Chef(db.Model):
+    __tablename__ = "chef"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_chef_email"),
+        db.UniqueConstraint("restaurant_id", name="unique_restaurant_chef"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Foreign columns
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="chef")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "restaurant_id": self.restaurant_id
         }
 
 ## Table (mesa)
