@@ -36,17 +36,16 @@ def get_single_ingredient(ingredient_id):
 def create_ingredient():
     body = request.get_json()
 
-    ingredient_mandatory_schema = ["name", "active"]
+    ingredient_mandatory_schema = ["name"]
 
     for key in ingredient_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({
-                "message": "Missing info. Body must include 'name' and 'active'."
+                "message": "Missing info. Body must include 'name'."
             }), 400
 
     new_ingredient = Ingredient(
-        name=body.get("name"),
-        active=body.get("active")
+        name=body.get("name")
     )
 
     db.session.add(new_ingredient)

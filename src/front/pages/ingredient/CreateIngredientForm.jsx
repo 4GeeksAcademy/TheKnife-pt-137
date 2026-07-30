@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const CreateIngredientForm = () => {
 
-    const [ingredientData, setIngredientData] = useState({name: "", active: true})
+    const [ingredientData, setIngredientData] = useState({name: ""})
     const { addIngredient } = useIngredient()
 
     return (
