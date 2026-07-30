@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const CreateProductForm = () => {
 
-    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: ""})
+    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", restaurant_id: 0, recipe_id: 0})
     const { createProduct } = useProduct()
 
     return (
@@ -30,6 +30,14 @@ const CreateProductForm = () => {
                     <option value="dish">Dish</option>
                     <option value="drink">Drink</option>
                 </select>
+            </div>
+            <div>
+                <label htmlFor="restaurantid">Restaurant id</label>
+                <input onChange={(e)=>setProductData({...productData, restaurant_id: e.target.value})} value={productData.restaurant_id} type="number" name="restaurantid" id="restaurantid" />
+            </div>
+            <div>
+                <label htmlFor="recipeid">Recipe id</label>
+                <input onChange={(e)=>setProductData({...productData, recipe_id: e.target.value})} value={productData.recipe_id} type="number" name="recipeid" id="recipeid" />
             </div>
             <button onClick={()=>createProduct(productData)} className="btn btn-primary">Create new product</button>
             <Link to="/products">Back to products</Link>

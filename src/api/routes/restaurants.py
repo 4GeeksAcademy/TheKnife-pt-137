@@ -9,7 +9,7 @@ restaurant = Blueprint("restaurantbp", __name__)
 @restaurant.route("/restaurants")
 def get_restaurants():
     all_restaurants = db.session.scalars(select(Restaurant)).all()
-    all_restaurants_dicts = [restaurants.serialize() for restaurants in all_restaurants]
+    all_restaurants_dicts = [restaurant.serialize() for restaurant in all_restaurants]
     return jsonify(list(all_restaurants_dicts)), 200
 
 # GET single restaurant

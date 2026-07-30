@@ -26,6 +26,14 @@ import Restaurants from "./pages/restaurant/Restaurants";
 import CreateRestaurantForm from "./pages/restaurant/CreateRestaurantForm";
 import SingleRestaurant from "./pages/restaurant/SingleRestaurant";
 import EditRestaurantForm from "./pages/restaurant/EditRestaurantForm";
+import Waiters from "./pages/waiter/Waiters";
+import CreateWaiterForm from "./pages/waiter/CreateWaiterForm";
+import SingleWaiter from "./pages/waiter/SingleWaiter";
+import EditWaiterForm from "./pages/waiter/EditWaiterForm";
+import Orders from "./pages/order/Orders";
+import CreateOrderForm from "./pages/order/CreateOrderForm";
+import SingleOrder from "./pages/order/SingleOrder";
+import EditOrderForm from "./pages/order/EditOrderForm";
 
 // INGREDIENTS imports
 import Ingredients from "./pages/ingredient/Ingredients";
@@ -66,6 +74,15 @@ export const router = createBrowserRouter(
       <Route path="/ingredients/create" element={<CreateIngredientForm />} />
       <Route path="/ingredients/:ingredient_id" element={<SingleIngredient />} />
       <Route path="/ingredients/edit/:ingredient_id" element={<EditIngredientForm />} />
+      <Route path="/waiters" element={<Waiters />} />
+      <Route path="/create_waiter" element={<CreateWaiterForm />} />
+      <Route path="/single_waiter/:waiter_id" element={<SingleWaiter />} />
+      <Route path="/edit_waiter/:waiter_id" element={<EditWaiterForm />} />
+
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/create_order" element={<CreateOrderForm />} />
+      <Route path="/single_order/:order_id" element={<SingleOrder />} />
+      <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
 
     </Route>
   )

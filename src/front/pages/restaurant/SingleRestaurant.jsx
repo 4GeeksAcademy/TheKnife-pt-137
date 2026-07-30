@@ -14,7 +14,7 @@ const SingleRestaurant = () => {
 
     useEffect(() => {
         getSingleRestaurant(restaurant_id)
-    }, [store.SingleRestaurant])
+    }, [store.singleRestaurant])
 
     return (
         <div className="single_restaurant">

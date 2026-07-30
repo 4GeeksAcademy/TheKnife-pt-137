@@ -27,7 +27,7 @@ const Restaurants = () => {
     return (
         <div className="restaurant_page d-flex flex-column align-items-center gap-3 mt-4">
             <Link to="/create_restaurant"><button className="btn btn-primary">Add restaurant</button></Link>
-            <div className="restaurants d-flex gap-5">
+            <div className="restaurants d-flex flex-column gap-5">
                 <h1>Restaurants</h1>
                 {restaurantsList}
             </div>
