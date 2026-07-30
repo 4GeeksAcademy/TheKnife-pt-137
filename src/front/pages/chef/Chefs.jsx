@@ -26,6 +26,7 @@ const Chefs = () => {
     return (
         <div className="chef_page d-flex flex-column align-items-center gap-3 mt-4">
             <Link to="/create_chef"><button className="btn btn-primary">Add chef</button></Link>
+            <Link to="/chef_login"><button className="btn btn-success">Chef login</button></Link>
             <div className="chefs d-flex flex-column  align-items-center gap-2">
                 <h1>chefs</h1>
                 {chefsList}

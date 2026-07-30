@@ -1,11 +1,27 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, create_access_token
 from sqlalchemy import select
-from api.models import db, Recipe
+from api.models import db, Recipe, Waiter, Chef
 
 recipe = Blueprint("recipebp", __name__)
 
+def get_current_user():
+    email = get_jwt_identity()
+    claims = get_jwt()
+    role = claims["role"]
+    models = {"chef": Chef, "waiter": Waiter} # FALTA METER COOK CUANDO SE HAGA LA TABLA
+    model = models.get(role)
+    current_user = db.session.scalar(select(model).where(model.email == email))
+    return current_user, role
+
 @recipe.route("/recipes")
+@jwt_required()
 def get_recipes():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "user not found"}), 404
+    if role == "waiter":
+        return(jsonify({"message": "Your account can't access here"})), 403
     all_recipes = db.session.scalars(select(Recipe)).all()
     all_recipes_dicts = [rec.serialize() for rec in all_recipes]
     return jsonify(list(all_recipes_dicts)), 200

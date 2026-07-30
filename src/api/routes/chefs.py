@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, create_access_token
 from sqlalchemy import select
-from api.models import db, Chef
+from api.models import db, Chef, Restaurant
 
 chef = Blueprint("chefbp", __name__)
 
@@ -21,9 +22,9 @@ def get_single_chef(chef_id):
         return jsonify({"message": "chef not found"}), 404
     return jsonify(single_chef.serialize()), 200
 
-# POST create a chef
+# POST register a chef
 @chef.route("/chefs", methods=["POST"])
-def create_chef():
+def chef_register():
     body = request.get_json()
     chef_mandatory_schema = ["name", "email", "password", "restaurant_id"]
     for key in chef_mandatory_schema:
@@ -38,6 +39,25 @@ def create_chef():
     db.session.add(new_chef)
     db.session.commit()
     return jsonify(new_chef.serialize()), 200
+
+# Chef login
+@chef.route("/chef_login", methods=["POST"])
+def chef_login():
+    body = request.get_json()
+    if "email" not in body or "password" not in body:
+        return jsonify({"message": "Email or password is missing"}), 400
+    chef = db.session.scalar(select(Chef).where(
+        Chef.email == body.get("email"),
+        Chef.password == body.get("password")
+    ))
+    if not chef:
+        return jsonify({"message": "Email or passowrd incorrect"}), 400
+    restaurant = db.session.scalar(select(Restaurant.name).where(Restaurant.id == chef.restaurant_id))
+    if not restaurant:
+        return jsonify({"message": "Chef doesn't have a restaurant asigned"}), 404
+    jwtoken = create_access_token(identity=chef.email, additional_claims={"role": "chef"})
+    return jsonify({"token": jwtoken, "chef": chef.serialize(), "chef_restaurant": restaurant}), 200
+    
 
 # DELETE a chef
 @chef.route("/chefs/<int:chef_id>", methods=["DELETE"])

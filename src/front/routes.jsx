@@ -36,6 +36,8 @@ import Chefs from "./pages/chef/Chefs";
 import CreateChefForm from "./pages/chef/CreateChefForm";
 import EditChefForm from "./pages/chef/EditChefForm";
 import SingleChef from "./pages/chef/SingleChef";
+import ChefLogin from "./pages/chef/ChefLogin";
+import ChefDashboard from "./pages/chef/ChefDashboard";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -83,6 +85,9 @@ export const router = createBrowserRouter(
       <Route path="/create_chef" element={<CreateChefForm />} />
       <Route path="/single_chef/:chef_id" element={<SingleChef />} />
       <Route path="/edit_chef/:chef_id" element={<EditChefForm />} />
+      <Route path="/chef_login" element={<ChefLogin />} />
+      <Route path="/chef_dashboard" element={<ChefDashboard />} />
+
 
     </Route>
   )
