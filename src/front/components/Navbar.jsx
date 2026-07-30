@@ -27,6 +27,9 @@ export const Navbar = () => {
 					<Link to="/orders">
 						<button className="btn btn-primary">Orders CRUD</button>
 					</Link>
+					<Link to="/chefs">
+						<button className="btn btn-primary">Chefs CRUD</button>
+					</Link>
 				</div>
 			</div>
 		</nav>

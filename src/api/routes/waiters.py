@@ -25,14 +25,15 @@ def get_single_waiter(waiter_id):
 @waiter.route("/waiters", methods=["POST"])
 def create_waiter():
     body = request.get_json()
-    waiter_mandatory_schema = ["name", "email", "password"]
+    waiter_mandatory_schema = ["name", "email", "password", "restaurant_id"]
     for key in waiter_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password'"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password' and 'restaurant_id'"}), 400
     new_waiter = Waiter(
         name=body.get("name"),
         email=body.get("email"),
-        password=body.get("password")
+        password=body.get("password"),
+        restaurant_id=body.get("restaurant_id")
     )
     db.session.add(new_waiter)
     db.session.commit()

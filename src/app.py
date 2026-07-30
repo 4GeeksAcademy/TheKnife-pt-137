@@ -20,6 +20,7 @@ from api.routes.restaurants import restaurant
 from api.routes.ingredients import ingredient
 from api.routes.waiters import waiter
 from api.routes.orders import order
+from api.routes.chefs import chef
 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -56,6 +57,7 @@ app.register_blueprint(restaurant)
 app.register_blueprint(ingredient)
 app.register_blueprint(waiter)
 app.register_blueprint(order)
+app.register_blueprint(chef)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

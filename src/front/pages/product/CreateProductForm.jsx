@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
+import { useRestaurant } from "../../hooks/useRestaurant"; 
 import { Link } from "react-router-dom";
+import useGlobalReducer from "../../hooks/useGlobalReducer";
 
 const CreateProductForm = () => {
 
-    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", restaurant_id: 0, recipe_id: 0})
+    const { store } = useGlobalReducer()
+    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", restaurant_id: "", recipe_id: ""})
     const { createProduct } = useProduct()
+    const { getRestaurants } = useRestaurant()
+
+    useEffect(() => {
+        getRestaurants()
+    }, [])
+
+    const restaurants = store.restaurants.map((restaurant) => {
+        return <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+    })
 
     return (
         <div className="product_form d-flex flex-column align-items-center gap-3">
@@ -32,12 +44,17 @@ const CreateProductForm = () => {
                 </select>
             </div>
             <div>
-                <label htmlFor="restaurantid">Restaurant id</label>
-                <input onChange={(e)=>setProductData({...productData, restaurant_id: e.target.value})} value={productData.restaurant_id} type="number" name="restaurantid" id="restaurantid" />
+                <label htmlFor="restaurant">Restaurant</label>
+                <select onChange={(e)=>setProductData({...productData, restaurant_id: e.target.value})} value={productData.restaurant_id} name="restaurantid" id="restaurantid" >
+                    <option value="">Select a restaurant</option>
+                    {restaurants}
+                </select>
             </div>
             <div>
                 <label htmlFor="recipeid">Recipe id</label>
-                <input onChange={(e)=>setProductData({...productData, recipe_id: e.target.value})} value={productData.recipe_id} type="number" name="recipeid" id="recipeid" />
+                <select onChange={(e)=>setProductData({...productData, recipe_id: e.target.value})} value={productData.recipe_id} name="recipeid" id="recipeid">
+                    <option value="">none</option>
+                </select>
             </div>
             <button onClick={()=>createProduct(productData)} className="btn btn-primary">Create new product</button>
             <Link to="/products">Back to products</Link>
