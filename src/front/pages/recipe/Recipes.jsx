@@ -34,6 +34,7 @@ const Recipes = () => {
                     <Link to={`/recipe/${recipe.id}`}>
                         <button className="btn btn-secondary">View recipe</button>
                     </Link>
+                    <img src={recipe.img_url} height="150" width="200" />
                 </div>
             </div>
         )

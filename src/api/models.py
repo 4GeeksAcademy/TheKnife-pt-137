@@ -164,6 +164,7 @@ class Recipe(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
@@ -173,6 +174,7 @@ class Recipe(db.Model):
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
+            "img_url": self.img_url
             }
 
 # Ingredients
