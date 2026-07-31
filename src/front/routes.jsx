@@ -60,6 +60,8 @@ import Cooks from "./pages/cook/Cooks";
 import CreateCookForm from "./pages/cook/CreateCookForm";
 import SingleCook from "./pages/cook/SingleCook";
 import EditCookForm from "./pages/cook/EditCookForm";
+import CookLogin from "./pages/cook/CookLogin";
+import CookDashboard from "./pages/cook/CookDashboard";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -120,6 +122,8 @@ export const router = createBrowserRouter(
       <Route path="/create_cook" element={<CreateCookForm />} />
       <Route path="/single_cook/:cook_id" element={<SingleCook />} />
       <Route path="/edit_cook/:cook_id" element={<EditCookForm />} />
+      <Route path="/cook_login" element={<CookLogin />} />
+      <Route path="/cook_dashboard" element={<CookDashboard />} />
 
     </Route>
   )

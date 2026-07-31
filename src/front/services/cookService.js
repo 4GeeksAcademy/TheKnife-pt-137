@@ -36,6 +36,24 @@ export async function createCookService(cookData) {
   else if (response.status === 200) return response;
 }
 
+// Cook login
+export async function cookLoginService(cookLoginData) {
+    const cookLogin = {
+        email: cookLoginData.email,
+        password: cookLoginData.password
+    }
+    const response = await fetch(`${backendURL}/cook_login`, {
+        method: "POST",
+        body: JSON.stringify(cookLogin),
+        headers: {"Content-Type": "application/json"}
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    else if (response.ok) {
+        const data = await response.json()
+        return data;
+    }
+}
+
 // Delete cook
 export async function deleteCookService(cookId) {
   const response = await fetch(`${backendURL}/cooks/${cookId}`, {
