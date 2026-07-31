@@ -137,6 +137,7 @@ class Product(db.Model):
     sell_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
     recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
@@ -154,7 +155,8 @@ class Product(db.Model):
             "type": self.type,
             "active": self.active,
             "restaurant_id": self.restaurant_id,
-            "recipe_id": self.recipe_id
+            "recipe_id": self.recipe_id,
+            "img_url": self.img_url
         }
 
 # Recipe

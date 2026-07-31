@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const EditProductForm = () => {
 
     const { store } = useGlobalReducer()
-    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", active: true})
+    const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", active: true, img_url: ""})
     const { getSingleProduct, editProduct } = useProduct()
     const { product_id } = useParams()
 
@@ -54,6 +54,24 @@ const EditProductForm = () => {
                 <label htmlFor="active">Active</label>
                 <input onChange={(e)=>setProductData({...productData, active: e.target.checked})} checked={productData.active} type="checkbox" name="active" id="active" />
             </div>
+            <input
+                type="file"
+                onChange={async (e) => {
+                    const image = e.target.files[0]
+                    const formData = new FormData()
+                    formData.append("file", image)
+                    formData.append("upload_preset", "cocinapp_images") 
+                    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
+                        method: "POST",
+                        body: formData
+                    })
+                    const data = await response.json()
+                    setProductData({ 
+                        ...productData,
+                        img_url: data.secure_url
+                    })
+                }}
+            />
             <button onClick={()=>editProduct(product_id, productData)} className="btn btn-primary">Edit product</button>
             <Link to="/products">Back to products</Link>
         </div>
