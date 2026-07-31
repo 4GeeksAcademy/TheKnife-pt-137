@@ -30,6 +30,9 @@ export const Navbar = () => {
 					<Link to="/chefs">
 						<button className="btn btn-primary">Chefs CRUD</button>
 					</Link>
+					<Link to="/cooks">
+						<button className="btn btn-primary">Cooks CRUD</button>
+					</Link>
 				</div>
 			</div>
 		</nav>
