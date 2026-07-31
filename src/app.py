@@ -18,12 +18,11 @@ from api.routes.products import product
 from api.routes.recipes import recipe
 from api.routes.tables import table
 from api.routes.restaurants import restaurant
+from api.routes.ingredients import ingredient
 from api.routes.waiters import waiter
 from api.routes.orders import order
 from api.routes.chefs import chef
 
-
-# from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -32,7 +31,7 @@ app = Flask(__name__)
 CORS(app)
 app.url_map.strict_slashes = False
 
-# database condiguration
+# database configuration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
@@ -52,7 +51,7 @@ db.init_app(app)
 # add the admin
 setup_admin(app)
 
-# add the admin
+# add the commands
 setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
@@ -61,6 +60,7 @@ app.register_blueprint(product)
 app.register_blueprint(recipe)
 app.register_blueprint(table)
 app.register_blueprint(restaurant)
+app.register_blueprint(ingredient)
 app.register_blueprint(waiter)
 app.register_blueprint(order)
 app.register_blueprint(chef)
@@ -85,7 +85,6 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0  # avoid cache memory
     return response
-
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

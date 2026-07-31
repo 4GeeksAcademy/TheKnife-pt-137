@@ -22,6 +22,7 @@ export async function createWaiterService(waiterData) {
         name: waiterData.name,
         email: waiterData.email,
         password: waiterData.password,
+        restaurant_id: waiterData.restaurant_id
     }
     const response = await fetch(`${backendURL}/waiters`, {
         method: "POST",

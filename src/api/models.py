@@ -6,7 +6,7 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-## Restaurant
+# Restaurant
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     __table_args__ = (
@@ -24,6 +24,7 @@ class Restaurant(db.Model):
     # Relationships
     products: Mapped[list["Product"]] = relationship(back_populates="restaurant")
     chef: Mapped["Chef"] = relationship(back_populates="restaurant")
+    waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
 
     def serialize(self):
         return {
@@ -45,13 +46,17 @@ class Waiter(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    ## aquí falta el restaurant_id cuando lo haagamos con relaciones
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="waiters")
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            "email": self.email
+            "email": self.email,
+            "restaurant_id": self.restaurant_id
         }
 
 ## Chef
@@ -89,23 +94,22 @@ class Table(db.Model):
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     location: Mapped[str] = mapped_column(nullable=False)
 
-
     def serialize(self):
         return {
             "id": self.id,
             "number": self.number,
             "status": self.status,
-            "location": self.location, 
+            "location": self.location,
         }
 
-## Product
+# Product
 class Product(db.Model):
     __tablename__ = "product"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(40), nullable=False)
     description: Mapped[str] = mapped_column(String(120), nullable=True)
-    sell_price: Mapped[Decimal] = mapped_column(Numeric(10,2), nullable=False)
+    sell_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
     # Foreign keys
@@ -128,9 +132,9 @@ class Product(db.Model):
             "recipe_id": self.recipe_id
         }
 
-## Recipe
+# Recipe
 class Recipe(db.Model):
-    __tablename__="recipe"
+    __tablename__ = "recipe"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
@@ -145,6 +149,24 @@ class Recipe(db.Model):
             "name": self.name,
             "steps": self.steps,
             }
+
+# Ingredients
+class Ingredient(db.Model):
+    __tablename__ = "ingredient"
+    __table_args__ = (
+        db.UniqueConstraint("name", name="unique_ingredient_name"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    active: Mapped[bool] = mapped_column(nullable=False, default=True)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "active": self.active
+        }
 
 ## Order
 class Order(db.Model):
