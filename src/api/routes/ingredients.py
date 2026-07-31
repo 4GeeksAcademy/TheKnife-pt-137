@@ -41,11 +41,12 @@ def create_ingredient():
     for key in ingredient_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({
-                "message": "Missing info. Body must include 'name'."
+                "message": "Missing info. Body must include 'name', 'img_url' is optional."
             }), 400
 
     new_ingredient = Ingredient(
-        name=body.get("name")
+        name=body.get("name"),
+        img_url=body.get("img_url")
     )
 
     db.session.add(new_ingredient)
@@ -90,7 +91,7 @@ def edit_ingredient(ingredient_id):
     for key in ingredient_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({
-                "message": "Missing info. Body must include 'name' and 'active'."
+                "message": "Missing info. Body must include 'name' and 'active', 'img_url' is optional."
             }), 400
 
     for key in body:

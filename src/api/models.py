@@ -187,12 +187,14 @@ class Ingredient(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            "active": self.active
+            "active": self.active,
+            "img_url": self.img_url
         }
 
 ## Order

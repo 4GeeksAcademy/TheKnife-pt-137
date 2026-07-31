@@ -18,6 +18,7 @@ export default function Ingredients() {
     const ingredients = store.ingredients.map((ingredient) => {
         return <li key={ingredient.id}>
             name: {ingredient.name}
+            <img src={ingredient.img_url} height="150" width="200" />
             <Link to={`/ingredients/${ingredient.id}`}>Ver</Link>
             <Link to={`/ingredients/edit/${ingredient.id}`}>Editar</Link>
             <button onClick={() => removeIngredient(ingredient.id)}>Eliminar</button>
