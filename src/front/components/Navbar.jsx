@@ -18,6 +18,9 @@ export const Navbar = () => {
 					<Link to="/restaurants">
 						<button className="btn btn-primary">Restaurants CRUD</button>
 					</Link>
+					<Link to="/ingredients">
+						<button className="btn btn-primary">Ingredients CRUD</button>
+					</Link>
 					<Link to="/waiters">
 						<button className="btn btn-primary">Waiters CRUD</button>
 					</Link>
@@ -26,6 +29,12 @@ export const Navbar = () => {
 					</Link>
 					<Link to="/tables">
 						<button className="btn btn-primary">Tables CRUD</button>
+					</Link>	
+					<Link to="/chefs">
+						<button className="btn btn-primary">Chefs CRUD</button>
+					</Link>
+					<Link to="/cooks">
+						<button className="btn btn-primary">Cooks CRUD</button>
 					</Link>
 				</div>
 			</div>

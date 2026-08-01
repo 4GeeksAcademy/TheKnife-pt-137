@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, jwt_required
 from sqlalchemy import select
 from api.models import db, Waiter
 
@@ -21,22 +22,38 @@ def get_single_waiter(waiter_id):
         return jsonify({"message": "Waiter not found"}), 404
     return jsonify(single_waiter.serialize()), 200
 
-# POST create a waiter
+# POST register a waiter
 @waiter.route("/waiters", methods=["POST"])
-def create_waiter():
+def waiter_register():
     body = request.get_json()
-    waiter_mandatory_schema = ["name", "email", "password"]
+    waiter_mandatory_schema = ["name", "email", "password", "restaurant_id"]
     for key in waiter_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password'"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password' and 'restaurant_id'"}), 400
     new_waiter = Waiter(
         name=body.get("name"),
         email=body.get("email"),
-        password=body.get("password")
+        password=body.get("password"),
+        restaurant_id=body.get("restaurant_id")
     )
     db.session.add(new_waiter)
     db.session.commit()
     return jsonify(new_waiter.serialize()), 200
+
+# Waiter login
+@waiter.route("/waiter_login", methods=["POST"])
+def waiter_login():
+    body = request.get_json()
+    if "email" not in body or "password" not in body:
+        return jsonify({"message": "Email or password is missing"}), 400
+    waiter = db.session.scalar(select(Waiter).where(
+        Waiter.email == body.get("email"),
+        Waiter.password == body.get("password")
+    ))
+    if not waiter:
+        return jsonify({"message": "Email or password incorrect"}), 404
+    jwtoken = create_access_token(identity=waiter.email, additional_claims={"role": "waiter"})
+    return jsonify({"token": jwtoken})
 
 # DELETE a waiter
 @waiter.route("/waiters/<int:waiter_id>", methods=["DELETE"])
