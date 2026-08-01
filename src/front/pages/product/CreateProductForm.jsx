@@ -3,6 +3,7 @@ import { useProduct } from "../../hooks/useProduct";
 import { useRestaurant } from "../../hooks/useRestaurant";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const CreateProductForm = () => {
 
@@ -10,6 +11,7 @@ const CreateProductForm = () => {
     const [productData, setProductData] = useState({ name: "", description: "", sellPrice: 0, type: "", restaurant_id: "", recipe_id: "", img_url: "" })
     const { createProduct } = useProduct()
     const { getRestaurants } = useRestaurant()
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getRestaurants()
@@ -56,24 +58,7 @@ const CreateProductForm = () => {
                     <option value="">none</option>
                 </select>
             </div>
-            <input
-                type="file"
-                onChange={async (e) => {
-                    const image = e.target.files[0]
-                    const formData = new FormData()
-                    formData.append("file", image)
-                    formData.append("upload_preset", "cocinapp_images") 
-                    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
-                        method: "POST",
-                        body: formData
-                    })
-                    const data = await response.json()
-                    setProductData({ 
-                        ...productData,
-                        img_url: data.secure_url
-                    })
-                }}
-            />
+            <input type="file" onChange={(e)=>uploadImage(e, "cocinapp_images", setProductData, productData)} />
             <button onClick={() => createProduct(productData)} className="btn btn-primary">Create new product</button>
             <Link to="/products">Back to products</Link>
         </div>

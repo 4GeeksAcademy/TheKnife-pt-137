@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 import { Link } from "react-router-dom";
 
 const EditProductForm = () => {
@@ -10,6 +11,7 @@ const EditProductForm = () => {
     const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", active: true, img_url: ""})
     const { getSingleProduct, editProduct } = useProduct()
     const { product_id } = useParams()
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getSingleProduct(product_id)
@@ -54,24 +56,7 @@ const EditProductForm = () => {
                 <label htmlFor="active">Active</label>
                 <input onChange={(e)=>setProductData({...productData, active: e.target.checked})} checked={productData.active} type="checkbox" name="active" id="active" />
             </div>
-            <input
-                type="file"
-                onChange={async (e) => {
-                    const image = e.target.files[0]
-                    const formData = new FormData()
-                    formData.append("file", image)
-                    formData.append("upload_preset", "cocinapp_images") 
-                    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
-                        method: "POST",
-                        body: formData
-                    })
-                    const data = await response.json()
-                    setProductData({ 
-                        ...productData,
-                        img_url: data.secure_url
-                    })
-                }}
-            />
+            <input type="file" onChange={(e)=>uploadImage(e,"cocinapp_images", setProductData,productData)} />
             <button onClick={()=>editProduct(product_id, productData)} className="btn btn-primary">Edit product</button>
             <Link to="/products">Back to products</Link>
         </div>

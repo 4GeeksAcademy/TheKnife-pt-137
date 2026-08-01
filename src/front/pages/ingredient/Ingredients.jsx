@@ -12,7 +12,6 @@ export default function Ingredients() {
     }, []);
 
     useEffect(() => {
-        console.log(store.ingredients);
     }, [store.ingredients]);
 
     const ingredients = store.ingredients.map((ingredient) => {

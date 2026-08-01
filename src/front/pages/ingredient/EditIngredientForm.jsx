@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useIngredient } from "../../hooks/useIngredient";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 import { Link } from "react-router-dom";
 
 const EditIngredientForm = () => {
@@ -10,6 +11,7 @@ const EditIngredientForm = () => {
     const [ingredientData, setIngredientData] = useState({ name: "", active: false, img_url: "" });
     const { fetchSingleIngredient, updateIngredient } = useIngredient();
     const { ingredient_id } = useParams();
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         fetchSingleIngredient(ingredient_id);
@@ -50,24 +52,7 @@ const EditIngredientForm = () => {
                 />
             </div>
 
-            <input
-                type="file"
-                onChange={async (e) => {
-                    const image = e.target.files[0]
-                    const formData = new FormData()
-                    formData.append("file", image)
-                    formData.append("upload_preset", "cocinapp_images")
-                    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
-                        method: "POST",
-                        body: formData
-                    })
-                    const data = await response.json()
-                    setIngredientData({ 
-                        ...ingredientData,
-                        img_url: data.secure_url
-                    })
-                }}
-            />
+            <input type="file" onChange={(e)=>uploadImage(e,"cocinapp_images", setIngredientData,ingredientData)}/>
 
             <button
                 onClick={() => updateIngredient(ingredient_id, ingredientData)}
