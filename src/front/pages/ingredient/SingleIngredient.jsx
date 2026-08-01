@@ -18,6 +18,7 @@ export default function SingleIngredient() {
         <div>
             <h1>{store.singleIngredient.name}</h1>
             <p>Estado: {store.singleIngredient.active ? "Activo" : "Inactivo"}</p>
+            <img src={store.singleIngredient.img_url} height="300" width="350" />
         </div>
     );
 }

@@ -137,6 +137,7 @@ class Product(db.Model):
     sell_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
     recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
@@ -154,7 +155,8 @@ class Product(db.Model):
             "type": self.type,
             "active": self.active,
             "restaurant_id": self.restaurant_id,
-            "recipe_id": self.recipe_id
+            "recipe_id": self.recipe_id,
+            "img_url": self.img_url
         }
 
 # Recipe
@@ -164,6 +166,7 @@ class Recipe(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
@@ -173,6 +176,7 @@ class Recipe(db.Model):
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
+            "img_url": self.img_url
             }
 
 # Ingredients
@@ -185,12 +189,14 @@ class Ingredient(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
-            "active": self.active
+            "active": self.active,
+            "img_url": self.img_url
         }
 
 ## Order

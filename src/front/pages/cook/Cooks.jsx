@@ -25,6 +25,7 @@ const Cooks = () => {
     return (
         <div className="waiter_page d-flex flex-column align-items-center gap-3 mt-4">
             <Link to="/create_cook"><button className="btn btn-primary">Add cook</button></Link>
+            <Link to="/cook_login"><button className="btn btn-success">Cook login</button></Link>
             <div className="waiters d-flex flex-column  align-items-center gap-2">
                 <h1>Cooks</h1>
                 {cooksList}

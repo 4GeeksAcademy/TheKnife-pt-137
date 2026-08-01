@@ -23,6 +23,7 @@ function SingleRecipe() {
             <h1>{store.single_recipe.name}</h1>
             <h3>Pasos:</h3>
             <p>{store.single_recipe.steps}</p>
+            <img src={store.single_recipe.img_url} alt="" height="300" width="400" />
 
             <Link to="/recipes">
                 Volver a recetas

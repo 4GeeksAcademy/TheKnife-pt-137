@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 const EditIngredientForm = () => {
 
     const { store } = useGlobalReducer();
-    const [ingredientData, setIngredientData] = useState({ name: "", active: false });
+    const [ingredientData, setIngredientData] = useState({ name: "", active: false, img_url: "" });
     const { fetchSingleIngredient, updateIngredient } = useIngredient();
     const { ingredient_id } = useParams();
 
@@ -49,6 +49,25 @@ const EditIngredientForm = () => {
                     id="active"
                 />
             </div>
+
+            <input
+                type="file"
+                onChange={async (e) => {
+                    const image = e.target.files[0]
+                    const formData = new FormData()
+                    formData.append("file", image)
+                    formData.append("upload_preset", "cocinapp_images")
+                    const response = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`, {
+                        method: "POST",
+                        body: formData
+                    })
+                    const data = await response.json()
+                    setIngredientData({ 
+                        ...ingredientData,
+                        img_url: data.secure_url
+                    })
+                }}
+            />
 
             <button
                 onClick={() => updateIngredient(ingredient_id, ingredientData)}

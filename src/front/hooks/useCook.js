@@ -7,6 +7,7 @@ import {
   createCookService,
   deleteCookService,
   editCookService,
+  cookLoginService,
 } from "../services/cookService";
 
 export function useCook() {
@@ -56,6 +57,27 @@ export function useCook() {
     }
   }
 
+  // Cook login
+  async function cookLogin(cookLoginData) {
+    try {
+      const data = await cookLoginService(cookLoginData);
+      const cookToken = data.token;
+      localStorage.setItem("cooktoken", cookToken);
+      console.log(data);
+      dispatch({ type: "cook_login", payload: data });
+      navigate("/cook_dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Chef logout
+    function cookLogout() {
+        localStorage.removeItem("cooktoken")
+        dispatch({type: "cook_logout"})
+        navigate("/cook_login")
+    }
+
   // Edit cook
   async function editCook(cookId, cookData) {
     try {
@@ -74,5 +96,7 @@ export function useCook() {
     getSingleCook,
     createCook,
     editCook,
+    cookLogin,
+    cookLogout
   };
 }

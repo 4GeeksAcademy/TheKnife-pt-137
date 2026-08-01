@@ -27,11 +27,12 @@ def create_recipe():
     for key in recipe_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({
-                "message": "Missing info. Body must include 'name' and 'steps'."
+                "message": "Missing info. Body must include 'name' and 'steps', and optional 'img_url'"
             }), 400
     new_recipe = Recipe(
         name=body.get("name"),
-        steps=body.get("steps")
+        steps=body.get("steps"),
+        img_url=body.get("img_url")
     )
     db.session.add(new_recipe)
     db.session.commit()
@@ -60,7 +61,7 @@ def edit_recipe(recipe_id):
     for key in recipe_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({
-                "message": "Missing info. Body must include 'name' and 'steps'."
+                "message": "Missing info. Body must include 'name' and 'steps'. 'img_url it's optional'"
             }), 400
     for key in body:
         setattr(recipe_to_edit, key, body[key])

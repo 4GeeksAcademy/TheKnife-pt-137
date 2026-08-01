@@ -28,7 +28,7 @@ def create_product():
     product_mandatory_schema = ["name", "sell_price", "type", "restaurant_id"]
     for key in product_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type', 'restaurant_id'. 'description' is optional for the product"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type', 'restaurant_id'. 'description' and 'img_url' are optional for the product"}), 400
     recipe_id = body.get("recipe_id")
     if recipe_id == "":
         recipe_id=None
@@ -39,7 +39,8 @@ def create_product():
         type=body.get("type"),
         active=body.get("active"),
         restaurant_id=body.get("restaurant_id"),
-        recipe_id=recipe_id
+        recipe_id=recipe_id,
+        img_url=body.get("img_url")
     )
     # más adelante cuando haya restaurant_id hay que meter comprobación para que no haya dos productos iguales en un mismo restaurante
     db.session.add(new_product)
@@ -68,7 +69,7 @@ def edit_product(product_id):
     product_mandatory_schema = ["name", "sell_price", "type", "active"]
     for key in product_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type'. 'description' is optional for the product"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'sell_price', 'type'. 'description' and 'img_url' are optional for the product"}), 400
     for key in body:
         setattr(product_to_edit, key, body[key])
     db.session.commit()
