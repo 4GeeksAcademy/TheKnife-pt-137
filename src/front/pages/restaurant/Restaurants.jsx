@@ -18,6 +18,7 @@ const Restaurants = () => {
             <span>Email: {restaurant.email}</span>
             <span>Phone: {restaurant.phone}</span>
             <span>Address: {restaurant.address}</span>
+            <img src={restaurant.img_url} height="200" width="250" />
             <button className="btn btn-danger" onClick={() => deleteRestaurant(restaurant.id)}>Delete restaurant</button>
             <Link to={`/edit_restaurant/${restaurant.id}`}><button className="btn btn-warning">Edit restaurant</button></Link>
             <Link to={`/single_restaurant/${restaurant.id}`}><button className="btn btn-primary">View restaurant</button></Link>

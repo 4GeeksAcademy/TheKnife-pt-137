@@ -22,7 +22,8 @@ export async function createRestaurantService(restaurantData) {
         name: restaurantData.name,
         email: restaurantData.email,
         phone: restaurantData.phone,
-        address: restaurantData.address
+        address: restaurantData.address,
+        img_url: restaurantData.img_url
     }
     const response = await fetch(`${backendURL}/restaurants`, {
         method: "POST",
@@ -57,7 +58,8 @@ export async function editRestaurantService(restaurantId, restaurantData) {
         name: restaurantData.name,
         email: restaurantData.email,
         phone: restaurantData.phone,
-        address: restaurantData.address
+        address: restaurantData.address,
+        img_url: restaurantData.img_url
     }
     const response = await fetch(`${backendURL}/restaurants/${restaurantId}`, {
         method: "PUT",

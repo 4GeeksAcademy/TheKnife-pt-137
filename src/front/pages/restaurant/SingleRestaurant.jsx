@@ -22,6 +22,7 @@ const SingleRestaurant = () => {
             <h2>email: {store.singleRestaurant.email}</h2>
             <h2>phone: {store.singleRestaurant.phone}</h2>
             <h2>address: {store.singleRestaurant.address}</h2>
+            <img src={store.singleRestaurant.img_url} height="300" width="350" />
             <Link to="/restaurants">Back to restaurants</Link>
         </div>
     )
