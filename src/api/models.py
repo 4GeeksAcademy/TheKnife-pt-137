@@ -147,6 +147,8 @@ class Product(db.Model):
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="products")
     recipe: Mapped["Recipe"] = relationship(back_populates="product")
+    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="product")
+
 
     def serialize(self):
         return {
@@ -211,7 +213,8 @@ class Order(db.Model):
     state: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     date_time: Mapped[datetime] = mapped_column(default=datetime.now)
     people: Mapped[int] = mapped_column(nullable=False)
-
+    # Relationships
+    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="order")
 
     def serialize(self):
         return {
@@ -221,4 +224,29 @@ class Order(db.Model):
             "state": self.state,
             "date_time": self.date_time,
             "people": self.people,
+        }
+
+# Order-product
+class OrderProduct(db.Model):
+    __tablename__ = "order_product"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey("order.id"))
+    product_id: Mapped[int] = mapped_column(ForeignKey("product.id"))
+    amount: Mapped[int] = mapped_column(nullable=False, default=1)
+    unit_price: Mapped[float] = mapped_column(nullable=False)
+    comment: Mapped[str] = mapped_column(String(120), nullable=True)
+
+    # Relationships
+    product: Mapped["Product"] = relationship(back_populates="order_products")
+    order: Mapped["Order"] = relationship(back_populates="order_products")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "order_id": self.order_id,
+            "product_id": self.product_id,
+            "amount": self.amount,
+            "unit_price": self.unit_price,
+            "comment": self.comment,
         }
