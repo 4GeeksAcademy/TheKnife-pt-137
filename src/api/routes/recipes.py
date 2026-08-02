@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
-from api.models import db, Recipe
+from api.models import db, Recipe, RecipeIngredient
 
 recipe = Blueprint("recipebp", __name__)
 
@@ -48,6 +48,15 @@ def delete_recipe(recipe_id):
 
     if not recipe_to_delete:
         return jsonify({"message": "Recipe not found"}), 404
+
+
+    recipe_ingredients_to_delete = db.session.scalars(
+        select(RecipeIngredient).where(RecipeIngredient.recipe_id == recipe_id)
+    ).all()
+
+    for ri in recipe_ingredients_to_delete:
+        db.session.delete(ri)
+
 
     db.session.delete(recipe_to_delete)
     db.session.commit()

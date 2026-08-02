@@ -142,6 +142,7 @@ class Recipe(db.Model):
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
+    recipe_ingredients: Mapped[list["RecipeIngredient"]] = relationship(back_populates="recipe")
 
     def serialize(self):
         return {
@@ -160,6 +161,9 @@ class Ingredient(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+
+    # Relationships
+    recipe_ingredients: Mapped[list["RecipeIngredient"]] = relationship(back_populates="ingredient")
 
     def serialize(self):
         return {
@@ -189,3 +193,26 @@ class Order(db.Model):
             "date_time": self.date_time,
             "people": self.people,
         }
+
+# RecipeIngredient
+class RecipeIngredient(db.Model):
+    __tablename__ = "recipe_ingredient"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id"), nullable=False)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=False)
+    amount: Mapped[float] = mapped_column(nullable=False)
+
+    # Relationships
+    ingredient: Mapped["Ingredient"] = relationship(back_populates="recipe_ingredients")
+    recipe: Mapped["Recipe"] = relationship(back_populates="recipe_ingredients")
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "ingredient_id": self.ingredient_id,
+            "recipe_id": self.recipe_id,
+            "amount": self.amount
+        }
+
