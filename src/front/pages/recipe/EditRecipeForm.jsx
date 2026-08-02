@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useRecipe } from "../../hooks/useRecipe"
+import { useCloudinary } from "../../hooks/useCloudinary"
 import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { Link } from "react-router-dom"
 
@@ -12,6 +13,8 @@ function EditRecipeForm() {
 
     const [name, setName] = useState("")
     const [steps, setSteps] = useState("")
+    const [img_url, setImg_url] = useState("")
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getSingleRecipe(recipe_id)
@@ -21,6 +24,7 @@ function EditRecipeForm() {
         if (store.single_recipe) {
             setName(store.single_recipe.name)
             setSteps(store.single_recipe.steps)
+            setImg_url(store.single_recipe.img_url)
         }
     }, [store.single_recipe])
 
@@ -29,7 +33,8 @@ function EditRecipeForm() {
 
         const recipeData = {
             name: name,
-            steps: steps
+            steps: steps,
+            img_url: img_url.img_url
         }
 
         editRecipe(recipe_id, recipeData)
@@ -56,6 +61,8 @@ function EditRecipeForm() {
                     value={steps}
                     onChange={(e) => setSteps(e.target.value)}
                 />
+
+                <input type="file" onChange={(e)=>uploadImage(e, "cocinapp_images",setImg_url, img_url)} />
 
                 <button type="submit">Guardar cambios</button>
                 <Link to="/recipes">

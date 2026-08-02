@@ -20,6 +20,7 @@ const Product = () => {
             <span>{product.name}</span>
             <span>{product.description}</span>
             <span>{product.sell_price}€</span>
+            <img src={product.img_url} height="200" width="250" />
             <button className="btn btn-danger" onClick={() => deleteProduct(product.id)}>Delete product</button>
             <Link to={`/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
             <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
@@ -31,6 +32,7 @@ const Product = () => {
             <span>{product.name}</span>
             <span>{product.description}</span>
             <span>{product.sell_price}€</span>
+             <img src={product.img_url} height="200" width="250" />
             <button className="btn btn-danger" onClick={() => deleteProduct(product.id)}>Delete product</button>
             <Link to={`/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
             <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>

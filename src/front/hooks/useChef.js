@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getChefsService, getSingleChefService, createChefService, deleteChefService, editChefService } from "../services/chefService";
+import { getChefsService, getSingleChefService, createChefService, deleteChefService, editChefService, chefLoginService } from "../services/chefService";
 
 export function useChef() {
 
@@ -35,6 +35,25 @@ export function useChef() {
         } catch(error) {console.log(error)}
     }
 
+    // Chef login
+    async function chefLogin(chefLoginData) {
+        try {
+            const data = await chefLoginService(chefLoginData)
+            const chefToken = data.token
+            localStorage.setItem("cheftoken", chefToken)
+            console.log(data)
+            dispatch({type: "chef_login", payload: data})
+            navigate("/chef_dashboard")
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef logout
+    function chefLogout() {
+        localStorage.removeItem("cheftoken")
+        dispatch({type: "chef_logout"})
+        navigate("/chef_login")
+    }
+
     // Delete chef
     async function deleteChef(chefId) {
         try {
@@ -60,6 +79,8 @@ export function useChef() {
         deleteChef,
         getSingleChef,
         createChef,
-        editChef
+        editChef,
+        chefLogin,
+        chefLogout
     }
 }

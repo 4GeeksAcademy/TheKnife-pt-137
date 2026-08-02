@@ -24,7 +24,8 @@ export async function createProductService(productData) {
         sell_price: productData.sellPrice,
         type: productData.type,
         restaurant_id: productData.restaurant_id,
-        recipe_id: productData.recipe_id
+        recipe_id: productData.recipe_id,
+        img_url: productData.img_url
     }
     const response = await fetch(`${backendURL}/products`, {
         method: "POST",
@@ -60,7 +61,8 @@ export async function editProductService(productId, productData) {
         description: productData.description,
         sell_price: productData.sellPrice,
         type: productData.type,
-        active: productData.active
+        active: productData.active,
+        img_url: productData.img_url
     }
     const response = await fetch(`${backendURL}/products/${productId}`, {
         method: "PUT",

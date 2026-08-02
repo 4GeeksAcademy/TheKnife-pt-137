@@ -3,12 +3,14 @@ import { useRestaurant } from "../../hooks/useRestaurant";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const EditRestaurantForm = () => {
 
     const { store } = useGlobalReducer()
-    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: ""})
+    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", })
     const { getSingleRestaurant, editRestaurant } = useRestaurant()
+    const { uploadImage } = useCloudinary()
     const { restaurant_id } = useParams()
 
     useEffect(() => {
@@ -44,6 +46,7 @@ const EditRestaurantForm = () => {
                 <label htmlFor="type">Address</label>
                 <input type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
             </div>
+            <input type="file" name="image" id="image" onChange={(e)=>uploadImage(e,"cocinapp_images",setRestaurantData,restaurantData)} />
             <button onClick={()=>editRestaurant(restaurant_id, restaurantData)} className="btn btn-primary">Edit restaurant</button>
             <Link to="/restaurants">Back to restaurants</Link>
         </div>

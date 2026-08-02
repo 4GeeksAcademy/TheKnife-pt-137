@@ -35,6 +35,26 @@ export async function createChefService(chefData) {
     else if (response.status === 200) return response;
 }
 
+// Chef login
+export async function chefLoginService(chefLoginData) {
+    const chefLogin = {
+        email: chefLoginData.email,
+        password: chefLoginData.password
+    }
+    const response = await fetch(`${backendURL}/chef_login`, {
+        method: "POST",
+        body: JSON.stringify(chefLogin),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+    if (!response.ok) throw new Error("Email or password incorrect")
+    else if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+}
+
 // Delete chef
 export async function deleteChefService(chefId) {
     const response = await fetch(`${backendURL}/chefs/${chefId}`, {

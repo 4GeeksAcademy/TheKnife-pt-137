@@ -3,6 +3,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
+from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
@@ -22,6 +23,7 @@ from api.routes.waiters import waiter
 from api.routes.orders import order
 from api.routes.chefs import chef
 from api.routes.recipe_ingredient import recipe_ingredient
+from api.routes.cooks import cook
 
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -41,6 +43,11 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
+
+# JWT config
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+jwt = JWTManager(app)
+
 db.init_app(app)
 
 # add the admin
@@ -60,6 +67,7 @@ app.register_blueprint(waiter)
 app.register_blueprint(order)
 app.register_blueprint(chef)
 app.register_blueprint(recipe_ingredient)
+app.register_blueprint(cook)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

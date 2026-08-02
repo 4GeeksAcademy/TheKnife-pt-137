@@ -20,11 +20,13 @@ class Restaurant(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     phone: Mapped[str] = mapped_column(String(15), nullable=False)
     address: Mapped[str] = mapped_column(String(100), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(back_populates="restaurant")
     chef: Mapped["Chef"] = relationship(back_populates="restaurant")
     waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
+    cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
 
     def serialize(self):
         return {
@@ -32,7 +34,8 @@ class Restaurant(db.Model):
             "name": self.name,
             "email": self.email,
             "phone": self.phone,
-            "address": self.address
+            "address": self.address,
+            "img_url": self.img_url
         }
 
 ## Waiter
@@ -50,6 +53,30 @@ class Waiter(db.Model):
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="waiters")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "restaurant_id": self.restaurant_id
+        }
+
+## Cook
+class Cook(db.Model):
+    __tablename__ = "cook"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_cook_email"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="cooks")
 
     def serialize(self):
         return {
@@ -112,6 +139,7 @@ class Product(db.Model):
     sell_price: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     type: Mapped[str] = mapped_column(String(20), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
     recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
@@ -129,7 +157,8 @@ class Product(db.Model):
             "type": self.type,
             "active": self.active,
             "restaurant_id": self.restaurant_id,
-            "recipe_id": self.recipe_id
+            "recipe_id": self.recipe_id,
+            "img_url": self.img_url
         }
 
 # Recipe
@@ -139,6 +168,7 @@ class Recipe(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
@@ -149,6 +179,7 @@ class Recipe(db.Model):
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
+            "img_url": self.img_url
             }
 
 # Ingredients
@@ -161,6 +192,7 @@ class Ingredient(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
     recipe_ingredients: Mapped[list["RecipeIngredient"]] = relationship(back_populates="ingredient")
@@ -169,7 +201,8 @@ class Ingredient(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "active": self.active
+            "active": self.active,
+            "img_url": self.img_url
         }
 
 ## Order

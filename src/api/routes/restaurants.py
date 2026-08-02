@@ -28,12 +28,13 @@ def create_restaurant():
     restaurant_mandatory_schema = ["name", "email", "phone", "address"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url is optional'."}), 400
     new_restaurant = Restaurant(
         name=body.get("name"),
         email=body.get("email"),
         phone=body.get("phone"),
-        address=body.get("address")
+        address=body.get("address"),
+        img_url=body.get("img_url")
     )
     db.session.add(new_restaurant)
     db.session.commit()
@@ -61,7 +62,7 @@ def edit_restaurant(restaurant_id):
     restaurant_mandatory_schema = ["name", "email", "phone", "address"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url' is optional."}), 400
     for key in body:
         setattr(restaurant_to_edit, key, body[key])
     db.session.commit()
