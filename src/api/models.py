@@ -35,7 +35,25 @@ class Restaurant(db.Model):
             "phone": self.phone,
             "address": self.address
         }
+## Admin
+class Admin(db.Model):
+    __tablename__ = "admin"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_admin_email"),
+    )
 
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+        }
 ## Waiter
 class Waiter(db.Model):
     __tablename__ = "waiter"
