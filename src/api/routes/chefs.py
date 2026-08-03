@@ -52,11 +52,8 @@ def chef_login():
     ))
     if not chef:
         return jsonify({"message": "Email or passowrd incorrect"}), 400
-    restaurant = db.session.scalar(select(Restaurant.name).where(Restaurant.id == chef.restaurant_id))
-    if not restaurant:
-        return jsonify({"message": "Chef doesn't have a restaurant asigned"}), 404
     jwtoken = create_access_token(identity=chef.email, additional_claims={"role": "chef"})
-    return jsonify({"token": jwtoken, "chef": chef.serialize(), "chef_restaurant": restaurant}), 200
+    return jsonify({"token": jwtoken, "chef": chef.serialize()}), 200
     
 
 # DELETE a chef

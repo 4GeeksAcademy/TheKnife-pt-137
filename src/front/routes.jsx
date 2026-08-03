@@ -69,6 +69,9 @@ import EditCookForm from "./pages/cook/EditCookForm";
 import CookLogin from "./pages/cook/CookLogin";
 import CookDashboard from "./pages/cook/CookDashboard";
 
+// OrderProducts
+import ProductsListForOrder from "./pages/order/ProductsListForOrder";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
 
@@ -117,10 +120,12 @@ export const router = createBrowserRouter(
       <Route path="/single_order/:order_id" element={<SingleOrder />} />
       <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
 
+      {/* Tables */}
       <Route path="/tables" element={<Tables />} />
       <Route path="/create_table" element={<CreateTableForm />} />
       <Route path="/single_table/:table_id" element={<SingleTable />} />
       <Route path="/edit_table/:table_id" element={<EditTableForm />} />
+
       {/* Chefs */}
       <Route path="/chefs" element={<Chefs />} />
       <Route path="/create_chef" element={<CreateChefForm />} />
@@ -136,6 +141,9 @@ export const router = createBrowserRouter(
       <Route path="/edit_cook/:cook_id" element={<EditCookForm />} />
       <Route path="/cook_login" element={<CookLogin />} />
       <Route path="/cook_dashboard" element={<CookDashboard />} />
+
+      {/* OrderProducts */}
+      <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />
 
     </Route>
   )
