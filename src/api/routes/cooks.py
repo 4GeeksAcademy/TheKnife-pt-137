@@ -50,13 +50,10 @@ def cook_login():
         Cook.email == body.get("email"),
         Cook.password == body.get("password")
     ))
-    restaurant = db.session.scalar(select(Restaurant.name).where(Restaurant.id == cook.restaurant_id))
-    if not restaurant:
-        return jsonify({"message": "Cook doesn't has a restaurant"})
     if not cook:
         return jsonify({"message": "Email or password incorrect"}), 404
     jwtoken = create_access_token(identity=cook.email, additional_claims={"role": "cook"})
-    return jsonify({"token": jwtoken, "cook": cook.serialize(), "restaurant": restaurant})
+    return jsonify({"token": jwtoken, "cook": cook.serialize()})
 
 # DELETE a cook
 @cook.route("/cooks/<int:cook_id>", methods=["DELETE"])

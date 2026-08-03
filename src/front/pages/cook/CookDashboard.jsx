@@ -22,7 +22,7 @@ const CookDashBoard = () => {
     return (
         <div className="cook_dashboard">
             <h1>Welcome back, {currentCook.name}</h1>
-            <h2>Restaurant: {store.loggedCook.restaurant}</h2>
+            <h2>Restaurant: {currentCook.restaurant_name}</h2>
             <button onClick={cookLogout} className="btn btn-primary">Log out</button>
         </div>
     )

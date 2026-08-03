@@ -22,7 +22,7 @@ const ChefDashboard = () => {
     return (
         <div className="chef_dashboard">
             <h1>Welcome back, {currentChef.name}</h1>
-            <h2>Restaurant: {store.loggedChef.restaurant}</h2>
+            <h2>Restaurant: {currentChef.restaurant_name}</h2>
             <button onClick={chefLogout} className="btn btn-primary">Log out</button>
         </div>
     )

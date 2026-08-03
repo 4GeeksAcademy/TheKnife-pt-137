@@ -83,7 +83,8 @@ class Cook(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "restaurant_id": self.restaurant_id
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 ## Chef
@@ -109,7 +110,8 @@ class Chef(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "restaurant_id": self.restaurant_id
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 ## Table (mesa)
@@ -249,4 +251,5 @@ class OrderProduct(db.Model):
             "amount": self.amount,
             "unit_price": self.unit_price,
             "comment": self.comment,
+            "product_name": self.product.name
         }
