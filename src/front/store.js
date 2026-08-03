@@ -5,7 +5,7 @@ export const initialStore = () => {
     recipes: [],
     single_recipe: {},
     restaurants: [],
-    singleRestaurant: {}, 
+    singleRestaurant: {},
     ingredients: [],
     singleIngredient: {},
     cooks: [],
@@ -19,6 +19,8 @@ export const initialStore = () => {
     singleWaiter: {},
     orders: [],
     singleOrder: {},
+    orderProducts: [],
+    singleOrderProduct: {},
     tables: [],
     singleTable: {},
     chefs: [],
@@ -60,29 +62,29 @@ export default function storeReducer(store, action = {}) {
       };
     case "set_single_restaurant":
       return {
-        ...store, 
-        singleRestaurant: action.payload
-      }
+        ...store,
+        singleRestaurant: action.payload,
+      };
     case "set_cooks":
       return {
         ...store,
-        cooks: action.payload
-      }
+        cooks: action.payload,
+      };
     case "set_single_cook":
       return {
-        ...store, 
-        singleCook: action.payload
-      }
+        ...store,
+        singleCook: action.payload,
+      };
     case "set_ingredients":
       return {
         ...store,
-        ingredients: action.payload
-      }
+        ingredients: action.payload,
+      };
     case "set_single_ingredient":
       return {
         ...store,
-        singleIngredient: action.payload
-      }
+        singleIngredient: action.payload,
+      };
     case "set_waiters":
       return {
         ...store,
@@ -100,19 +102,29 @@ export default function storeReducer(store, action = {}) {
       };
     case "set_single_order":
       return {
-        ...store, 
-        singleOrder: action.payload
-      }
+        ...store,
+        singleOrder: action.payload,
+      };
+    case "set_order_products":
+      return {
+        ...store,
+        orderProducts: action.payload,
+      };
+    case "set_single_order_product":
+      return {
+        ...store,
+        singleOrderProduct: action.payload,
+      };
     case "set_tables":
       return {
-        ...store, 
-        tables: action.payload
-      }
+        ...store,
+        tables: action.payload,
+      };
     case "set_single_table":
       return {
-        ...store, 
-        singleTable: action.payload
-      }
+        ...store,
+        singleTable: action.payload,
+      };
     case "set_chefs":
       return {
         ...store,
@@ -121,9 +133,9 @@ export default function storeReducer(store, action = {}) {
     case "set_single_chef":
       return {
         ...store,
-        singleChef: action.payload
+        singleChef: action.payload,
       };
-      case "chef_login":
+    case "chef_login":
       return {
         ...store,
         loggedChef: {
@@ -132,33 +144,33 @@ export default function storeReducer(store, action = {}) {
           restaurant: action.payload.chef_restaurant,
         },
       };
-      case "cook_login":
+    case "cook_login":
       return {
         ...store,
         loggedCook: {
           cookAuth: true,
           cook: action.payload.cook,
-          restaurant: action.payload.restaurant
+          restaurant: action.payload.restaurant,
         },
       };
-      case "cook_logout":
-        return {
-          ...store,
-          singleCook: {
-            cookAuth: false,
-            cook: {},
-            restaurant: ""
-          }
-        }
-      case "chef_logout":
-        return {
-          ...store,
-          singleChef: {
-            chefAuth: false,
-            chef: {},
-            restaurant: ""
-          }
-        }
+    case "cook_logout":
+      return {
+        ...store,
+        singleCook: {
+          cookAuth: false,
+          cook: {},
+          restaurant: "",
+        },
+      };
+    case "chef_logout":
+      return {
+        ...store,
+        singleChef: {
+          chefAuth: false,
+          chef: {},
+          restaurant: "",
+        },
+      };
     default:
       return store;
   }

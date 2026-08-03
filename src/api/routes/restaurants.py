@@ -1,18 +1,23 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
-from api.models import db, Product, Recipe, Restaurant
+from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter
 
 restaurant = Blueprint("restaurantbp", __name__)
 
 # Endpoints
 # GET Restaurants
+
+
 @restaurant.route("/restaurants")
 def get_restaurants():
     all_restaurants = db.session.scalars(select(Restaurant)).all()
-    all_restaurants_dicts = [restaurant.serialize() for restaurant in all_restaurants]
+    all_restaurants_dicts = [restaurant.serialize()
+                             for restaurant in all_restaurants]
     return jsonify(list(all_restaurants_dicts)), 200
 
 # GET single restaurant
+
+
 @restaurant.route("/restaurants/<int:restaurant_id>")
 def get_single_restaurant(restaurant_id):
     single_restaurant = db.session.scalar(
@@ -22,6 +27,8 @@ def get_single_restaurant(restaurant_id):
     return jsonify(single_restaurant.serialize()), 200
 
 # POST create a restaurant
+
+
 @restaurant.route("/restaurants", methods=["POST"])
 def create_restaurant():
     body = request.get_json()
@@ -41,17 +48,33 @@ def create_restaurant():
     return jsonify(new_restaurant.serialize()), 200
 
 # DELETE a restaurant
+
+
 @restaurant.route("/restaurants/<int:restaurant_id>", methods=["DELETE"])
 def delete_restaurant(restaurant_id):
     restaurant_to_delete = db.session.scalar(
         select(Restaurant).where(Restaurant.id == restaurant_id))
     if not restaurant_to_delete:
         return jsonify({"message": "Restaurant not found"}), 404
+    restaurant_chef = db.session.scalar(
+        select(Chef).where(Chef.restaurant_id == restaurant_id))
+    if restaurant_chef:
+        db.session.delete(restaurant_chef)
+    restaurant_cooks = db.session.scalars(
+        select(Cook).where(Cook.restaurant_id == restaurant_id)).all()
+    for cook in restaurant_cooks:
+        db.session.delete(cook)
+    restaurant_waiters = db.session.scalars(
+        select(Waiter).where(Waiter.restaurant_id == restaurant_id)).all()
+    for waiter in restaurant_waiters:
+        db.session.delete(waiter)
     db.session.delete(restaurant_to_delete)
     db.session.commit()
     return jsonify({"message": "Restaurant deleted successfully"}), 200
 
 # PUT: edit a restaurant
+
+
 @restaurant.route("/restaurants/<int:restaurant_id>", methods=["PUT"])
 def edit_restaurant(restaurant_id):
     restaurant_to_edit = db.session.scalar(

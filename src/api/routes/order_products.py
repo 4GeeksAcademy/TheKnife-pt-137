@@ -22,7 +22,7 @@ def get_single_order_product(order_product_id):
     return jsonify(single_order_product.serialize()), 200
 
 # Get all products of an order
-@order_product.route("orders/<int:order_id>/order_products")
+@order_product.route("/orders/<int:order_id>/order_products")
 def get_order_products_by_order(order_id):
     order_products = db.session.scalars(select(OrderProduct).where(
         OrderProduct.order_id == order_id
