@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, jwt_required
 from sqlalchemy import select
-from api.models import db, Waiter
+from api.models import db, Waiter, Restaurant
 
 waiter = Blueprint("waiterbp", __name__)
 
@@ -51,9 +51,12 @@ def waiter_login():
         Waiter.password == body.get("password")
     ))
     if not waiter:
-        return jsonify({"message": "Email or password incorrect"}), 404
+        return jsonify({"message": "Email or password incorrect"}), 400
+    restaurant = db.session.scalar(select(Restaurant.name).where(Restaurant.id == waiter.restaurant_id))
+    if not restaurant:
+        return jsonify({"message": "Waiter doesn't have a restaurant asigned"}), 404
     jwtoken = create_access_token(identity=waiter.email, additional_claims={"role": "waiter"})
-    return jsonify({"token": jwtoken})
+    return jsonify({"token": jwtoken, "waiter": waiter.serialize(), "waiter_restaurant": restaurant}), 200
 
 # DELETE a waiter
 @waiter.route("/waiters/<int:waiter_id>", methods=["DELETE"])

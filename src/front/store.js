@@ -30,6 +30,11 @@ export const initialStore = () => {
       chef: {},
       restaurant: "",
     },
+    loggedWaiter: {
+      waiterAuth: false,
+      waiter: {},
+      restaurant: "",
+    },
   };
 };
 
@@ -171,6 +176,24 @@ export default function storeReducer(store, action = {}) {
             restaurant: ""
           }
         }
+      case "waiter_login":
+        return {
+          ...store,
+          loggedWaiter: {
+            waiterAuth: true,
+            waiter: action.payload.waiter,
+            restaurant: action.payload.waiter_restaurant,
+          },
+        };
+      case "waiter_logout":
+        return {
+          ...store,
+          loggedWaiter: {
+            waiterAuth: false,
+            waiter: {},
+            restaurant: "",
+          },
+        };
     default:
       return store;
   }

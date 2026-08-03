@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getWaitersService, getSingleWaiterService, createWaiterService, deleteWaiterService, editWaiterService } from "../services/waiterService";
+import { getWaitersService, getSingleWaiterService, createWaiterService, deleteWaiterService, editWaiterService, waiterLoginService } from "../services/waiterService";
 
 export function useWaiter() {
 
@@ -35,6 +35,25 @@ export function useWaiter() {
         } catch(error) {console.log(error)}
     }
 
+    // Waiter login
+    async function waiterLogin(waiterLoginData) {
+        try {
+            const data = await waiterLoginService(waiterLoginData)
+            const waiterToken = data.token
+            localStorage.setItem("waitertoken", waiterToken)
+            console.log(data)
+            dispatch({type: "waiter_login", payload: data})
+            navigate("/waiter_dashboard")
+        } catch (error) {console.log(error)}
+    }
+
+    // Waiter logout
+    function waiterLogout() {
+        localStorage.removeItem("waitertoken")
+        dispatch({type: "waiter_logout"})
+        navigate("/waiter_login")
+    }
+
     // Delete waiter
     async function deleteWaiter(waiterId) {
         try {
@@ -60,6 +79,8 @@ export function useWaiter() {
         deleteWaiter,
         getSingleWaiter,
         createWaiter,
-        editWaiter
+        editWaiter,
+        waiterLogin,
+        waiterLogout
     }
 }

@@ -35,6 +35,27 @@ export async function createWaiterService(waiterData) {
     else if (response.status === 200) return response;
 }
 
+// Waiter login
+export async function waiterLoginService(waiterLoginData) {
+    const loginData = {
+        email: waiterLoginData.email,
+        password: waiterLoginData.password
+    }
+    const response = await fetch(`${backendURL}/waiter_login`, {
+        method: "POST",
+        body: JSON.stringify(loginData),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+    if (response.status === 400) throw new Error("Email or password incorrect")
+    else if (response.status === 404) throw new Error("Waiter doesn't have a restaurant asigned")
+    else if (response.status === 200) {
+        const data = await response.json()
+        return data;
+    }
+}
+
 // Delete waiter
 export async function deleteWaiterService(waiterId) {
     const response = await fetch(`${backendURL}/waiters/${waiterId}`, {
