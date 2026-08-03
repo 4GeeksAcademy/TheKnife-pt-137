@@ -7,6 +7,8 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # Restaurant
+
+
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     __table_args__ = (
@@ -23,7 +25,8 @@ class Restaurant(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    products: Mapped[list["Product"]] = relationship(back_populates="restaurant")
+    products: Mapped[list["Product"]] = relationship(
+        back_populates="restaurant")
     chef: Mapped["Chef"] = relationship(back_populates="restaurant")
     waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
     cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
@@ -38,7 +41,9 @@ class Restaurant(db.Model):
             "img_url": self.img_url
         }
 
-## Waiter
+# Waiter
+
+
 class Waiter(db.Model):
     __tablename__ = "waiter"
     __table_args__ = (
@@ -62,7 +67,9 @@ class Waiter(db.Model):
             "restaurant_id": self.restaurant_id
         }
 
-## Cook
+# Cook
+
+
 class Cook(db.Model):
     __tablename__ = "cook"
     __table_args__ = (
@@ -87,7 +94,9 @@ class Cook(db.Model):
             "restaurant_name": self.restaurant.name
         }
 
-## Chef
+# Chef
+
+
 class Chef(db.Model):
     __tablename__ = "chef"
     __table_args__ = (
@@ -114,7 +123,9 @@ class Chef(db.Model):
             "restaurant_name": self.restaurant.name
         }
 
-## Table (mesa)
+# Table (mesa)
+
+
 class Table(db.Model):
     __tablename__ = "table"
 
@@ -132,6 +143,8 @@ class Table(db.Model):
         }
 
 # Product
+
+
 class Product(db.Model):
     __tablename__ = "product"
 
@@ -144,13 +157,14 @@ class Product(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
-    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
+    recipe_id: Mapped[int] = mapped_column(
+        ForeignKey("recipe.id"), nullable=True)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="products")
     recipe: Mapped["Recipe"] = relationship(back_populates="product")
-    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="product")
-
+    order_products: Mapped[list["OrderProduct"]
+                           ] = relationship(back_populates="product")
 
     def serialize(self):
         return {
@@ -166,6 +180,8 @@ class Product(db.Model):
         }
 
 # Recipe
+
+
 class Recipe(db.Model):
     __tablename__ = "recipe"
 
@@ -176,6 +192,8 @@ class Recipe(db.Model):
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
+    recipe_ingredients: Mapped[list["RecipeIngredient"]
+                               ] = relationship(back_populates="recipe")
 
     def serialize(self):
         return {
@@ -183,9 +201,11 @@ class Recipe(db.Model):
             "name": self.name,
             "steps": self.steps,
             "img_url": self.img_url
-            }
+        }
 
 # Ingredients
+
+
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     __table_args__ = (
@@ -197,6 +217,10 @@ class Ingredient(db.Model):
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
+    # Relationships
+    recipe_ingredients: Mapped[list["RecipeIngredient"]
+                               ] = relationship(back_populates="ingredient")
+
     def serialize(self):
         return {
             "id": self.id,
@@ -205,18 +229,23 @@ class Ingredient(db.Model):
             "img_url": self.img_url
         }
 
-## Order
+# Order
+
+
 class Order(db.Model):
     __tablename__ = "order"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    table_id: Mapped[int] = mapped_column() #(ForeignKey("table.id")) AQUÍ HAY QUE AÑADIR ESTAS FOREIGN KEYS CUANDO SE PUEDAN CREAR MESAS PORQUE AHORA MISMO NO PERMITE CREAR COMANDAS AL NO EXISTIR NINGUNA MESA
-    waiter_id: Mapped[int] = mapped_column() #(ForeignKey("waiter.id"))
-    state: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
+    # (ForeignKey("table.id")) AQUÍ HAY QUE AÑADIR ESTAS FOREIGN KEYS CUANDO SE PUEDAN CREAR MESAS PORQUE AHORA MISMO NO PERMITE CREAR COMANDAS AL NO EXISTIR NINGUNA MESA
+    table_id: Mapped[int] = mapped_column()
+    waiter_id: Mapped[int] = mapped_column()  # (ForeignKey("waiter.id"))
+    state: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="pending")
     date_time: Mapped[datetime] = mapped_column(default=datetime.now)
     people: Mapped[int] = mapped_column(nullable=False)
     # Relationships
-    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="order")
+    order_products: Mapped[list["OrderProduct"]
+                           ] = relationship(back_populates="order")
 
     def serialize(self):
         return {
@@ -229,6 +258,8 @@ class Order(db.Model):
         }
 
 # Order-product
+
+
 class OrderProduct(db.Model):
     __tablename__ = "order_product"
 
@@ -252,4 +283,31 @@ class OrderProduct(db.Model):
             "unit_price": self.unit_price,
             "comment": self.comment,
             "product_name": self.product.name
+        }
+
+# RecipeIngredient
+
+
+class RecipeIngredient(db.Model):
+    __tablename__ = "recipe_ingredient"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ingredient_id: Mapped[int] = mapped_column(
+        ForeignKey("ingredient.id"), nullable=False)
+    recipe_id: Mapped[int] = mapped_column(
+        ForeignKey("recipe.id"), nullable=False)
+    amount: Mapped[float] = mapped_column(nullable=False)
+
+    # Relationships
+    ingredient: Mapped["Ingredient"] = relationship(
+        back_populates="recipe_ingredients")
+    recipe: Mapped["Recipe"] = relationship(
+        back_populates="recipe_ingredients")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "ingredient_id": self.ingredient_id,
+            "recipe_id": self.recipe_id,
+            "amount": self.amount
         }

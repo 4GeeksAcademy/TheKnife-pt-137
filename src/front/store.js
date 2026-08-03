@@ -25,6 +25,8 @@ export const initialStore = () => {
     singleTable: {},
     chefs: [],
     singleChef: {},
+    recipeIngredients: [],
+    singleRecipeIngredient: {},
     loggedChef: {
       chefAuth: false,
       chef: {},
@@ -136,7 +138,7 @@ export default function storeReducer(store, action = {}) {
         singleChef: action.payload,
       };
     case "chef_login":
-      return {
+        return {
         ...store,
         loggedChef: {
           chefAuth: true,
@@ -144,6 +146,16 @@ export default function storeReducer(store, action = {}) {
           restaurant: action.payload.chef_restaurant,
         },
       };
+    case "set_recipe_ingredients":
+      return {
+        ...store,
+        recipeIngredients: action.payload
+      }
+    case "set_single_recipe_ingredient":
+      return {
+        ...store,
+        singleRecipeIngredient: action.payload
+      }
     case "cook_login":
       return {
         ...store,
