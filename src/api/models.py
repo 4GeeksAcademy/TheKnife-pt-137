@@ -7,8 +7,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # Restaurant
-
-
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     __table_args__ = (
@@ -42,8 +40,6 @@ class Restaurant(db.Model):
         }
 
 # Waiter
-
-
 class Waiter(db.Model):
     __tablename__ = "waiter"
     __table_args__ = (
@@ -68,8 +64,6 @@ class Waiter(db.Model):
         }
 
 # Cook
-
-
 class Cook(db.Model):
     __tablename__ = "cook"
     __table_args__ = (
@@ -95,8 +89,6 @@ class Cook(db.Model):
         }
 
 # Chef
-
-
 class Chef(db.Model):
     __tablename__ = "chef"
     __table_args__ = (
@@ -109,7 +101,7 @@ class Chef(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     # Foreign columns
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"), nullable=True)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="chef")
@@ -120,12 +112,9 @@ class Chef(db.Model):
             "name": self.name,
             "email": self.email,
             "restaurant_id": self.restaurant_id,
-            "restaurant_name": self.restaurant.name
         }
 
 # Table (mesa)
-
-
 class Table(db.Model):
     __tablename__ = "table"
 
@@ -143,8 +132,6 @@ class Table(db.Model):
         }
 
 # Product
-
-
 class Product(db.Model):
     __tablename__ = "product"
 
@@ -180,8 +167,6 @@ class Product(db.Model):
         }
 
 # Recipe
-
-
 class Recipe(db.Model):
     __tablename__ = "recipe"
 
@@ -204,8 +189,6 @@ class Recipe(db.Model):
         }
 
 # Ingredients
-
-
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     __table_args__ = (
