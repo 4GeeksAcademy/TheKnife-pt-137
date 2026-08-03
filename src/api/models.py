@@ -28,6 +28,8 @@ class Restaurant(db.Model):
     chef: Mapped["Chef"] = relationship(back_populates="restaurant")
     waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
     cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
+    tables: Mapped[list["Table"]] = relationship(back_populates="restaurant")
+
 
     def serialize(self):
         return {
@@ -122,6 +124,11 @@ class Table(db.Model):
     number: Mapped[int] = mapped_column(nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     location: Mapped[str] = mapped_column(nullable=False)
+    # Foreign keys
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"), nullable=False)
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="tables")
 
     def serialize(self):
         return {
@@ -129,6 +136,7 @@ class Table(db.Model):
             "number": self.number,
             "status": self.status,
             "location": self.location,
+            "restaurant_id": self.restaurant_id
         }
 
 # Product

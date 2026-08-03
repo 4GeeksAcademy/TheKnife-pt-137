@@ -25,16 +25,17 @@ def get_single_table(table_id):
 @table.route("/tables", methods=["POST"])
 def create_table():
     body = request.get_json()
-    table_mandatory_schema = ["number", "status", "location"]
+    table_mandatory_schema = ["number", "status", "location", "restaurant_id"]
     
     for key in table_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'number', 'status', 'location'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'number', 'status', 'location', 'restaurant_id'."}), 400
             
     new_table = Table(
         number=body.get("number"),
         status=body.get("status"),
-        location=body.get("location")
+        location=body.get("location"),
+        restaurant_id=body.get("restaurant_id")
     )
     
     db.session.add(new_table)
@@ -62,11 +63,11 @@ def edit_table(table_id):
         return jsonify({"message": "Table not found"}), 404
         
     body = request.get_json()
-    table_mandatory_schema = ["number", "status", "location"]
+    table_mandatory_schema = ["number", "status", "location", "restaurant_id"]
     
     for key in table_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'number', 'status', 'location'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'number', 'status', 'location', 'restaurant_id'"}), 400
             
     for key in body:
         setattr(table_to_edit, key, body[key])
