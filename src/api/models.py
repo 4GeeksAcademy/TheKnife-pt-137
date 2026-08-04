@@ -29,6 +29,7 @@ class Restaurant(db.Model):
     waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
     cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
     tables: Mapped[list["Table"]] = relationship(back_populates="restaurant")
+    recipes: Mapped[list["Recipe"]] = relationship(back_populates="restaurant")
 
 
     def serialize(self):
@@ -183,18 +184,22 @@ class Recipe(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
     recipe_ingredients: Mapped[list["RecipeIngredient"]
                                ] = relationship(back_populates="recipe")
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="recipes")
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
-            "img_url": self.img_url
+            "img_url": self.img_url,
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Ingredients

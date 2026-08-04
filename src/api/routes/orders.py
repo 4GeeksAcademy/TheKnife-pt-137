@@ -79,7 +79,8 @@ def edit_order(order_id):
 
 ############################################################################
 ##### CHEF ######
-@order.route("/orders/<int:restaurant_id>")
+# Chef get the orders of his restaurant
+@order.route("/restaurants/<int:restaurant_id>/orders")
 @jwt_required()
 def get_restaurant_orders(restaurant_id):
     current_user, role = get_current_user()
@@ -89,7 +90,6 @@ def get_restaurant_orders(restaurant_id):
         return jsonify({"message": "Access forbidden"}), 403
     if current_user.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
-    table = db.session.scalar(select(Table).where(Table.restaurant_id == restaurant_id))
-    restaurant_orders = db.session.scalars(select(Order).where(
-        Order.restaurant_id
-    )).all()
+    restaurant_orders = db.session.scalars(select(Order).join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)).all()
+    restaurant_orders_dicts = [order.serialize() for order in restaurant_orders]
+    return jsonify(restaurant_orders_dicts)
