@@ -1,9 +1,18 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, create_access_token
 from sqlalchemy import select
-from api.models import db, Recipe, RecipeIngredient
+from api.models import db, Recipe, RecipeIngredient, Chef, Cook, Waiter
 
 recipe = Blueprint("recipebp", __name__)
+
+def get_current_user():
+    email = get_jwt_identity()
+    claims = get_jwt_identity()
+    role = claims["role"]
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    user_model = models[role]
+    current_user = db.session.scalar(select(user_model).where(user_model.email == email))
+    return current_user, role
 
 @recipe.route("/recipes")
 def get_recipes():
@@ -78,3 +87,20 @@ def edit_recipe(recipe_id):
     db.session.commit()
     return jsonify(recipe_to_edit.serialize()), 200
 
+#####################################################################
+##### CHEF
+# GET all recipes of a restaurant (chef or cook)
+@recipe.route("/restaurants/<int:restaurant_id>/recipes")
+@jwt_required()
+def get_all_restaurant_recipes(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "chef" or role != "cook":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    all_restaurant_recipes = db.session.scalars(select(Recipe).where(
+        Recipe.restaurant_id == restaurant_id
+    )).all()
+    return jsonify([recipe.serialize() for recipe in all_restaurant_recipes]), 200
