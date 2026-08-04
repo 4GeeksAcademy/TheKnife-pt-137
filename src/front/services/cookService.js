@@ -111,3 +111,35 @@ export async function cookRegisterService(restaurant_id, cookData) {
         return data
     }
 }
+
+// Chef can see cooks of his restaurant
+export async function getRestaurantCooksService(restaurant_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/cooks`, {
+    methods: "GET",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}
+
+// Chef can delete a cook of his restaurant
+export async function deleteRestaurantCookService(restaurant_id, cook_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/cooks/${cook_id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}

@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getWaitersService, getSingleWaiterService, createWaiterService, deleteWaiterService, editWaiterService, waiterLoginService, waiterRegisterService } from "../services/waiterService";
+import { getWaitersService, getSingleWaiterService, createWaiterService, deleteWaiterService, editWaiterService, waiterLoginService, waiterRegisterService, getRestaurantWaitersService, deleteRestaurantWaiterService } from "../services/waiterService";
 
 export function useWaiter() {
 
@@ -83,6 +83,25 @@ export function useWaiter() {
         } catch (error) {console.log(error)}
     }
 
+      // Chef get waiters of his restaurant
+      async function getRestaurantWaiters(restaurant_id) {
+        try {
+          const data = await getRestaurantWaitersService(restaurant_id)
+          console.log(data)
+          dispatch({type: "set_waiters", payload: data})
+        } catch (error) {console.log(error)}
+      }
+    
+      // Chef deletes a waiter of his restaurant
+      async function deleteRestaurantWaiter(restaurant_id, waiter_id) {
+        try {
+          const data = await deleteRestaurantWaiterService(restaurant_id, waiter_id)
+          console.log(data)
+          getRestaurantWaiters(restaurant_id)
+        } catch (error) {console.log(error)}
+      }
+    
+
     
     return {
         getWaiters,
@@ -92,6 +111,8 @@ export function useWaiter() {
         editWaiter,
         waiterLogin,
         waiterLogout,
-        waiterRegister
+        waiterRegister,
+        getRestaurantWaiters,
+        deleteRestaurantWaiter
     }
 }

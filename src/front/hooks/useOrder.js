@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getOrdersService, getSingleOrderService, createOrderService, deleteOrderService, editOrderService } from "../services/orderService";
+import { getOrdersService, getSingleOrderService, createOrderService, deleteOrderService, editOrderService, getAllRestaurantOrdersService } from "../services/orderService";
 
 export function useOrder() {
 
@@ -54,12 +54,22 @@ export function useOrder() {
         } catch (error) {console.log(error)}
     }
 
+    /////////////////////////////////////////////////
+    // Get all restaurant orders
+    async function getAllRestaurantOrders(restaurant_id) {
+        try {
+            const data = await getAllRestaurantOrdersService(restaurant_id);
+            console.log(data)
+            dispatch({type: "set_orders", payload: data})
+        } catch (error) {console.log(error)}
+    }
     
     return {
         getOrders,
         deleteOrder,
         getSingleOrder,
         createOrder,
-        editOrder
+        editOrder,
+        getAllRestaurantOrders
     }
 }

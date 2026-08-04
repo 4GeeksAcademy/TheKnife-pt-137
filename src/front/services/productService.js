@@ -74,3 +74,63 @@ export async function editProductService(productId, productData) {
     if (response.status === 404) throw new Error("Product not found")
     else if (response.status === 200) return response;
 }
+
+/////////////////////////////////////////////////////////////////////////
+// Get all products
+export async function getAllRestaurantProductsService(restaurant_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred");
+    else if (response.ok) {
+        const data = await response.json()
+        return data;
+    }
+}
+
+// Chef can delete products of his restaurant
+export async function deleteRestaurantProductService(restaurant_id, product_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products/${product_id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}
+
+// Chef creates a product
+export async function chefCreateProductService(restaurant_id, productData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const newProduct = {
+        name: productData.name,
+        description: productData.description,
+        type: productData.type,
+        sell_price: productData.sellPrice,
+        recipe_id: productData.recipe_id,
+        img_url: productData.img_url
+    }
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/create_product`, {
+        method: "POST",
+        body: JSON.stringify(newProduct),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    console.log(response)
+    if (!response.ok) throw new Error("Some error has ocurred")
+    else if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+}

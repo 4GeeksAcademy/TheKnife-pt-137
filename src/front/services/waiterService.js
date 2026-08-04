@@ -115,3 +115,35 @@ export async function waiterRegisterService(restaurant_id, waiterData) {
         return data
     }
 }
+
+// Chef can see waiters of his restaurant
+export async function getRestaurantWaitersService(restaurant_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/waiters`, {
+    methods: "GET",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}
+
+// Chef can delete a waiter of his restaurant
+export async function deleteRestaurantWaiterService(restaurant_id, waiter_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/waiters/${waiter_id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}

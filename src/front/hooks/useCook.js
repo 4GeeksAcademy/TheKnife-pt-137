@@ -8,7 +8,9 @@ import {
   deleteCookService,
   editCookService,
   cookLoginService,
-  cookRegisterService
+  cookRegisterService,
+  getRestaurantCooksService,
+  deleteRestaurantCookService
 } from "../services/cookService";
 
 export function useCook() {
@@ -98,9 +100,28 @@ export function useCook() {
       const data = await cookRegisterService(restaurant_id, cookData);
       console.log(data);
       navigate("/chef_dashboard");
+      await getRestaurantCooks(restaurant_id)
     } catch (error) {
       console.log(error);
     }
+  }
+
+  // Chef get cooks of his restaurant
+  async function getRestaurantCooks(restaurant_id) {
+    try {
+      const data = await getRestaurantCooksService(restaurant_id)
+      console.log(data)
+      dispatch({type: "set_cooks", payload: data})
+    } catch (error) {console.log(error)}
+  }
+
+  // Chef deletes a cook of his restaurant
+  async function deleteRestaurantCook(restaurant_id, cook_id) {
+    try {
+      const data = await deleteRestaurantCookService(restaurant_id, cook_id)
+      console.log(data)
+      getRestaurantCooks(restaurant_id)
+    } catch (error) {console.log(error)}
   }
 
   return {
@@ -111,6 +132,8 @@ export function useCook() {
     editCook,
     cookLogin,
     cookLogout,
-    cookRegister
+    cookRegister,
+    getRestaurantCooks,
+    deleteRestaurantCook
   };
 }

@@ -1,6 +1,6 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
-import { getProductsService, deleteProductService, getSingleProductService, createProductService, editProductService } from "../services/productService";
+import { getProductsService, deleteProductService, getSingleProductService, createProductService, editProductService, deleteRestaurantProductService, getAllRestaurantProductsService, chefCreateProductService } from "../services/productService";
 import useGlobalReducer from "./useGlobalReducer";
 
 export function useProduct() {
@@ -54,12 +54,53 @@ export function useProduct() {
         } catch (error) {console.log(error)}
     }
 
+      /////////////////////////////////////////////////
+      // Get all restaurant products
+      async function getAllRestaurantProducts(restaurant_id) {
+        try {
+          const data = await getAllRestaurantProductsService(restaurant_id);
+          dispatch({
+            type: "set_products",
+            payload: data,
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    
+      // Chef deletes a product of his restaurant
+      async function deleteRestaurantProduct(restaurant_id, product_id) {
+        try {
+          const data = await deleteRestaurantProductService(
+            restaurant_id,
+            product_id,
+          );
+          console.log(data);
+          getAllRestaurantProducts(restaurant_id);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    
+      // Chef creates a product
+      async function chefCreateProduct(restaurant_id, productData) {
+        try {
+          const data = await chefCreateProductService(restaurant_id, productData);
+          console.log(data);
+          navigate("/chef_dashboard");
+        } catch (error) {
+          console.log(error);
+        }
+      }
     
     return {
         getProducts,
         deleteProduct,
         getSingleProduct,
         createProduct,
-        editProduct
+        editProduct,
+        getAllRestaurantProducts,
+        deleteRestaurantProduct,
+        chefCreateProduct
     }
 }

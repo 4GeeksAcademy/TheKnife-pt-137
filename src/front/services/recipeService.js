@@ -41,4 +41,59 @@ export async function editRecipeService(recipeId, recipeData) {
     })
     return response
 }
+/////////////////////////////////////////////////////////////////////////
+// Get all recipes
+export async function getAllRestaurantRecipesService(restaurant_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred");
+    else if (response.ok) {
+        const data = await response.json()
+        return data;
+    }
+}
 
+// Chef can delete recipes of his restaurant
+export async function deleteRestaurantRecipeService(restaurant_id, recipe_id) {
+  const chefToken = localStorage.getItem("cheftoken")
+  const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}`, {
+    method: "DELETE",
+    headers: {
+      "Authorization": `Bearer ${chefToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred")
+  else if (response.ok) {
+    const data = await response.json()
+    return data
+  }
+}
+
+// Chef creates a recipe
+export async function chefCreateRecipeService(restaurant_id, recipeData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const newRecipe = {
+        name: recipeData.name,
+        steps: recipeData.steps,
+        img_url: recipeData.img_url
+    }
+    const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/create_recipe`, {
+        method: "POST",
+        body: JSON.stringify(newRecipe),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    console.log(response)
+    if (!response.ok) throw new Error("Some error has ocurred")
+    else if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+}

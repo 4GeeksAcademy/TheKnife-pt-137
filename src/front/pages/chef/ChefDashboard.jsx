@@ -17,10 +17,6 @@ const ChefDashboard = () => {
         }
     }, [])
 
-    useEffect(() => {
-        console.log(store.loggedChef)
-    }, [store.loggedChef])
-
     const currentChef = store.loggedChef.chef
 
     return (
@@ -31,12 +27,12 @@ const ChefDashboard = () => {
             <div className="chef-actions d-flex flex-column align-items-start gap-2">
                 <h2>Actions</h2>
                 <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`}><button className="btn btn-primary">Register a waiter</button></Link>
-                <button className="btn btn-warning">Restaurant waiter list</button>
+                <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`}><button className="btn btn-warning">Waiter list</button></Link>
                 <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`}><button className="btn btn-primary">Register a Cook</button></Link>
-                <button className="btn btn-warning">Restaurant cook list</button>
-                <button className="btn btn-danger">Restaurant recipes list</button>
-                <button className="btn btn-success">Restaurant orders list</button>
-                <button className="btn btn-dark">Restaurant products list</button>
+                <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`}><button className="btn btn-warning">Cook list</button></Link>
+                <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`}><button className="btn btn-danger">Recipes list</button></Link>
+                <Link to={`/restaurants/${currentChef.restaurant_id}/orders`}><button className="btn btn-success">Orders list</button></Link>
+                <Link to={`/restaurants/${currentChef.restaurant_id}/products`}><button className="btn btn-dark">Products list</button></Link>
             </div>
         </div>
     )
