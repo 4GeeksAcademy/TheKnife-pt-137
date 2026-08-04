@@ -25,6 +25,7 @@ const Waiters = () => {
     return (
         <div className="waiter_page d-flex flex-column align-items-center gap-3 mt-4">
             <Link to="/create_waiter"><button className="btn btn-primary">Add waiter</button></Link>
+            <Link to="/waiter_login"><button className="btn btn-success">Waiter login</button></Link>
             <div className="waiters d-flex flex-column  align-items-center gap-2">
                 <h1>Waiters</h1>
                 {waitersList}

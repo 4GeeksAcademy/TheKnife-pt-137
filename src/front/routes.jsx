@@ -34,6 +34,8 @@ import Waiters from "./pages/waiter/Waiters";
 import CreateWaiterForm from "./pages/waiter/CreateWaiterForm";
 import SingleWaiter from "./pages/waiter/SingleWaiter";
 import EditWaiterForm from "./pages/waiter/EditWaiterForm";
+import WaiterLogin from "./pages/waiter/WaiterLogin";
+import WaiterDashboard from "./pages/waiter/WaiterDashboard";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -109,6 +111,8 @@ export const router = createBrowserRouter(
       <Route path="/create_waiter" element={<CreateWaiterForm />} />
       <Route path="/single_waiter/:waiter_id" element={<SingleWaiter />} />
       <Route path="/edit_waiter/:waiter_id" element={<EditWaiterForm />} />
+      <Route path="/waiter_login" element={<WaiterLogin />} />
+      <Route path="/waiter_dashboard" element={<WaiterDashboard />} />
 
       {/* Orders */}
       <Route path="/orders" element={<Orders />} />
