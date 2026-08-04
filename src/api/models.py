@@ -174,7 +174,8 @@ class Product(db.Model):
             "active": self.active,
             "restaurant_id": self.restaurant_id,
             "recipe_id": self.recipe_id,
-            "img_url": self.img_url
+            "img_url": self.img_url,
+            "restaurant_name": self.restaurant.name
         }
 
 # Recipe
