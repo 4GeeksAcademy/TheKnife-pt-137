@@ -4,6 +4,7 @@ import { useRestaurant } from "../../hooks/useRestaurant";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { useCloudinary } from "../../hooks/useCloudinary";
+import { useRecipe } from "../../hooks/useRecipe";
 
 const CreateProductForm = () => {
 
@@ -11,14 +12,20 @@ const CreateProductForm = () => {
     const [productData, setProductData] = useState({ name: "", description: "", sellPrice: 0, type: "", restaurant_id: "", recipe_id: "", img_url: "" })
     const { createProduct } = useProduct()
     const { getRestaurants } = useRestaurant()
+    const { getRecipes } = useRecipe()
     const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getRestaurants()
+        getRecipes()
     }, [])
 
     const restaurants = store.restaurants.map((restaurant) => {
         return <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+    })
+
+    const recipes = store.recipes.map((recipe) => {
+        return <option key={recipe.id} value={recipe.id}>{recipe.name}</option>
     })
 
     return (
@@ -55,7 +62,8 @@ const CreateProductForm = () => {
             <div>
                 <label htmlFor="recipeid">Recipe id</label>
                 <select onChange={(e) => setProductData({ ...productData, recipe_id: e.target.value })} value={productData.recipe_id} name="recipeid" id="recipeid">
-                    <option value="">none</option>
+                    <option value="">None</option>
+                    {recipes}
                 </select>
             </div>
             <input type="file" onChange={(e)=>uploadImage(e, "cocinapp_images", setProductData, productData)} />
