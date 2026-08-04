@@ -18,6 +18,7 @@ const Recipes = () => {
             <div key={recipe.id} className="recipe d-flex flex-column gap-2 border p-3">
                 <span><strong>Nombre:</strong> {recipe.name}</span>
                 <span><strong>Pasos:</strong> {recipe.steps}</span>
+                <span><strong>Restaurant:</strong> {recipe.restaurant_name}</span>
 
                 <div className="d-flex gap-3 mt-2">
                     <button 
