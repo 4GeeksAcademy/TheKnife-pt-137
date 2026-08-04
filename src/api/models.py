@@ -63,7 +63,8 @@ class Waiter(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "restaurant_id": self.restaurant_id
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Cook
