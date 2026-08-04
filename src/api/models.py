@@ -136,7 +136,8 @@ class Table(db.Model):
             "number": self.number,
             "status": self.status,
             "location": self.location,
-            "restaurant_id": self.restaurant_id
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Product
