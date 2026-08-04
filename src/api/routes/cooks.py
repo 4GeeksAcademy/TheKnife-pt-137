@@ -119,3 +119,27 @@ def chef_register_cook(restaurant_id):
     db.session.add(new_cook)
     db.session.commit()
     return jsonify(new_cook.serialize()), 200
+
+# Chef deletes a cook
+@cook.route("/restaurants/<int:restaurant_id>/cooks/<int:cook_id>", methods=["DELETE"])
+@jwt_required()
+def chef_or_cook_delete_cook(cook_id, restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role not in ["chef", "cook"]:
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    cook_to_delete = db.session.scalar(
+        select(Cook).where(Cook.id == cook_id))
+    if role == "cook":
+        if cook_to_delete.id != current_user.id:
+            return jsonify({"message": "You don't have permissions to delete this cook"})
+    if cook_to_delete.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    if not cook_to_delete:
+        return jsonify({"message": "cook not found"}), 404
+    db.session.delete(cook_to_delete)
+    db.session.commit()
+    return jsonify({"message": "cook deleted successfully"}), 200
