@@ -8,6 +8,7 @@ import {
   deleteCookService,
   editCookService,
   cookLoginService,
+  cookRegisterService
 } from "../services/cookService";
 
 export function useCook() {
@@ -72,11 +73,11 @@ export function useCook() {
   }
 
   // Chef logout
-    function cookLogout() {
-        localStorage.removeItem("cooktoken")
-        dispatch({type: "cook_logout"})
-        navigate("/cook_login")
-    }
+  function cookLogout() {
+    localStorage.removeItem("cooktoken");
+    dispatch({ type: "cook_logout" });
+    navigate("/cook_login");
+  }
 
   // Edit cook
   async function editCook(cookId, cookData) {
@@ -90,6 +91,18 @@ export function useCook() {
     }
   }
 
+  //////////////////////////////////////////////////////////////////
+  // Chef registers a cook
+  async function cookRegister(restaurant_id, cookData) {
+    try {
+      const data = await cookRegisterService(restaurant_id, cookData);
+      console.log(data);
+      navigate("/chef_dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return {
     getCooks,
     deleteCook,
@@ -97,6 +110,7 @@ export function useCook() {
     createCook,
     editCook,
     cookLogin,
-    cookLogout
+    cookLogout,
+    cookRegister
   };
 }

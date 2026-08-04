@@ -36,6 +36,7 @@ import SingleWaiter from "./pages/waiter/SingleWaiter";
 import EditWaiterForm from "./pages/waiter/EditWaiterForm";
 import WaiterLogin from "./pages/waiter/WaiterLogin";
 import WaiterDashboard from "./pages/waiter/WaiterDashboard";
+import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -71,6 +72,7 @@ import CookDashboard from "./pages/cook/CookDashboard";
 
 // OrderProducts
 import ProductsListForOrder from "./pages/order/ProductsListForOrder";
+import RegisterCook from "./pages/cook/actions/RegisterCook";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -113,6 +115,7 @@ export const router = createBrowserRouter(
       <Route path="/edit_waiter/:waiter_id" element={<EditWaiterForm />} />
       <Route path="/waiter_login" element={<WaiterLogin />} />
       <Route path="/waiter_dashboard" element={<WaiterDashboard />} />
+      <Route path="/restaurants/:restaurant_id/register_waiter" element={<RegisterWaiter />} />
 
       {/* Orders */}
       <Route path="/orders" element={<Orders />} />
@@ -141,6 +144,7 @@ export const router = createBrowserRouter(
       <Route path="/edit_cook/:cook_id" element={<EditCookForm />} />
       <Route path="/cook_login" element={<CookLogin />} />
       <Route path="/cook_dashboard" element={<CookDashboard />} />
+      <Route path="/restaurants/:restaurant_id/register_cook" element={<RegisterCook />} />
 
       {/* OrderProducts */}
       <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />

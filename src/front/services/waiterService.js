@@ -89,3 +89,29 @@ export async function editWaiterService(waiterId, waiterData) {
     if (response.status === 404) throw new Error("Waiter not found")
     else if (response.status === 200) return response;
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// Chef registers a waiter
+export async function waiterRegisterService(restaurant_id, waiterData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const newWaiter = {
+        name: waiterData.name,
+        email: waiterData.email,
+        password: waiterData.password
+    }
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/waiter_register`, {
+        method: "POST",
+        body: JSON.stringify(newWaiter),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    console.log(`${backendURL}/restaurants/${restaurant_id}/waiter_register`)
+    console.log(response)
+    if (!response.ok) throw new Error("Some error has ocurred")
+    else if (response.ok) {
+        const data = await response.json()
+        return data
+    }
+}
