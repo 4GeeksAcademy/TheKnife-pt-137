@@ -1,9 +1,18 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, jwt_required
 from sqlalchemy import select
-from api.models import db, Cook, Restaurant
+from api.models import db, Cook, Restaurant, Chef, Waiter
 
 cook = Blueprint("cookbp", __name__)
+
+def get_current_user():
+    email = get_jwt_identity()
+    claims = get_jwt()
+    role = claims["role"]
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    user_model = models[role]
+    current_user = db.session.scalar(select(user_model).where(user_model.email == email))
+    return current_user, role
 
 # Endpoints
 # GET cooks
@@ -82,3 +91,31 @@ def edit_cook(cook_id):
         setattr(cook_to_edit, key, body[key])
     db.session.commit()
     return jsonify(cook_to_edit.serialize()), 200
+
+############################################################################
+### CHEFS #########
+# Chef registers a cook
+@cook.route("/restaurants/<int:restaurant_id>/cook_register", methods=["POST"])
+@jwt_required()
+def chef_register_cook(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "chef":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    body = request.get_json()
+    cook_mandatory_schema = ["name", "email", "password"]
+    for key in cook_mandatory_schema:
+        if key not in body or body[key] == "":
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password'"}), 400
+    new_cook = Cook(
+        name=body.get("name"),
+        email=body.get("email"),
+        password=body.get("password"),
+        restaurant_id=restaurant_id
+    )
+    db.session.add(new_cook)
+    db.session.commit()
+    return jsonify(new_cook.serialize()), 200
