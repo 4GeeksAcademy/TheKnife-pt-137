@@ -94,6 +94,21 @@ def edit_cook(cook_id):
 
 ############################################################################
 ### CHEFS #########
+# Chef see the list of cooks of his restaurant
+@cook.route("/restaurants/<int:restaurant_id>/cooks")
+@jwt_required()
+def get_restaurant_cooks(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "chef":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    all_restaurant_cooks = db.session.scalars(select(Cook).where(Cook.restaurant_id == restaurant_id)).all()
+    all_restaurant_cooks_dicts = [cook.serialize() for cook in all_restaurant_cooks]
+    return jsonify(list(all_restaurant_cooks_dicts)), 200
+
 # Chef registers a cook
 @cook.route("/restaurants/<int:restaurant_id>/cook_register", methods=["POST"])
 @jwt_required()
