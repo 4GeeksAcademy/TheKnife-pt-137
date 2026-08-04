@@ -20,6 +20,7 @@ export async function createTableService(tableData) {
         number: tableData.number,
         status: tableData.status,
         location: tableData.location,
+        restaurant_id: tableData.restaurant_id
     };
 
     const response = await fetch(`${backendURL}/tables`, {

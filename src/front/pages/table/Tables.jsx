@@ -16,6 +16,7 @@ const Tables = () => {
         return <div key={table.id} className="table d-flex align-items-center gap-3">
             <span>number: {table.number}</span>
             <span>status: {table.status}</span>
+            <span>restaurant: {table.restaurant_name}</span>
             <button className="btn btn-danger" onClick={() => deleteTable(table.id)}>Delete table</button>
             <Link to={`/edit_table/${table.id}`}><button className="btn btn-warning">Edit table</button></Link>
             <Link to={`/single_table/${table.id}`}><button className="btn btn-primary">View table</button></Link>

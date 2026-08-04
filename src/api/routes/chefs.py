@@ -26,15 +26,14 @@ def get_single_chef(chef_id):
 @chef.route("/chefs", methods=["POST"])
 def chef_register():
     body = request.get_json()
-    chef_mandatory_schema = ["name", "email", "password", "restaurant_id"]
+    chef_mandatory_schema = ["name", "email", "password"]
     for key in chef_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password', ''restaurant_id'"}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'password'"}), 400
     new_chef = Chef(
         name=body.get("name"),
         email=body.get("email"),
         password=body.get("password"),
-        restaurant_id=body.get("restaurant_id")
     )
     db.session.add(new_chef)
     db.session.commit()
