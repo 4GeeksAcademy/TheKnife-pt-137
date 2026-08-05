@@ -3,7 +3,7 @@ import { useProduct } from "../../../hooks/useProduct";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { Link, useParams } from "react-router-dom";
 
-const RestaurantProducts = () => {
+const ChefRestaurantProducts = () => {
 
     const { getAllRestaurantProducts, deleteRestaurantProduct } = useProduct()
     const { store } = useGlobalReducer()
@@ -17,7 +17,19 @@ const RestaurantProducts = () => {
     const drinks = store.products.filter((product) => product.type === "drink")
 
     const dishList = dishes.map((product) => {
-        return <div key={product.id} className="product d-flex align-items-center gap-3">
+        return <div key={product.id} className="product d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
+            <span>{product.name}</span>
+            <span>{product.description}</span>
+            <span>{product.sell_price}€</span>
+            <img src={product.img_url} height="80" width="80" />
+            <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
+            <Link to={`/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
+            <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
+        </div>
+    })
+
+    const drinkList = drinks.map((product) => {
+        return <div key={product.id} className="product d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
             <span>{product.name}</span>
             <span>{product.description}</span>
             <span>{product.sell_price}€</span>
@@ -28,34 +40,22 @@ const RestaurantProducts = () => {
         </div>
     })
 
-    const drinkList = drinks.map((product) => {
-        return <div key={product.id} className="product d-flex align-items-center gap-3">
-            <span>{product.name}</span>
-            <span>{product.description}</span>
-            <span>{product.sell_price}€</span>
-             <img src={product.img_url} height="200" width="250" />
-            <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
-            <Link to={`/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
-            <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
-        </div>
-    })
-
     return (
-        <div className="product_page d-flex flex-column align-items-center gap-3 mt-4">
-            <Link to={`/restaurants/${restaurant_id}/create_product`}><button className="btn btn-primary">Add product</button></Link>
-            <div className="products d-flex gap-5">
-                <div className="dishes d-flex flex-column gap-2">
-                    <h1>Dishes</h1>
+        <div className="product_page container py-4">
+            <Link to={`/restaurants/${restaurant_id}/create_product`}><button className="btn btn-primary mb-4">Add product</button></Link>
+            <div className="products row">
+                <div className="dishes col-md-6 d-flex flex-column gap-2">
+                    <h1 className="h4">Dishes</h1>
                     {dishList}
                 </div>
-                <div className="drinks d-flex flex-column gap-2">
-                    <h1>Drinks</h1>
+                <div className="drinks col-md-6 d-flex flex-column gap-2">
+                    <h1 className="h4">Drinks</h1>
                     {drinkList}
                 </div>
-                <Link to="/chef_dashboard">Back to dashboard</Link>
             </div>
+            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
         </div>
     )
 }
 
-export default RestaurantProducts;
+export default ChefRestaurantProducts;
