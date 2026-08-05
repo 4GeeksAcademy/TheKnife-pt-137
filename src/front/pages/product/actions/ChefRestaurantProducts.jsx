@@ -24,7 +24,7 @@ const ChefRestaurantProducts = () => {
             <img src={product.img_url} height="80" width="80" />
             <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
             <Link to={`/restaurants/${restaurant_id}/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
-            <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
+            <Link to={`/restaurants/${restaurant_id}/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
         </div>
     })
 
@@ -36,7 +36,7 @@ const ChefRestaurantProducts = () => {
             <img src={product.img_url} height="200" width="250" />
             <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
             <Link to={`/restaurants/${restaurant_id}/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
-            <Link to={`/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
+            <Link to={`/restaurants/${restaurant_id}/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
         </div>
     })
 

@@ -92,6 +92,22 @@ export async function getAllRestaurantProductsService(restaurant_id) {
     }
 }
 
+// GET one product
+export async function getOneRestaurantProductService(restaurant_id, product_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products/${product_id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (response.status === 404) throw new Error("Product not found")
+    else if (response.status === 200) {
+        const product = await response.json()
+        return product;
+    }
+}
+
 // Chef can delete products of his restaurant
 export async function deleteRestaurantProductService(restaurant_id, product_id) {
   const chefToken = localStorage.getItem("cheftoken")

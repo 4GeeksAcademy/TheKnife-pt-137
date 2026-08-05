@@ -9,12 +9,12 @@ const ChefEditProduct = () => {
 
     const { store } = useGlobalReducer()
     const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", active: true, img_url: ""})
-    const { getSingleProduct, chefEditProduct } = useProduct()
+    const { getOneRestaurantProduct, chefEditProduct } = useProduct()
     const { product_id, restaurant_id } = useParams()
     const { uploadImage } = useCloudinary()
 
     useEffect(() => {
-        getSingleProduct(product_id)
+        getOneRestaurantProduct(restaurant_id, product_id)
     }, [])
     useEffect(() => {
         if (store.singleProduct.id) {
