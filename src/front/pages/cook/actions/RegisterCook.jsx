@@ -27,6 +27,7 @@ const RegisterCook = () => {
                 <input onChange={(e)=>setCookData({...cookData, password: e.target.value})} value={cookData.password} type="password" name="password" id="password" />
             </div>
             <button onClick={()=>cookRegister(restaurant_id, cookData)} className="btn btn-primary">Create new cook</button>
+            <Link to="/chef_dashboard">Go back to dashboard</Link>
         </div>
     )
 }

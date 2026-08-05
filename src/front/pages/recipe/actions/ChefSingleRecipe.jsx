@@ -31,6 +31,9 @@ const ChefSingleRecipe = () => {
                     </div>
                 </div>
             </div>
+            <Link to={`/restaurants/${restaurant_id}/recipes`}>
+                Volver a recetas
+            </Link>
 
         </div>
     )

@@ -50,7 +50,7 @@ function ChefCreateRecipe() {
 
                 <input type="file" onChange={(e) => uploadImage(e, "cocinapp_images", setImg_url, img_url)} />
                 <button type="submit">Create recipe</button>
-                <Link to="/recipes">
+                <Link to={`/restaurants/${restaurant_id}/recipes`}>
                     Volver a recetas
                 </Link>
             </form>

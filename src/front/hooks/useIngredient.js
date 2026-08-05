@@ -7,7 +7,13 @@ import {
     getSingleIngredient,
     createIngredient,
     editIngredient,
-    deleteIngredient
+    deleteIngredient,
+    getActiveIngredientsService,
+    getInactiveIngredientsService,
+    getOneIngredientService,
+    chefCreateIngredientService,
+    chefEditIngredientService,
+    deactivateIngredientService
 } from "../services/ingredientService";
 
 export const useIngredient = () => {
@@ -38,14 +44,73 @@ export const useIngredient = () => {
 
     const removeIngredient = async (id) => {
         await deleteIngredient(id);
-        fetchIngredients(); 
+        fetchIngredients();
     };
+
+    /////////////////////////////////////////////////
+    // Chef gets all active ingredients
+    async function fetchActiveIngredients() {
+        try {
+            const data = await getActiveIngredientsService()
+            dispatch({type: "set_ingredients", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef gets all inactive ingredients
+    async function fetchInactiveIngredients() {
+        try {
+            const data = await getInactiveIngredientsService()
+            dispatch({type: "set_inactive_ingredients", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef gets one ingredient
+    async function fetchChefSingleIngredient(ingredient_id) {
+        try {
+            const data = await getOneIngredientService(ingredient_id)
+            dispatch({type: "set_single_ingredient", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef creates an ingredient
+    async function chefCreateIngredient(ingredientData) {
+        try {
+            const data = await chefCreateIngredientService(ingredientData)
+            console.log(data)
+            navigate("/chef_dashboard")
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef edits an ingredient
+    async function chefEditIngredient(ingredient_id, ingredientData) {
+        try {
+            const response = await chefEditIngredientService(ingredient_id, ingredientData)
+            const data = await response.json()
+            console.log(data)
+            navigate("/chef_dashboard")
+        } catch (error) {console.log(error)}
+    }
+
+    // Chef deactivates an ingredient (soft delete)
+    async function deactivateIngredient(ingredient_id) {
+        try {
+            const data = await deactivateIngredientService(ingredient_id)
+            console.log(data)
+            fetchActiveIngredients()
+        } catch (error) {console.log(error)}
+    }
 
     return {
         fetchIngredients,
         fetchSingleIngredient,
         addIngredient,
         updateIngredient,
-        removeIngredient
+        removeIngredient,
+        fetchActiveIngredients,
+        fetchInactiveIngredients,
+        fetchChefSingleIngredient,
+        chefCreateIngredient,
+        chefEditIngredient,
+        deactivateIngredient
     };
 };

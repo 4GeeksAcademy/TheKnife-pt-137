@@ -39,7 +39,9 @@ const ChefEditRecipe = () => {
             </div>
             <input type="file" onChange={(e) => uploadImage(e, "cocinapp_images", setRecipeData, recipeData)} />
             <button onClick={() => chefEditRecipe(restaurant_id, recipe_id, recipeData)} className="btn btn-primary">Edit recipe</button>
-            <Link to="/chef_dashboard">Back to dashboard</Link>
+            <Link to={`/restaurants/${restaurant_id}/recipes`}>
+                Volver a recetas
+            </Link>
         </div>
     )
 }

@@ -40,7 +40,7 @@ const ChefDashboard = () => {
             <div className="card mb-4">
                 <div className="card-header">Restaurant</div>
                 <div className="card-body d-flex gap-2">
-                    <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
+                    <Link style={{display: store.loggedChef.chef.restaurant_id ? "none" : "block"}} to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
                     <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
                     <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
                     <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
@@ -73,6 +73,7 @@ const ChefDashboard = () => {
                             <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`} className="btn btn-danger">Recipes list</Link>
                             <Link to={`/restaurants/${currentChef.restaurant_id}/orders`} className="btn btn-success">Orders list</Link>
                             <Link to={`/restaurants/${currentChef.restaurant_id}/products`} className="btn btn-dark">Products list</Link>
+                            <Link to="/chef_ingredients" className="btn btn-info">Ingredients list</Link>
                         </div>
                     </div>
 

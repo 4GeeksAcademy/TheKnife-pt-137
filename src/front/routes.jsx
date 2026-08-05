@@ -80,6 +80,10 @@ import Ingredients from "./pages/ingredient/Ingredients";
 import CreateIngredientForm from "./pages/ingredient/CreateIngredientForm";
 import SingleIngredient from "./pages/ingredient/SingleIngredient";
 import EditIngredientForm from "./pages/ingredient/EditIngredientForm";
+import ChefIngredients from "./pages/ingredient/actions/ChefIngredients";
+import ChefInactiveIngredients from "./pages/ingredient/actions/ChefInactiveIngredients";
+import ChefCreateIngredient from "./pages/ingredient/actions/ChefCreateIngredient";
+import ChefEditIngredient from "./pages/ingredient/actions/ChefEditIngredient";
 
 // Cooks
 import Cooks from "./pages/cook/Cooks";
@@ -139,6 +143,10 @@ export const router = createBrowserRouter(
       <Route path="/ingredients/create" element={<CreateIngredientForm />} />
       <Route path="/ingredients/:ingredient_id" element={<SingleIngredient />} />
       <Route path="/ingredients/edit/:ingredient_id" element={<EditIngredientForm />} />
+      <Route path="/chef_ingredients" element={<ChefIngredients />} />
+      <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
+      <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
+      <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
 
       {/* Waiters */}
       <Route path="/waiters" element={<Waiters />} />

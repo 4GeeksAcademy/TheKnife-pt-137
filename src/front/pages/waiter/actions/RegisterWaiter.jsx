@@ -27,6 +27,7 @@ const RegisterWaiter = () => {
                 <input onChange={(e)=>setWaiterData({...waiterData, password: e.target.value})} value={waiterData.password} type="password" name="password" id="password" />
             </div>
             <button onClick={()=>waiterRegister(restaurant_id, waiterData)} className="btn btn-primary">Create new waiter</button>
+            <Link to="/chef_dashboard">Go back to dashboard</Link>
         </div>
     )
 }
