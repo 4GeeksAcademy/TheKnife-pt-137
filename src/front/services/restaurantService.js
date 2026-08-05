@@ -87,6 +87,10 @@ export async function chefGetRestaurantService(restaurant_id) {
         const restaurant = await response.json()
         return restaurant;
     }
+    else {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.msg || `Error ${response.status}`)
+    }
 }
 
 // Chef create restaurant service

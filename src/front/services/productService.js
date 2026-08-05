@@ -134,3 +134,26 @@ export async function chefCreateProductService(restaurant_id, productData) {
         return data
     }
 }
+
+// Chef edits a product of his restaurant
+export async function chefEditProductService(product_id, productData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const editedProduct = {
+        name: productData.name,
+        description: productData.description,
+        sell_price: productData.sellPrice,
+        type: productData.type,
+        active: productData.active,
+        img_url: productData.img_url
+    }
+    const response = await fetch(`${backendURL}/products/${productId}`, {
+        method: "PUT",
+        body: JSON.stringify(editedProduct),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (response.status === 404) throw new Error("Product not found")
+    else if (response.status === 200) return response;
+}

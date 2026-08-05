@@ -1,6 +1,6 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
-import { getProductsService, deleteProductService, getSingleProductService, createProductService, editProductService, deleteRestaurantProductService, getAllRestaurantProductsService, chefCreateProductService } from "../services/productService";
+import { getProductsService, deleteProductService, getSingleProductService, createProductService, editProductService, deleteRestaurantProductService, getAllRestaurantProductsService, chefCreateProductService, chefEditProductService } from "../services/productService";
 import useGlobalReducer from "./useGlobalReducer";
 
 export function useProduct() {
@@ -92,6 +92,16 @@ export function useProduct() {
           console.log(error);
         }
       }
+
+      // Chef edits product of his restaurant
+    async function chefEditProduct(product_id, productData) {
+        try {
+            const response = await chefEditProductService(product_id, productData)
+            const data = await response.json()
+            console.log(data)
+            navigate("/chef_dashboard")
+        } catch (error) {console.log(error)}
+    }
     
     return {
         getProducts,
@@ -101,6 +111,7 @@ export function useProduct() {
         editProduct,
         getAllRestaurantProducts,
         deleteRestaurantProduct,
-        chefCreateProduct
+        chefCreateProduct,
+        chefEditProduct
     }
 }

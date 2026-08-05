@@ -15,6 +15,8 @@ const ChefGetRestaurant = () => {
         chefGetRestaurant(restaurant_id)
     }, [store.singleRestaurant])
 
+    if (!store.singleRestaurant.id) return <p className="text-center mt-5">Loading...</p>
+
     return (
         <div className="container py-4 d-flex flex-column align-items-center">
 
