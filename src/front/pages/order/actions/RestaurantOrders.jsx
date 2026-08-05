@@ -14,23 +14,34 @@ const RestaurantOrders = () => {
     }, [])
 
     const ordersList = store.orders.map((order) => {
-        return <div key={order.id} className="order d-flex align-items-center gap-3">
-            <span>table id: {order.table_id}</span>
-            <span>waiter id: {order.waiter_id}</span>
-            <span>state: {order.state}</span>
-            <span>date and time: {order.date_time}</span>
-            <span>people: {order.people}</span>
-            <Link to={`/restaurants/${restaurant_id}/orders/${order.id}`}><button className="btn btn-primary">View order</button></Link>
-        </div>
+        return (
+            <div key={order.id} className="col-md-4">
+                <div className="card h-100">
+                    <div className="card-body d-flex flex-column">
+                        <h2 className="h5">Order #{order.id}</h2>
+                        <ul className="list-group list-group-flush mb-3">
+                            <li className="list-group-item"><strong>Table:</strong> {order.table_id}</li>
+                            <li className="list-group-item"><strong>Waiter:</strong> {order.waiter_id}</li>
+                            <li className="list-group-item"><strong>State:</strong> {order.state}</li>
+                            <li className="list-group-item"><strong>Date and time:</strong> {order.date_time}</li>
+                            <li className="list-group-item"><strong>People:</strong> {order.people}</li>
+                        </ul>
+                        <div className="d-flex gap-2 mt-auto">
+                            <Link to={`/restaurants/${restaurant_id}/orders/${order.id}`}><button className="btn btn-primary btn-sm">View order</button></Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     })
 
     return (
-        <div className="order_page d-flex flex-column align-items-center gap-3 mt-4">
-            <div className="orders d-flex flex-column  align-items-center gap-2">
-                <h1>orders</h1>
+        <div className="order_page container py-4">
+            <h1 className="h4 mb-3">Orders</h1>
+            <div className="orders row g-3">
                 {ordersList}
             </div>
-            <Link to="/chef_dashboard">Back to dashboard</Link>
+            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
         </div>
     )
 }
