@@ -41,7 +41,6 @@ export function useChef() {
             const data = await chefLoginService(chefLoginData)
             const chefToken = data.token
             localStorage.setItem("cheftoken", chefToken)
-            console.log(data)
             dispatch({type: "chef_login", payload: data})
             navigate("/chef_dashboard")
         } catch (error) {console.log(error)}

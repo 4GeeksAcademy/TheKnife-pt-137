@@ -33,7 +33,7 @@ const ChefDashboard = () => {
                 <div className="card-header">Restaurant</div>
                 <div className="card-body d-flex gap-2">
                     <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
-                    <button className="btn btn-outline-secondary">Edit restaurant</button>
+                    <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-secondary">Edit restaurant</button></Link>
                 </div>
             </div>
 

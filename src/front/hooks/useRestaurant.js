@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getRestaurantsService, getSingleRestaurantService, createRestaurantService, deleteRestaurantService, editRestaurantService, chefCreateRestaurantService } from "../services/restaurantService";
+import { getRestaurantsService, getSingleRestaurantService, createRestaurantService, deleteRestaurantService, editRestaurantService, chefCreateRestaurantService, chefEditRestaurantService, chefGetRestaurantService } from "../services/restaurantService";
 
 export function useRestaurant() {
 
@@ -55,6 +55,15 @@ export function useRestaurant() {
     }
 
     /////////////////////////////////////////////////////////////
+    // Chef get his restaurant
+    // GET single restaurant
+    async function chefGetRestaurant(restaurant_id) {
+        try {
+            const restaurant = await chefGetRestaurantService(restaurant_id)
+            dispatch({type: "set_single_restaurant", payload: restaurant})
+        } catch (error) {console.log(error)}
+    }
+
     // Chef creates his restaurant
     async function chefCreateRestaurant(restaurantData) {
         try {
@@ -65,6 +74,17 @@ export function useRestaurant() {
         } catch (error) {console.log(error)}
     }
 
+    // Chef edit his restaurant
+    async function chefEditRestaurant(restaurant_id, restaurantData) {
+        try {
+            const response = await chefEditRestaurantService(restaurant_id, restaurantData)
+            const data = await response.json()
+            console.log(data)
+            navigate("/chef_dashboard")
+            chefGetRestaurant(restaurant_id)
+        } catch (error) {console.log(error)}
+    }
+
     
     return {
         getRestaurants,
@@ -72,6 +92,7 @@ export function useRestaurant() {
         getSingleRestaurant,
         createRestaurant,
         editRestaurant,
-        chefCreateRestaurant
+        chefCreateRestaurant,
+        chefEditRestaurant
     }
 }

@@ -104,6 +104,8 @@ def get_chef_restaurant(restaurant_id):
     if role != "chef":
         return jsonify({"message": "Access forbidden"}), 403
     restaurant = db.session.scalar(select(Restaurant).where(Restaurant.id == restaurant_id))
+    if not restaurant:
+        return jsonify({"message": "Restaurant not found"}), 404
     if restaurant.id != user.restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
     return jsonify(restaurant.serialize())
