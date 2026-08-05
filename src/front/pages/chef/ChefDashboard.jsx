@@ -20,6 +20,12 @@ const ChefDashboard = () => {
 
     const currentChef = store.loggedChef.chef
 
+    async function handleDeleteRestaurant() {
+        const confirmation = window.prompt("If you delete the restaurant, all items related to it will be deleted also\n Enter 'DELETE' to delete the restaurant.")
+        if (confirmation != "DELETE") return
+        chefDeleteRestaurant(currentChef.restaurant_id)
+    }
+
     return (
         <div className="container py-4">
 
@@ -36,7 +42,8 @@ const ChefDashboard = () => {
                 <div className="card-body d-flex gap-2">
                     <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
                     <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
-                    <button onClick={()=>chefDeleteRestaurant(currentChef.restaurant_id)} className="btn btn-outline-danger">Delete restaurant</button>
+                    <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
+                    <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
                 </div>
             </div>
 

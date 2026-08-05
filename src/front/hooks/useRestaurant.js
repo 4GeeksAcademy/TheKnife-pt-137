@@ -90,7 +90,7 @@ export function useRestaurant() {
         try {
             const message = await chefDeleteRestaurantService(restaurant_id)
             console.log(message)
-            getRestaurants()
+            navigate("/chef_login")
         } catch(error) {console.log(error)}
     }
 
@@ -103,6 +103,7 @@ export function useRestaurant() {
         editRestaurant,
         chefCreateRestaurant,
         chefEditRestaurant,
-        chefDeleteRestaurant
+        chefDeleteRestaurant,
+        chefGetRestaurant
     }
 }
