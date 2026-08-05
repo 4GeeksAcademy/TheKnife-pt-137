@@ -24,12 +24,12 @@ class Restaurant(db.Model):
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(
-        back_populates="restaurant")
-    chef: Mapped["Chef"] = relationship(back_populates="restaurant")
-    waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
-    cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
-    tables: Mapped[list["Table"]] = relationship(back_populates="restaurant")
-    recipes: Mapped[list["Recipe"]] = relationship(back_populates="restaurant")
+        back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    chef: Mapped["Chef"] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    tables: Mapped[list["Table"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    recipes: Mapped[list["Recipe"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
 
 
     def serialize(self):
@@ -53,7 +53,7 @@ class Waiter(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="waiters")
@@ -78,7 +78,7 @@ class Cook(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="cooks")
@@ -105,7 +105,7 @@ class Chef(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     # Foreign columns
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"), nullable=True)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="SET NULL"), nullable=True)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="chef")
@@ -128,7 +128,7 @@ class Table(db.Model):
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     location: Mapped[str] = mapped_column(nullable=False)
     # Foreign keys
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"), nullable=False)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"), nullable=False)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="tables")
@@ -155,7 +155,7 @@ class Product(db.Model):
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
     recipe_id: Mapped[int] = mapped_column(
         ForeignKey("recipe.id"), nullable=True)
 
@@ -187,7 +187,7 @@ class Recipe(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
