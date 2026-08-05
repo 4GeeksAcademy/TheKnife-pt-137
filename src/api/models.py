@@ -116,7 +116,7 @@ class Chef(db.Model):
             "name": self.name,
             "email": self.email,
             "restaurant_id": self.restaurant_id,
-            "restaurant_name": self.restaurant.name
+            "restaurant_name": self.restaurant.name if self.restaurant else None
         }
 
 # Table (mesa)

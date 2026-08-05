@@ -17,6 +17,7 @@ const Chefs = () => {
             <span>Name: {chef.name}</span>
             <span>Email: {chef.email}</span>
             <span>restaurant id: {chef.restaurant_id}</span>
+            <span>restaurant: {chef.restaurant_name}</span>
             <button className="btn btn-danger" onClick={() => deleteChef(chef.id)}>Delete chef</button>
             <Link to={`/edit_chef/${chef.id}`}><button className="btn btn-warning">Edit chef</button></Link>
             <Link to={`/single_chef/${chef.id}`}><button className="btn btn-primary">View chef</button></Link>
@@ -27,6 +28,7 @@ const Chefs = () => {
         <div className="chef_page d-flex flex-column align-items-center gap-3 mt-4">
             <Link to="/create_chef"><button className="btn btn-primary">Add chef</button></Link>
             <Link to="/chef_login"><button className="btn btn-success">Chef login</button></Link>
+            <Link to="/chef_dashboard"><button className="btn btn-dark">Chef dashboard</button></Link>
             <div className="chefs d-flex flex-column  align-items-center gap-2">
                 <h1>chefs</h1>
                 {chefsList}

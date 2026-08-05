@@ -3,7 +3,6 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link, useNavigate } from "react-router-dom";
 import { useChef } from "../../hooks/useChef";
 
-
 const ChefDashboard = () => {
 
     const { store } = useGlobalReducer()
@@ -20,20 +19,56 @@ const ChefDashboard = () => {
     const currentChef = store.loggedChef.chef
 
     return (
-        <div className="chef_dashboard">
-            <h1>Welcome back, {currentChef.name}</h1>
-            <h2>Restaurant: {currentChef.restaurant_name}</h2>
-            <button onClick={chefLogout} className="btn btn-primary">Log out</button>
-            <div className="chef-actions d-flex flex-column align-items-start gap-2">
-                <h2>Actions</h2>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`}><button className="btn btn-primary">Register a waiter</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`}><button className="btn btn-warning">Waiter list</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`}><button className="btn btn-primary">Register a Cook</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`}><button className="btn btn-warning">Cook list</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`}><button className="btn btn-danger">Recipes list</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/orders`}><button className="btn btn-success">Orders list</button></Link>
-                <Link to={`/restaurants/${currentChef.restaurant_id}/products`}><button className="btn btn-dark">Products list</button></Link>
+        <div className="container py-4">
+
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 className="mb-1">Welcome back, {currentChef.name}</h1>
+                    <h2 className="h5 text-muted mb-0">Restaurant: {currentChef.restaurant_name}</h2>
+                </div>
+                <button onClick={chefLogout} className="btn btn-primary">Log out</button>
             </div>
+
+            <div className="card mb-4">
+                <div className="card-header">Restaurant</div>
+                <div className="card-body d-flex gap-2">
+                    <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
+                    <button className="btn btn-outline-secondary">Edit restaurant</button>
+                </div>
+            </div>
+
+            <div className="card">
+                <div className="card-header">Actions</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <h6 className="text-muted">Waiters</h6>
+                        <div className="d-flex gap-2">
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`} className="btn btn-primary">Register a waiter</Link>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`} className="btn btn-warning">Waiter list</Link>
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <h6 className="text-muted">Cooks</h6>
+                        <div className="d-flex gap-2">
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`} className="btn btn-primary">Register a Cook</Link>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`} className="btn btn-warning">Cook list</Link>
+                        </div>
+                    </div>
+
+                    <div className="mb-0">
+                        <h6 className="text-muted">Management</h6>
+                        <div className="d-flex gap-2">
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`} className="btn btn-danger">Recipes list</Link>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/orders`} className="btn btn-success">Orders list</Link>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/products`} className="btn btn-dark">Products list</Link>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     )
 }

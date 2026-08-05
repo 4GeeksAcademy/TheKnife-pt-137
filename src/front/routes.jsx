@@ -35,6 +35,8 @@ import Restaurants from "./pages/restaurant/Restaurants";
 import CreateRestaurantForm from "./pages/restaurant/CreateRestaurantForm";
 import SingleRestaurant from "./pages/restaurant/SingleRestaurant";
 import EditRestaurantForm from "./pages/restaurant/EditRestaurantForm";
+import ChefCreateRestaurant from "./pages/restaurant/actions/ChefCreateRestaurant";
+
 
 // Waiters
 import Waiters from "./pages/waiter/Waiters";
@@ -117,6 +119,8 @@ export const router = createBrowserRouter(
       <Route path="/create_restaurant" element={<CreateRestaurantForm />} />
       <Route path="/single_restaurant/:restaurant_id" element={<SingleRestaurant />} />
       <Route path="/edit_restaurant/:restaurant_id" element={<EditRestaurantForm />} />
+      <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
+
 
       {/* Ingredients */}
       <Route path="/ingredients" element={<Ingredients />} />

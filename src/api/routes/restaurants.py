@@ -117,6 +117,9 @@ def chef_create_restaurant():
         return ({"message": "User not found"}), 404
     if role != "chef":
         return jsonify({"message": "Access forbidden"}), 403
+    chef_restaurant = db.session.scalar(select(Restaurant).where(Restaurant.id == user.restaurant_id))
+    if chef_restaurant:
+        return jsonify({"message": "Chef already owns a restaurant"}), 409
     body = request.get_json()
     restaurant_mandatory_schema = ["name", "email", "phone", "address"]
     for key in restaurant_mandatory_schema:
