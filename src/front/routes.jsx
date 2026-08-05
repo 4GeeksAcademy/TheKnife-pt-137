@@ -29,9 +29,10 @@ import CreateRecipeForm from "./pages/recipe/CreateRecipeForm";
 import SingleRecipe from "./pages/recipe/SingleRecipe";
 import EditRecipeForm from "./pages/recipe/EditRecipeForm";
 import RestaurantRecipes from "./pages/recipe/actions/RestaurantRecipes";
+import CookRecipes from "./pages/recipe/actions/CookRecipes";
 import ChefCreateRecipe from "./pages/recipe/actions/ChefCreateRecipe";
 import ChefEditRecipe from "./pages/recipe/actions/ChefEditRecipe";
-import ChefSingleRecipe from "./pages/recipe/actions/ChefSingleRecipe";
+import RestaurantSingleRecipe from "./pages/recipe/actions/RestaurantSingleRecipe";
 
 // Restaurants
 import Restaurants from "./pages/restaurant/Restaurants";
@@ -64,6 +65,7 @@ import CreateTableForm from "./pages/table/CreateTableForm";
 import SingleTable from "./pages/table/SingleTable";
 import EditTableForm from "./pages/table/EditTableForm";
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
+import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
 
 
@@ -124,9 +126,10 @@ export const router = createBrowserRouter(
       <Route path="/recipe/:recipe_id" element={<SingleRecipe />} />
       <Route path="/edit_recipe/:recipe_id" element={<EditRecipeForm />} />
       <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
+      <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
       <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
-      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<ChefSingleRecipe />} />
+      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
 
       {/* Restaurants */}
       <Route path="/restaurants" element={<Restaurants />} />
@@ -164,6 +167,7 @@ export const router = createBrowserRouter(
       <Route path="/single_order/:order_id" element={<SingleOrder />} />
       <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
+      <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
 
 

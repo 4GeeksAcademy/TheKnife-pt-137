@@ -44,11 +44,11 @@ export async function editRecipeService(recipeId, recipeData) {
 /////////////////////////////////////////////////////////////////////////
 // Get all recipes
 export async function getAllRestaurantRecipesService(restaurant_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
     const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
         }
     })
     if (!response.ok) throw new Error("Some error has ocurred");
@@ -76,11 +76,11 @@ export async function deleteRestaurantRecipeService(restaurant_id, recipe_id) {
 
 // GET one recipe
 export async function getOneRestaurantRecipeService(restaurant_id, recipe_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
     const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
         }
     })
     if (response.status === 404) throw new Error("Recipe not found")

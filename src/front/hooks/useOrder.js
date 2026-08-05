@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getOrdersService, getSingleOrderService, createOrderService, deleteOrderService, editOrderService, getAllRestaurantOrdersService, getSingleRestaurantOrderService } from "../services/orderService";
+import { getOrdersService, getSingleOrderService, createOrderService, deleteOrderService, editOrderService, getAllRestaurantOrdersService, getSingleRestaurantOrderService, updateOrderStatusService } from "../services/orderService";
 
 export function useOrder() {
 
@@ -72,6 +72,15 @@ export function useOrder() {
         } catch (error) {console.log(error)}
     }
 
+    // Cook updates the state of an order (doing/done)
+    async function updateOrderStatus(restaurant_id, order_id, state) {
+        try {
+            const order = await updateOrderStatusService(restaurant_id, order_id, state)
+            console.log(order)
+            getAllRestaurantOrders(restaurant_id)
+        } catch (error) {console.log(error)}
+    }
+
     return {
         getOrders,
         deleteOrder,
@@ -79,6 +88,7 @@ export function useOrder() {
         createOrder,
         editOrder,
         getAllRestaurantOrders,
-        getSingleRestaurantOrder
+        getSingleRestaurantOrder,
+        updateOrderStatus
     }
 }

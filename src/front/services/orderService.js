@@ -72,11 +72,11 @@ export async function editOrderService(orderId, orderData) {
 /////////////////////////////////////////////////////////////////////////
 // Get all orders
 export async function getAllRestaurantOrdersService(restaurant_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken") || localStorage.getItem("cooktoken")
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
         }
     })
     if (!response.ok) throw new Error("Some error has ocurred");
@@ -88,11 +88,30 @@ export async function getAllRestaurantOrdersService(restaurant_id) {
 
 // Get one order of the restaurant
 export async function getSingleRestaurantOrderService(restaurant_id, order_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken") || localStorage.getItem("cooktoken")
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders/${order_id}`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    if (response.status === 404) throw new Error("order not found")
+    else if (response.status === 200) {
+        const order = await response.json()
+        return order;
+    }
+    else throw new Error("Some error has ocurred")
+}
+
+// Cook updates the state of an order (doing/done)
+export async function updateOrderStatusService(restaurant_id, order_id, state) {
+    const cookToken = localStorage.getItem("cooktoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders/${order_id}/status`, {
+        method: "PUT",
+        body: JSON.stringify({ state }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${cookToken}`
         }
     })
     if (response.status === 404) throw new Error("order not found")

@@ -79,7 +79,7 @@ def edit_order(order_id):
 
 ############################################################################
 ##### CHEF ######
-# Chef get the orders of his restaurant
+# Chef get the orders of his restaurant, cook and waiter can see the ones that are not closed
 @order.route("/restaurants/<int:restaurant_id>/orders")
 @jwt_required()
 def get_restaurant_orders(restaurant_id):
@@ -114,3 +114,29 @@ def get_single_restaurant_order(restaurant_id, order_id):
     if not single_order:
         return jsonify({"message": "order not found"}), 404
     return jsonify(single_order.serialize()), 200
+
+# Cook updates the state of an order of his restaurant (doing/done)
+@order.route("/restaurants/<int:restaurant_id>/orders/<int:order_id>/status", methods=["PUT"])
+@jwt_required()
+def cook_update_order_status(restaurant_id, order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "cook":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    body = request.get_json()
+    new_state = body.get("state")
+    if new_state not in ["doing", "done"]:
+        return jsonify({"message": "State must be 'doing' or 'done'"}), 400
+    order_to_update = db.session.scalar(
+        select(Order).join(Table, Order.table_id == Table.id).where(
+            Order.id == order_id, Table.restaurant_id == restaurant_id
+        )
+    )
+    if not order_to_update:
+        return jsonify({"message": "order not found"}), 404
+    order_to_update.state = new_state
+    db.session.commit()
+    return jsonify(order_to_update.serialize()), 200

@@ -3,12 +3,13 @@ import { useRecipe } from "../../../hooks/useRecipe"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 
-const ChefSingleRecipe = () => {
+const RestaurantSingleRecipe = () => {
 
     const { store } = useGlobalReducer()
     const { getOneRestaurantRecipe } = useRecipe()
     const { restaurant_id, recipe_id } = useParams()
     const [loading, setLoading] = useState(true)
+    const isChef = !!localStorage.getItem("cheftoken")
 
     useEffect(() => {
         setLoading(true)
@@ -28,17 +29,14 @@ const ChefSingleRecipe = () => {
                         <li className="list-group-item"><strong>Steps:</strong> {store.single_recipe.steps}</li>
                     </ul>
                     <div className="d-flex gap-2">
-                        <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-warning">Edit recipe</Link>
-                        <Link to={`/restaurants/${restaurant_id}/recipes`} className="btn btn-outline-secondary">Back to recipes</Link>
+                        {isChef && <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-warning">Edit recipe</Link>}
+                        <Link to={isChef ? `/restaurants/${restaurant_id}/recipes` : `/restaurants/${restaurant_id}/cook_recipes`} className="btn btn-outline-secondary">Back to recipes</Link>
                     </div>
                 </div>
             </div>
-            <Link to={`/restaurants/${restaurant_id}/recipes`}>
-                Volver a recetas
-            </Link>
 
         </div>
     )
 }
 
-export default ChefSingleRecipe;
+export default RestaurantSingleRecipe;

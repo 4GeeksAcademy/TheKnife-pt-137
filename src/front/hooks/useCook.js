@@ -66,6 +66,7 @@ export function useCook() {
       const data = await cookLoginService(cookLoginData);
       const cookToken = data.token;
       localStorage.setItem("cooktoken", cookToken);
+      localStorage.setItem("cookData", JSON.stringify(data.cook));
       console.log(data);
       dispatch({ type: "cook_login", payload: data });
       navigate("/cook_dashboard");
@@ -74,11 +75,21 @@ export function useCook() {
     }
   }
 
-  // Chef logout
+  // Cook logout
   function cookLogout() {
     localStorage.removeItem("cooktoken");
+    localStorage.removeItem("cookData");
     dispatch({ type: "cook_logout" });
     navigate("/cook_login");
+  }
+
+  // Rehydrate the logged cook into the store after a page refresh
+  function rehydrateCook() {
+    const cookToken = localStorage.getItem("cooktoken");
+    const cookData = localStorage.getItem("cookData");
+    if (cookToken && cookData) {
+      dispatch({ type: "cook_login", payload: { cook: JSON.parse(cookData) } });
+    }
   }
 
   // Edit cook
@@ -132,6 +143,7 @@ export function useCook() {
     editCook,
     cookLogin,
     cookLogout,
+    rehydrateCook,
     cookRegister,
     getRestaurantCooks,
     deleteRestaurantCook
