@@ -14,20 +14,31 @@ const RestaurantCooks = () => {
     }, []);
 
     const cooksList = store.cooks.map((cook) => {
-        return <div key={cook.id} className="cook d-flex align-items-center gap-3">
-            <span>Name: {cook.name}</span>
-            <span>Email: {cook.email}</span>
-            <button onClick={()=>deleteRestaurantCook(restaurant_id, cook.id)} className="btn btn-danger">Delete cook</button>
-        </div>
+        return <tr key={cook.id}>
+            <td>{cook.name}</td>
+            <td>{cook.email}</td>
+            <td>
+                <button onClick={() => deleteRestaurantCook(restaurant_id, cook.id)} className="btn btn-danger btn-sm">Delete cook</button>
+            </td>
+        </tr>
     })
 
     return (
-        <div className="cook_page d-flex flex-column align-items-center gap-3 mt-4">
-            <div className="cooks d-flex flex-column  align-items-center gap-2">
-                <h1>Cooks</h1>
-                {cooksList}
-                <Link to="/chef_dashboard">Back to dashboard</Link>
-            </div>
+        <div className="cook_page container py-4">
+            <h1 className="h4 mb-3">Cooks</h1>
+            <table className="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {cooksList}
+                </tbody>
+            </table>
+            <Link to="/chef_dashboard">Back to dashboard</Link>
         </div>
     )
 }
