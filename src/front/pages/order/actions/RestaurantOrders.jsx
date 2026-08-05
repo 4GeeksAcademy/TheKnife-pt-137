@@ -20,7 +20,7 @@ const RestaurantOrders = () => {
             <span>state: {order.state}</span>
             <span>date and time: {order.date_time}</span>
             <span>people: {order.people}</span>
-            <Link to={`/single_order/${order.id}`}><button className="btn btn-primary">View order</button></Link>
+            <Link to={`/restaurants/${restaurant_id}/orders/${order.id}`}><button className="btn btn-primary">View order</button></Link>
         </div>
     })
 

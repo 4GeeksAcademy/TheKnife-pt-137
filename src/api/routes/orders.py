@@ -86,10 +86,31 @@ def get_restaurant_orders(restaurant_id):
     current_user, role = get_current_user()
     if not current_user:
         return jsonify({"message": "User not found"}), 404
-    if role != "chef":
-        return jsonify({"message": "Access forbidden"}), 403
     if current_user.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
-    restaurant_orders = db.session.scalars(select(Order).join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)).all()
-    restaurant_orders_dicts = [order.serialize() for order in restaurant_orders]
-    return jsonify(restaurant_orders_dicts)
+    if role == "chef":
+        restaurant_orders = db.session.scalars(select(Order).join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)).all()
+        restaurant_orders_dicts = [order.serialize() for order in restaurant_orders]
+        return jsonify(restaurant_orders_dicts)
+    elif role in ["waiter", "cook"]:
+        restaurant_orders = db.session.scalars(select(Order).where(Order.state != "closed").join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)).all()
+        restaurant_orders_dicts = [order.serialize() for order in restaurant_orders]
+        return jsonify(restaurant_orders_dicts)
+
+# Chef, waiter or cook get single order of their restaurant
+@order.route("/restaurants/<int:restaurant_id>/orders/<int:order_id>")
+@jwt_required()
+def get_single_restaurant_order(restaurant_id, order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    single_order = db.session.scalar(
+        select(Order).join(Table, Order.table_id == Table.id).where(
+            Order.id == order_id, Table.restaurant_id == restaurant_id
+        )
+    )
+    if not single_order:
+        return jsonify({"message": "order not found"}), 404
+    return jsonify(single_order.serialize()), 200

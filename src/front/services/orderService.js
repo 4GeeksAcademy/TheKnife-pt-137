@@ -85,3 +85,19 @@ export async function getAllRestaurantOrdersService(restaurant_id) {
         return data;
     }
 }
+
+// Get one order of the restaurant
+export async function getSingleRestaurantOrderService(restaurant_id, order_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders/${order_id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (response.status === 404) throw new Error("order not found")
+    else if (response.status === 200) {
+        const order = await response.json()
+        return order;
+    }
+}

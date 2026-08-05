@@ -64,6 +64,7 @@ import CreateTableForm from "./pages/table/CreateTableForm";
 import SingleTable from "./pages/table/SingleTable";
 import EditTableForm from "./pages/table/EditTableForm";
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
+import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
 
 
 // Chefs
@@ -155,6 +156,7 @@ export const router = createBrowserRouter(
       <Route path="/single_order/:order_id" element={<SingleOrder />} />
       <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
+      <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
 
 
       {/* Tables */}
