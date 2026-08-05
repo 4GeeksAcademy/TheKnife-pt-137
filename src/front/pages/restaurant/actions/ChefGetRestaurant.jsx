@@ -16,7 +16,7 @@ const ChefGetRestaurant = () => {
     }, [store.singleRestaurant])
 
     return (
-        <div className="container py-4">
+        <div className="container py-4 d-flex flex-column align-items-center">
 
             <div className="card" style={{ maxWidth: "500px" }}>
                 <img src={store.singleRestaurant.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
