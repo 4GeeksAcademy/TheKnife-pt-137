@@ -28,11 +28,11 @@ const RestaurantRecipes = () => {
                         Delete recipe
                     </button>
 
-                    <Link to={`/edit_recipe/${recipe.id}`}>
+                    <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe.id}`}>
                         <button className="btn btn-warning">Edit recipe</button>
                     </Link>
 
-                    <Link to={`/recipe/${recipe.id}`}>
+                    <Link to={`/restaurants/${restaurant_id}/recipe/${recipe.id}`}>
                         <button className="btn btn-secondary">View recipe</button>
                     </Link>
                     <img src={recipe.img_url} height="150" width="200" />

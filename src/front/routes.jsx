@@ -30,6 +30,8 @@ import SingleRecipe from "./pages/recipe/SingleRecipe";
 import EditRecipeForm from "./pages/recipe/EditRecipeForm";
 import RestaurantRecipes from "./pages/recipe/actions/RestaurantRecipes";
 import ChefCreateRecipe from "./pages/recipe/actions/ChefCreateRecipe";
+import ChefEditRecipe from "./pages/recipe/actions/ChefEditRecipe";
+import ChefSingleRecipe from "./pages/recipe/actions/ChefSingleRecipe";
 
 // Restaurants
 import Restaurants from "./pages/restaurant/Restaurants";
@@ -118,6 +120,8 @@ export const router = createBrowserRouter(
       <Route path="/edit_recipe/:recipe_id" element={<EditRecipeForm />} />
       <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
+      <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
+      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<ChefSingleRecipe />} />
 
       {/* Restaurants */}
       <Route path="/restaurants" element={<Restaurants />} />

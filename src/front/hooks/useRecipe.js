@@ -7,7 +7,9 @@ import {
   editRecipeService,
   getAllRestaurantRecipesService,
   deleteRestaurantRecipeService,
-  chefCreateRecipeService
+  chefCreateRecipeService,
+  getOneRestaurantRecipeService,
+  chefEditRecipeService
 } from "../services/recipeService";
 
 import useGlobalReducer from "./useGlobalReducer";
@@ -99,6 +101,28 @@ export function useRecipe() {
     }
   }
 
+  // Chef or cook gets one recipe of the restaurant
+  async function getOneRestaurantRecipe(restaurant_id, recipe_id) {
+    try {
+      const recipe = await getOneRestaurantRecipeService(restaurant_id, recipe_id);
+      dispatch({ type: "set_single_recipe", payload: recipe });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Chef edits recipe of his restaurant
+  async function chefEditRecipe(restaurant_id, recipe_id, recipeData) {
+    try {
+      const response = await chefEditRecipeService(restaurant_id, recipe_id, recipeData);
+      const data = await response.json();
+      console.log(data);
+      navigate("/chef_dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return {
     getRecipes,
     getSingleRecipe,
@@ -107,6 +131,8 @@ export function useRecipe() {
     editRecipe,
     getAllRestaurantRecipes,
     deleteRestaurantRecipe,
-    chefCreateRecipe
+    chefCreateRecipe,
+    getOneRestaurantRecipe,
+    chefEditRecipe
   };
 }
