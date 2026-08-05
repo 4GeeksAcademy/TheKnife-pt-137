@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getRestaurantsService, getSingleRestaurantService, createRestaurantService, deleteRestaurantService, editRestaurantService, chefCreateRestaurantService, chefEditRestaurantService, chefGetRestaurantService } from "../services/restaurantService";
+import { getRestaurantsService, getSingleRestaurantService, createRestaurantService, deleteRestaurantService, editRestaurantService, chefCreateRestaurantService, chefEditRestaurantService, chefGetRestaurantService, chefDeleteRestaurantService } from "../services/restaurantService";
 
 export function useRestaurant() {
 
@@ -85,6 +85,15 @@ export function useRestaurant() {
         } catch (error) {console.log(error)}
     }
 
+    // Chef deletes his restaurant
+    async function chefDeleteRestaurant(restaurant_id) {
+        try {
+            const message = await chefDeleteRestaurantService(restaurant_id)
+            console.log(message)
+            getRestaurants()
+        } catch(error) {console.log(error)}
+    }
+
     
     return {
         getRestaurants,
@@ -93,6 +102,7 @@ export function useRestaurant() {
         createRestaurant,
         editRestaurant,
         chefCreateRestaurant,
-        chefEditRestaurant
+        chefEditRestaurant,
+        chefDeleteRestaurant
     }
 }

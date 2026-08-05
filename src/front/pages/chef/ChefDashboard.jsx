@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link, useNavigate } from "react-router-dom";
 import { useChef } from "../../hooks/useChef";
+import { useRestaurant } from "../../hooks/useRestaurant";
 
 const ChefDashboard = () => {
 
     const { store } = useGlobalReducer()
     const navigate = useNavigate()
     const { chefLogout } = useChef()
+    const { chefDeleteRestaurant } = useRestaurant()
 
     useEffect(() => {
         const chefLogged = !!localStorage.getItem("cheftoken")
@@ -33,7 +35,8 @@ const ChefDashboard = () => {
                 <div className="card-header">Restaurant</div>
                 <div className="card-body d-flex gap-2">
                     <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
-                    <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-secondary">Edit restaurant</button></Link>
+                    <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
+                    <button onClick={()=>chefDeleteRestaurant(currentChef.restaurant_id)} className="btn btn-outline-danger">Delete restaurant</button>
                 </div>
             </div>
 

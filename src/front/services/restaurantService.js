@@ -133,3 +133,19 @@ export async function chefEditRestaurantService(restaurant_id, restaurantData) {
     if (response.status === 404) throw new Error("Restaurant not found")
     else if (response.status === 200) return response;
 }
+
+// Chef delete his restaurant
+export async function chefDeleteRestaurantService(restaurant_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/delete_restaurant/${restaurant_id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (response.status === 404) throw new Error("Restaurant not found")
+    else if (response.status === 200) {
+        const data = await response.json()
+        return data.message
+    }
+}
