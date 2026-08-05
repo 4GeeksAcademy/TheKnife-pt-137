@@ -179,7 +179,7 @@ export default function storeReducer(store, action = {}) {
     case "cook_logout":
       return {
         ...store,
-        singleCook: {
+        loggedCook: {
           cookAuth: false,
           cook: {},
           restaurant: "",
@@ -188,30 +188,12 @@ export default function storeReducer(store, action = {}) {
     case "chef_logout":
       return {
         ...store,
-        singleChef: {
+        loggedChef: {
           chefAuth: false,
           chef: {},
           restaurant: "",
         },
       };
-      case "cook_logout":
-        return {
-          ...store,
-          singleCook: {
-            cookAuth: false,
-            cook: {},
-            restaurant: ""
-          }
-        }
-      case "chef_logout":
-        return {
-          ...store,
-          singleChef: {
-            chefAuth: false,
-            chef: {},
-            restaurant: ""
-          }
-        }
       case "waiter_login":
         return {
           ...store,

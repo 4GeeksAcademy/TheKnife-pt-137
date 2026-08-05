@@ -8,13 +8,15 @@ const ChefDashboard = () => {
 
     const { store } = useGlobalReducer()
     const navigate = useNavigate()
-    const { chefLogout } = useChef()
+    const { chefLogout, chefLogin, rehydrateChef } = useChef()
     const { chefDeleteRestaurant } = useRestaurant()
 
     useEffect(() => {
         const chefLogged = !!localStorage.getItem("cheftoken")
         if (!chefLogged) {
             navigate("/chef_login")
+        } else if (!store.loggedChef.chef.id) {
+            rehydrateChef()
         }
     }, [])
 
