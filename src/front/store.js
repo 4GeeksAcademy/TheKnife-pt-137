@@ -157,6 +157,17 @@ export default function storeReducer(store, action = {}) {
           restaurant: action.payload.chef_restaurant,
         },
       };
+    case "update_logged_chef":
+      return {
+        ...store,
+        loggedChef: {
+          ...store.loggedChef,
+          chef: {
+            ...store.loggedChef.chef,
+            ...action.payload,
+          },
+        },
+      };
     case "set_recipe_ingredients":
       return {
         ...store,

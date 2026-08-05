@@ -80,6 +80,12 @@ export function useRestaurant() {
             const response = await chefEditRestaurantService(restaurant_id, restaurantData)
             const data = await response.json()
             console.log(data)
+            dispatch({type: "update_logged_chef", payload: {restaurant_name: data.name}})
+            const cachedChefData = localStorage.getItem("chefData")
+            if (cachedChefData) {
+                const parsedChefData = JSON.parse(cachedChefData)
+                localStorage.setItem("chefData", JSON.stringify({...parsedChefData, restaurant_name: data.name}))
+            }
             navigate("/chef_dashboard")
             chefGetRestaurant(restaurant_id)
         } catch (error) {console.log(error)}
