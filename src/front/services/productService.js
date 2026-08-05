@@ -136,7 +136,7 @@ export async function chefCreateProductService(restaurant_id, productData) {
 }
 
 // Chef edits a product of his restaurant
-export async function chefEditProductService(product_id, productData) {
+export async function chefEditProductService(restaurant_id, product_id, productData) {
     const chefToken = localStorage.getItem("cheftoken")
     const editedProduct = {
         name: productData.name,
@@ -146,7 +146,7 @@ export async function chefEditProductService(product_id, productData) {
         active: productData.active,
         img_url: productData.img_url
     }
-    const response = await fetch(`${backendURL}/products/${productId}`, {
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products/${product_id}`, {
         method: "PUT",
         body: JSON.stringify(editedProduct),
         headers: {

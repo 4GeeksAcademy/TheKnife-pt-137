@@ -94,9 +94,9 @@ export function useProduct() {
       }
 
       // Chef edits product of his restaurant
-    async function chefEditProduct(product_id, productData) {
+    async function chefEditProduct(restaurant_id, product_id, productData) {
         try {
-            const response = await chefEditProductService(product_id, productData)
+            const response = await chefEditProductService(restaurant_id, product_id, productData)
             const data = await response.json()
             console.log(data)
             navigate("/chef_dashboard")

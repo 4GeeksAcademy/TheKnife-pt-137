@@ -9,8 +9,8 @@ const ChefEditProduct = () => {
 
     const { store } = useGlobalReducer()
     const [productData, setProductData] = useState({name: "", description: "", sellPrice: 0, type: "", active: true, img_url: ""})
-    const { getSingleProduct, editProduct } = useProduct()
-    const { product_id } = useParams()
+    const { getSingleProduct, chefEditProduct } = useProduct()
+    const { product_id, restaurant_id } = useParams()
     const { uploadImage } = useCloudinary()
 
     useEffect(() => {
@@ -23,7 +23,8 @@ const ChefEditProduct = () => {
                 description: store.singleProduct.description,
                 sellPrice: store.singleProduct.sell_price,
                 type: store.singleProduct.type,
-                active: store.singleProduct.active
+                active: store.singleProduct.active,
+                img_url: store.singleProduct.img_url
             })
         }
     }, [store.singleProduct])
@@ -57,7 +58,7 @@ const ChefEditProduct = () => {
                 <input onChange={(e)=>setProductData({...productData, active: e.target.checked})} checked={productData.active} type="checkbox" name="active" id="active" />
             </div>
             <input type="file" onChange={(e)=>uploadImage(e,"cocinapp_images", setProductData,productData)} />
-            <button onClick={()=>editProduct(product_id, productData)} className="btn btn-primary">Edit product</button>
+            <button onClick={()=>chefEditProduct(restaurant_id, product_id, productData)} className="btn btn-primary">Edit product</button>
             <Link to="/chef_dashboard">Back to dashboard</Link>
         </div>
     )

@@ -20,7 +20,7 @@ import EditProductForm from "./pages/product/EditProductForm";
 import SingleProduct from "./pages/product/SingleProduct";
 import ChefProductCreate from "./pages/product/actions/ChefProductCreate";
 import ChefRestaurantProducts from "./pages/product/actions/ChefRestaurantProducts";
-
+import ChefEditProduct from "./pages/product/actions/ChefEditProduct";
 
 // Recipes
 import Recipes from "./pages/recipe/Recipes";
@@ -107,6 +107,7 @@ export const router = createBrowserRouter(
       <Route path="/single_product/:product_id" element={<SingleProduct />} />
       <Route path="/restaurants/:restaurant_id/create_product" element={<ChefProductCreate />} />
       <Route path="/restaurants/:restaurant_id/products" element={<ChefRestaurantProducts />} />
+      <Route path="/restaurants/:restaurant_id/edit_product/:product_id" element={<ChefEditProduct />} />
 
       {/* Recipes */}
       <Route path="/recipes" element={<Recipes />} />
