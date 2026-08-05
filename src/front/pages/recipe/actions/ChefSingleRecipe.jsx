@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRecipe } from "../../../hooks/useRecipe"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
@@ -8,12 +8,14 @@ const ChefSingleRecipe = () => {
     const { store } = useGlobalReducer()
     const { getOneRestaurantRecipe } = useRecipe()
     const { restaurant_id, recipe_id } = useParams()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getOneRestaurantRecipe(restaurant_id, recipe_id)
-    }, [])
+        setLoading(true)
+        getOneRestaurantRecipe(restaurant_id, recipe_id).finally(() => setLoading(false))
+    }, [restaurant_id, recipe_id])
 
-    if (!store.single_recipe.id) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <p className="text-center mt-5">Loading...</p>
 
     return (
         <div className="container py-4 d-flex flex-column align-items-center">

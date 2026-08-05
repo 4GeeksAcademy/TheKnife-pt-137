@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useOrder } from "../../../hooks/useOrder"
 import { useOrderProduct } from "../../../hooks/useOrderProduct"
 import { useParams, Link } from "react-router-dom"
@@ -10,13 +10,17 @@ const RestaurantSingleOrder = () => {
     const { getSingleRestaurantOrder } = useOrder()
     const { getProductsOfAnOrder } = useOrderProduct()
     const { restaurant_id, order_id } = useParams()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getSingleRestaurantOrder(restaurant_id, order_id)
-        getProductsOfAnOrder(order_id)
-    }, [])
+        setLoading(true)
+        Promise.all([
+            getSingleRestaurantOrder(restaurant_id, order_id),
+            getProductsOfAnOrder(order_id)
+        ]).finally(() => setLoading(false))
+    }, [restaurant_id, order_id])
 
-    if (!store.singleOrder.id) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <p className="text-center mt-5">Loading...</p>
 
     return (
         <div className="container py-4 d-flex flex-column align-items-center">

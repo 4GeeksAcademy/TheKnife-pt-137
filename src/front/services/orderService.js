@@ -100,4 +100,5 @@ export async function getSingleRestaurantOrderService(restaurant_id, order_id) {
         const order = await response.json()
         return order;
     }
+    else throw new Error("Some error has ocurred")
 }
