@@ -12,22 +12,36 @@ const RegisterWaiter = () => {
     const { waiterRegister } = useWaiter()
 
     return (
-        <div className="waiter_form d-flex flex-column align-items-center gap-3">
-            <h1>Create new waiter</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e)=>setWaiterData({...waiterData, name: e.target.value})} value={waiterData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Create new waiter</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e)=>setWaiterData({...waiterData, name: e.target.value})} value={waiterData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="email">Email</label>
+                        <input className="form-control" onChange={(e)=>setWaiterData({...waiterData, email: e.target.value})} value={waiterData.email} type="text" name="email" id="email" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input className="form-control" onChange={(e)=>setWaiterData({...waiterData, password: e.target.value})} value={waiterData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <button onClick={()=>waiterRegister(restaurant_id, waiterData)} className="btn btn-primary w-100 mb-3">Create new waiter</button>
+
+                    <div className="text-center">
+                        <Link to="/chef_dashboard">Go back to dashboard</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input onChange={(e)=>setWaiterData({...waiterData, email: e.target.value})} value={waiterData.email} type="text" name="email" id="email" />
-            </div>
-            <div>
-                <label htmlFor="password">Password</label>
-                <input onChange={(e)=>setWaiterData({...waiterData, password: e.target.value})} value={waiterData.password} type="password" name="password" id="password" />
-            </div>
-            <button onClick={()=>waiterRegister(restaurant_id, waiterData)} className="btn btn-primary">Create new waiter</button>
-            <Link to="/chef_dashboard">Go back to dashboard</Link>
+
         </div>
     )
 }

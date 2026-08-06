@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useRecipe } from "../../../hooks/useRecipe"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { Link, useParams } from "react-router-dom"
@@ -8,10 +8,14 @@ const RestaurantRecipes = () => {
     const { getAllRestaurantRecipes, deleteRestaurantRecipe } = useRecipe()
     const { restaurant_id } = useParams()
     const { store } = useGlobalReducer()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getAllRestaurantRecipes(restaurant_id)
+        setLoading(true)
+        getAllRestaurantRecipes(restaurant_id).finally(() => setLoading(false))
     }, [])
+
+    if (loading) return <p className="text-center">Loading...</p>
 
     const recipeList = store.recipes.map((recipe) => {
         return (

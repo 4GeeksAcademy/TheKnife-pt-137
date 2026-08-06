@@ -17,10 +17,18 @@ const SingleWaiter = () => {
     }, [store.singleWaiter])
 
     return (
-        <div className="single_waiter">
-            <h1>name: {store.singleWaiter.name}</h1>
-            <h2>email: {store.singleWaiter.email}</h2>
-            <Link to="/waiters">Back to waiters</Link>
+        <div className="container py-4 d-flex flex-column align-items-center">
+
+            <div className="card" style={{ maxWidth: "500px" }}>
+                <div className="card-body">
+                    <h1 className="h4">{store.singleWaiter.name}</h1>
+                    <ul className="list-group list-group-flush mb-3">
+                        <li className="list-group-item"><strong>Email:</strong> {store.singleWaiter.email}</li>
+                    </ul>
+                    <Link to="/waiters" className="btn btn-outline-secondary">Back to waiters</Link>
+                </div>
+            </div>
+
         </div>
     )
 }

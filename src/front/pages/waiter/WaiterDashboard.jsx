@@ -20,10 +20,16 @@ const WaiterDashboard = () => {
     const currentWaiter = store.loggedWaiter.waiter
 
     return (
-        <div className="waiter_dashboard">
-            <h1>Welcome back, {currentWaiter.name}</h1>
-            <h2>Restaurant: {store.loggedWaiter.restaurant}</h2>
-            <button onClick={waiterLogout} className="btn btn-primary">Log out</button>
+        <div className="container py-4">
+
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 className="mb-1">Welcome back, {currentWaiter.name}</h1>
+                    <h2 className="h5 text-muted mb-0">Restaurant: {store.loggedWaiter.restaurant}</h2>
+                </div>
+                <button onClick={waiterLogout} className="btn btn-primary">Log out</button>
+            </div>
+
         </div>
     )
 }

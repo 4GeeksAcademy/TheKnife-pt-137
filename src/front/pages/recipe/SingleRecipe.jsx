@@ -74,94 +74,100 @@ function SingleRecipe() {
     }
 
     if (!store.single_recipe) {
-        return <p>Cargando receta...</p>
+        return <p className="text-center mt-5">Cargando receta...</p>
     }
 
     return (
-        <div>
-            <h1>{store.single_recipe.name}</h1>
-            <h3>Pasos:</h3>
-            <p>{store.single_recipe.steps}</p>
-            <img src={store.single_recipe.img_url} alt="" height="300" width="400" />
+        <div className="container py-4 d-flex flex-column align-items-center">
 
-            <h3>Ingredientes:</h3>
-            {store.recipeIngredients && store.recipeIngredients.length > 0 ? (
-                <ul>
-                    {store.recipeIngredients.map((ri) => {
-                        const ingredientInfo = store.ingredients?.find(
-                            (ing) => ing.id === ri.ingredient_id
-                        )
-                        return (
-                            <li key={ri.id}>
-                                {ingredientInfo ? ingredientInfo.name : `Ingrediente #${ri.ingredient_id}`} — cantidad: {ri.amount}
+            <div className="card" style={{ maxWidth: "600px" }}>
+                <img src={store.single_recipe.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
+                <div className="card-body">
+                    <h1 className="h4">{store.single_recipe.name}</h1>
+                    <p><strong>Pasos:</strong> {store.single_recipe.steps}</p>
 
-                                <form
-                                    onSubmit={(event) => handleEditAmount(event, ri)}
-                                    style={{ display: "inline", marginLeft: "10px" }}
-                                >
-                                    <input
-                                        type="number"
-                                        step="0.01"
-                                        name="amount"
-                                        defaultValue={ri.amount}
-                                    />
-                                    <button type="submit">Guardar cantidad</button>
-                                </form>
+                    <h2 className="h6 mt-3">Ingredientes</h2>
+                    {store.recipeIngredients && store.recipeIngredients.length > 0 ? (
+                        <ul className="list-group list-group-flush mb-3">
+                            {store.recipeIngredients.map((ri) => {
+                                const ingredientInfo = store.ingredients?.find(
+                                    (ing) => ing.id === ri.ingredient_id
+                                )
+                                return (
+                                    <li key={ri.id} className="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <span>{ingredientInfo ? ingredientInfo.name : `Ingrediente #${ri.ingredient_id}`} — cantidad: {ri.amount}</span>
 
-                                <button onClick={() => handleRemoveIngredient(ri.id)}>
-                                    Eliminar
-                                </button>
-                            </li>
-                        )
-                    })}
-                </ul>
-            ) : (
-                <p>Esta receta todavía no tiene ingredientes.</p>
-            )}
+                                        <div className="d-flex gap-2 align-items-center">
+                                            <form
+                                                onSubmit={(event) => handleEditAmount(event, ri)}
+                                                className="d-flex gap-2 align-items-center"
+                                            >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    name="amount"
+                                                    defaultValue={ri.amount}
+                                                    className="form-control form-control-sm"
+                                                    style={{ width: "80px" }}
+                                                />
+                                                <button type="submit" className="btn btn-outline-primary btn-sm">Guardar</button>
+                                            </form>
 
-            <h4>Añadir ingrediente a esta receta</h4>
-            <form onSubmit={handleAddIngredient}>
-                <label>
-                    Ingrediente:
-                    <select
-                        value={ingredientId}
-                        onChange={(e) => setIngredientId(e.target.value)}
-                        required
-                    >
-                        <option value="">-- Selecciona un ingrediente --</option>
-                        {store.ingredients && store.ingredients.map((ing) => (
-                            <option key={ing.id} value={ing.id}>
-                                {ing.name}
-                            </option>
-                        ))}
-                    </select>
-                </label>
-                <br />
-                <label>
-                    Cantidad:
-                    <input
-                        type="number"
-                        step="0.01"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        required
-                    />
-                </label>
-                <br />
-                <button type="submit">Añadir</button>
-            </form>
+                                            <button onClick={() => handleRemoveIngredient(ri.id)} className="btn btn-danger btn-sm">
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="text-muted">Esta receta todavía no tiene ingredientes.</p>
+                    )}
 
-            <br />
+                    <h2 className="h6 mt-3">Añadir ingrediente a esta receta</h2>
+                    <form onSubmit={handleAddIngredient} className="mb-3">
+                        <div className="mb-2">
+                            <label className="form-label">Ingrediente</label>
+                            <select
+                                className="form-select"
+                                value={ingredientId}
+                                onChange={(e) => setIngredientId(e.target.value)}
+                                required
+                            >
+                                <option value="">-- Selecciona un ingrediente --</option>
+                                {store.ingredients && store.ingredients.map((ing) => (
+                                    <option key={ing.id} value={ing.id}>
+                                        {ing.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-2">
+                            <label className="form-label">Cantidad</label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                className="form-control"
+                                value={amount}
+                                onChange={(e) => setAmount(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary w-100">Añadir</button>
+                    </form>
 
-            <button onClick={handleDeleteRecipe}>
-                Eliminar esta receta
-            </button>
+                    <div className="d-flex gap-2">
+                        <button onClick={handleDeleteRecipe} className="btn btn-danger btn-sm">
+                            Eliminar esta receta
+                        </button>
+                        <Link to="/recipes" className="btn btn-outline-secondary btn-sm">
+                            Volver a recetas
+                        </Link>
+                    </div>
+                </div>
+            </div>
 
-            <br /><br />
-
-            <Link to="/recipes">
-                Volver a recetas
-            </Link>
         </div>
     )
 }

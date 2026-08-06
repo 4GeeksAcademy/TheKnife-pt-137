@@ -10,27 +10,45 @@ const CreateRestaurantForm = () => {
     const { uploadImage } = useCloudinary()
 
     return (
-        <div className="restaurant_form d-flex flex-column align-items-center gap-3">
-            <h1>Create new restaurant</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e)=>setRestaurantData({...restaurantData, name: e.target.value})} value={restaurantData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Create new restaurant</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, name: e.target.value})} value={restaurantData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="email">Email</label>
+                        <input className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, email: e.target.value})} value={restaurantData.email} type="text" name="email" id="email" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="phone">Phone</label>
+                        <input className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, phone: e.target.value})} value={restaurantData.phone} type="text" name="phone" id="phone" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="address">Address</label>
+                        <input className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" name="image" id="image" onChange={(e)=>uploadImage(e, "cocinapp_images", setRestaurantData, restaurantData)} />
+                    </div>
+
+                    <button onClick={()=>createRestaurant(restaurantData)} className="btn btn-primary w-100 mb-3">Create new restaurant</button>
+
+                    <div className="text-center">
+                        <Link to="/restaurants">Back to restaurants</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input onChange={(e)=>setRestaurantData({...restaurantData, email: e.target.value})} value={restaurantData.email} type="text" name="email" id="email" />
-            </div>
-            <div>
-                <label htmlFor="phone">Phone</label>
-                <input onChange={(e)=>setRestaurantData({...restaurantData, phone: e.target.value})} value={restaurantData.phone} type="text" name="phone" id="phone" />
-            </div>
-            <div>
-                <label htmlFor="type">Address</label>
-                <input type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
-            </div>
-            <input type="file" name="image" id="image" onChange={(e)=>uploadImage(e, "cocinapp_images", setRestaurantData, restaurantData)} />
-            <button onClick={()=>createRestaurant(restaurantData)} className="btn btn-primary">Create new restaurant</button>
-            <Link to="/restaurants">Back to restaurants</Link>
+
         </div>
     )
 }

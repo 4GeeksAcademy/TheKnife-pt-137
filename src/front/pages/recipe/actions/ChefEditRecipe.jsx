@@ -27,21 +27,37 @@ const ChefEditRecipe = () => {
     }, [store.single_recipe])
 
     return (
-        <div className="recipe_form d-flex flex-column align-items-center gap-3">
-            <h1>Edit recipe</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e) => setRecipeData({ ...recipeData, name: e.target.value })} value={recipeData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Edit recipe</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e) => setRecipeData({ ...recipeData, name: e.target.value })} value={recipeData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="steps">Steps</label>
+                        <textarea className="form-control" onChange={(e) => setRecipeData({ ...recipeData, steps: e.target.value })} value={recipeData.steps} name="steps" id="steps" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e) => uploadImage(e, "cocinapp_images", setRecipeData, recipeData)} />
+                    </div>
+
+                    <button onClick={() => chefEditRecipe(restaurant_id, recipe_id, recipeData)} className="btn btn-primary w-100 mb-3">Edit recipe</button>
+
+                    <div className="text-center">
+                        <Link to={`/restaurants/${restaurant_id}/recipes`}>
+                            Volver a recetas
+                        </Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="steps">Steps</label>
-                <textarea onChange={(e) => setRecipeData({ ...recipeData, steps: e.target.value })} value={recipeData.steps} name="steps" id="steps" />
-            </div>
-            <input type="file" onChange={(e) => uploadImage(e, "cocinapp_images", setRecipeData, recipeData)} />
-            <button onClick={() => chefEditRecipe(restaurant_id, recipe_id, recipeData)} className="btn btn-primary">Edit recipe</button>
-            <Link to={`/restaurants/${restaurant_id}/recipes`}>
-                Volver a recetas
-            </Link>
+
         </div>
     )
 }

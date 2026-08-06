@@ -17,11 +17,19 @@ const SingleChef = () => {
     }, [store.singleChef])
 
     return (
-        <div className="single_chef">
-            <h1>name: {store.singleChef.name}</h1>
-            <h2>email: {store.singleChef.email}</h2>
-            <h2>restaurant id: {store.singleChef.restaurant_id}</h2>
-            <Link to="/chefs">Back to chefs</Link>
+        <div className="container py-4 d-flex flex-column align-items-center">
+
+            <div className="card" style={{ maxWidth: "500px" }}>
+                <div className="card-body">
+                    <h1 className="h4">{store.singleChef.name}</h1>
+                    <ul className="list-group list-group-flush mb-3">
+                        <li className="list-group-item"><strong>Email:</strong> {store.singleChef.email}</li>
+                        <li className="list-group-item"><strong>Restaurant ID:</strong> {store.singleChef.restaurant_id}</li>
+                    </ul>
+                    <Link to="/chefs" className="btn btn-outline-secondary">Back to chefs</Link>
+                </div>
+            </div>
+
         </div>
     )
 }

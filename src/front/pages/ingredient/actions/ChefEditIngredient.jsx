@@ -27,19 +27,35 @@ const ChefEditIngredient = () => {
     }, [store.singleIngredient])
 
     return (
-        <div className="ingredient_form d-flex flex-column align-items-center gap-3">
-            <h1>Edit ingredient</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e) => setIngredientData({ ...ingredientData, name: e.target.value })} value={ingredientData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Edit ingredient</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e) => setIngredientData({ ...ingredientData, name: e.target.value })} value={ingredientData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3 form-check">
+                        <input className="form-check-input" onChange={(e) => setIngredientData({ ...ingredientData, active: e.target.checked })} checked={ingredientData.active} type="checkbox" name="active" id="active" />
+                        <label className="form-check-label" htmlFor="active">Active</label>
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e) => uploadImage(e, "cocinapp_images", setIngredientData, ingredientData)} />
+                    </div>
+
+                    <button onClick={() => chefEditIngredient(ingredient_id, ingredientData)} className="btn btn-primary w-100 mb-3">Edit ingredient</button>
+
+                    <div className="text-center">
+                        <Link to="/chef_ingredients">Back to ingredients</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="active">Active</label>
-                <input onChange={(e) => setIngredientData({ ...ingredientData, active: e.target.checked })} checked={ingredientData.active} type="checkbox" name="active" id="active" />
-            </div>
-            <input type="file" onChange={(e) => uploadImage(e, "cocinapp_images", setIngredientData, ingredientData)} />
-            <button onClick={() => chefEditIngredient(ingredient_id, ingredientData)} className="btn btn-primary">Edit ingredient</button>
-            <Link to="/chef_ingredients">Back to ingredients</Link>
+
         </div>
     )
 }

@@ -30,36 +30,54 @@ const ChefEditProduct = () => {
     }, [store.singleProduct])
     
     return (
-        <div className="product_form d-flex flex-column align-items-center gap-3">
-            <h1>Edit  product</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e)=>setProductData({...productData, name: e.target.value})} value={productData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Edit product</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e)=>setProductData({...productData, name: e.target.value})} value={productData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <input className="form-control" onChange={(e)=>setProductData({...productData, description: e.target.value})} value={productData.description} type="text" name="description" id="description" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="sellprice">Sell Price (€)</label>
+                        <input className="form-control" onChange={(e)=>setProductData({...productData, sellPrice: e.target.value})} value={productData.sellPrice} type="number" name="sellprice" id="sellprice" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="type">Type</label>
+                        <select className="form-select" onChange={(e)=>setProductData({...productData, type: e.target.value})} value={productData.type} name="type" id="type">
+                            <option value="">Select one product type</option>
+                            <option value="dish">Dish</option>
+                            <option value="drink">Drink</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-3 form-check">
+                        <input className="form-check-input" onChange={(e)=>setProductData({...productData, active: e.target.checked})} checked={productData.active} type="checkbox" name="active" id="active" />
+                        <label className="form-check-label" htmlFor="active">Active</label>
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e)=>uploadImage(e,"cocinapp_images", setProductData,productData)} />
+                    </div>
+
+                    <button onClick={()=>chefEditProduct(restaurant_id, product_id, productData)} className="btn btn-primary w-100 mb-3">Edit product</button>
+
+                    <div className="text-center">
+                        <Link to="/chef_dashboard">Back to dashboard</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="description">Description</label>
-                <input onChange={(e)=>setProductData({...productData, description: e.target.value})} value={productData.description} type="text" name="description" id="description" />
-            </div>
-            <div>
-                <label htmlFor="sellprice">Sell Price</label>
-                <input onChange={(e)=>setProductData({...productData, sellPrice: e.target.value})} value={productData.sellPrice} type="number" name="sellprice" id="sellprice" />
-                <span>€</span>
-            </div>
-            <div>
-                <label htmlFor="type">Type</label>
-                <select onChange={(e)=>setProductData({...productData, type: e.target.value})} value={productData.type} name="type" id="type">
-                    <option value="">Select one product type</option>
-                    <option value="dish">Dish</option>
-                    <option value="drink">Drink</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="active">Active</label>
-                <input onChange={(e)=>setProductData({...productData, active: e.target.checked})} checked={productData.active} type="checkbox" name="active" id="active" />
-            </div>
-            <input type="file" onChange={(e)=>uploadImage(e,"cocinapp_images", setProductData,productData)} />
-            <button onClick={()=>chefEditProduct(restaurant_id, product_id, productData)} className="btn btn-primary">Edit product</button>
-            <Link to="/chef_dashboard">Back to dashboard</Link>
+
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useProduct } from "../../hooks/useProduct"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import storeReducer from "../../store"
 import useGlobalReducer from "../../hooks/useGlobalReducer"
 
@@ -16,11 +16,20 @@ const SingleProduct = () => {
     }, [store.singleProduct])
 
     return (
-        <div className="single_product">
-            <h1>name: {store.singleProduct.name}</h1>
-            <h2>Description: {store.singleProduct.description}</h2>
-            <h2>Price: {store.singleProduct.sell_price}</h2>
-            <img src={store.singleProduct.img_url} height="300" width="350" />
+        <div className="container py-4 d-flex flex-column align-items-center">
+
+            <div className="card" style={{ maxWidth: "500px" }}>
+                <img src={store.singleProduct.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
+                <div className="card-body">
+                    <h1 className="h4">{store.singleProduct.name}</h1>
+                    <ul className="list-group list-group-flush mb-3">
+                        <li className="list-group-item"><strong>Description:</strong> {store.singleProduct.description}</li>
+                        <li className="list-group-item"><strong>Price:</strong> {store.singleProduct.sell_price}€</li>
+                    </ul>
+                    <Link to="/products" className="btn btn-outline-secondary">Back to products</Link>
+                </div>
+            </div>
+
         </div>
     )
 }
