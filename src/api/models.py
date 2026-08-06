@@ -236,7 +236,7 @@ class Order(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     # (ForeignKey("table.id")) AQUÍ HAY QUE AÑADIR ESTAS FOREIGN KEYS CUANDO SE PUEDAN CREAR MESAS PORQUE AHORA MISMO NO PERMITE CREAR COMANDAS AL NO EXISTIR NINGUNA MESA
     table_id: Mapped[int] = mapped_column(ForeignKey("table.id"))
-    waiter_id: Mapped[int] = mapped_column(ForeignKey("waiter.id"))  # (ForeignKey("waiter.id"))
+    waiter_id: Mapped[int] = mapped_column(ForeignKey("waiter.id", ondelete="SET NULL"), nullable=True)  
     state: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     date_time: Mapped[datetime] = mapped_column(default=datetime.now)
     people: Mapped[int] = mapped_column(nullable=False)

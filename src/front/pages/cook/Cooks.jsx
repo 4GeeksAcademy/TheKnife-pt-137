@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useCook } from "../../hooks/useCook";
+import { useConfirmedDelete } from "../../hooks/useConfirmedDelete"
 
 const Cooks = () => {
 
     const { getCooks, deleteCook } = useCook();
+    const { handleDelete } = useConfirmedDelete()
     const { store } = useGlobalReducer();
     const [loading, setLoading] = useState(true)
 
@@ -21,7 +23,7 @@ const Cooks = () => {
             <td>{cook.name}</td>
             <td>{cook.email}</td>
             <td className="d-flex gap-2">
-                <button className="btn btn-danger btn-sm" onClick={() => deleteCook(cook.id)}>Delete</button>
+                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(deleteCook, cook.id)}>Delete</button>
                 <Link to={`/edit_cook/${cook.id}`}><button className="btn btn-warning btn-sm">Edit</button></Link>
                 <Link to={`/single_cook/${cook.id}`}><button className="btn btn-primary btn-sm">View</button></Link>
             </td>
