@@ -33,6 +33,7 @@ const Cooks = () => {
             <div className="d-flex gap-2 mb-4">
                 <Link to="/create_cook"><button className="btn btn-primary">Add cook</button></Link>
                 <Link to="/cook_login"><button className="btn btn-success">Cook login</button></Link>
+                <Link to="/cook_dashboard"><button className="btn btn-dark">Cook dashboard</button></Link>
             </div>
             <h1 className="h4 mb-3">Cooks</h1>
             <table className="table table-striped align-middle">

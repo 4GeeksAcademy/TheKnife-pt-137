@@ -33,6 +33,7 @@ const Waiters = () => {
             <div className="d-flex gap-2 mb-4">
                 <Link to="/create_waiter"><button className="btn btn-primary">Add waiter</button></Link>
                 <Link to="/waiter_login"><button className="btn btn-success">Waiter login</button></Link>
+                <Link to="/waiter_dashboard"><button className="btn btn-dark">Waiter dashboard</button></Link>
             </div>
             <h1 className="h4 mb-3">Waiters</h1>
             <table className="table table-striped align-middle">
