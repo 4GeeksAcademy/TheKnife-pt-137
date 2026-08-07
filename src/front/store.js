@@ -6,6 +6,12 @@ export const initialStore = () => {
     single_recipe: {},
     restaurants: [],
     singleRestaurant: {},
+    managers: [],
+    singleManager: {},
+    loggedManager: {
+      managerAuth: false,
+      manager: {},
+    },
     ingredients: [],
     singleIngredient: {},
     inactiveIngredients: [],
@@ -72,6 +78,32 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         singleRestaurant: action.payload,
+      };
+    case "set_managers":
+      return {
+        ...store,
+        managers: action.payload,
+      };
+    case "set_single_manager":
+      return {
+        ...store,
+        singleManager: action.payload,
+      };
+    case "manager_login":
+      return {
+        ...store,
+        loggedManager: {
+          managerAuth: true,
+          manager: action.payload.manager,
+        },
+      };
+    case "manager_logout":
+      return {
+        ...store,
+        loggedManager: {
+          managerAuth: false,
+          manager: {},
+        },
       };
     case "set_cooks":
       return {
