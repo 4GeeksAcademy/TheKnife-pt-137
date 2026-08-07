@@ -42,6 +42,26 @@ class Restaurant(db.Model):
             "img_url": self.img_url
         }
 
+# Manager
+class Manager(db.Model):
+    __tablename__ = "manager"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_manager_email"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email
+        }
+
+
 # Waiter
 class Waiter(db.Model):
     __tablename__ = "waiter"
