@@ -7,7 +7,11 @@ import {
     getRecipeIngredientsByRecipe,
     createRecipeIngredient,
     editRecipeIngredient,
-    deleteRecipeIngredient
+    deleteRecipeIngredient,
+    getRestaurantRecipeIngredientsService,
+    chefAddRecipeIngredientService,
+    chefEditRecipeIngredientService,
+    chefDeleteRecipeIngredientService
 } from "../services/recipeIngredientService";
 
 export const useRecipeIngredient = () => {
@@ -60,12 +64,51 @@ export const useRecipeIngredient = () => {
         navigate(`/recipe/${recipeId}`);
     };
 
+    // GET the ingredients of a recipe of the restaurant (chef or cook)
+    async function fetchRestaurantRecipeIngredients(restaurant_id, recipe_id) {
+        try {
+            const data = await getRestaurantRecipeIngredientsService(restaurant_id, recipe_id)
+            dispatch({ type: "set_recipe_ingredients", payload: data })
+        } catch (error) { console.log(error) }
+    }
+
+    // Chef adds an ingredient to a recipe of his restaurant
+    async function chefAddRecipeIngredient(restaurant_id, recipe_id, recipeIngredientData) {
+        try {
+            const data = await chefAddRecipeIngredientService(restaurant_id, recipe_id, recipeIngredientData)
+            console.log(data)
+            fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
+        } catch (error) { console.log(error) }
+    }
+
+    // Chef edits an ingredient of a recipe of his restaurant
+    async function chefUpdateRecipeIngredient(restaurant_id, recipe_id, recipe_ingredient_id, recipeIngredientData) {
+        try {
+            const data = await chefEditRecipeIngredientService(restaurant_id, recipe_id, recipe_ingredient_id, recipeIngredientData)
+            console.log(data)
+            fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
+        } catch (error) { console.log(error) }
+    }
+
+    // Chef removes an ingredient from a recipe of his restaurant
+    async function chefRemoveRecipeIngredient(restaurant_id, recipe_id, recipe_ingredient_id) {
+        try {
+            const data = await chefDeleteRecipeIngredientService(restaurant_id, recipe_id, recipe_ingredient_id)
+            console.log(data)
+            fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
+        } catch (error) { console.log(error) }
+    }
+
     return {
         fetchRecipeIngredients,
         fetchSingleRecipeIngredient,
         fetchRecipeIngredientsByRecipe,
         addRecipeIngredient,
         updateRecipeIngredient,
-        removeRecipeIngredient
+        removeRecipeIngredient,
+        fetchRestaurantRecipeIngredients,
+        chefAddRecipeIngredient,
+        chefUpdateRecipeIngredient,
+        chefRemoveRecipeIngredient
     };
 };
