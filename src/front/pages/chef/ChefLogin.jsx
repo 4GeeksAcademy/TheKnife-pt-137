@@ -5,20 +5,48 @@ import { useState } from "react"
 const ChefLogin = () => {
 
     const { chefLogin } = useChef()
-    const [chefLoginData, setChefLoginData] = useState({email: "", password: ""})
+    const [chefLoginData, setChefLoginData] = useState({ email: "", password: "" })
 
     return (
-        <div className="chef_login mt-5 gap-3 d-flex flex-column justify-content-center align-items-center">
-            <div className="email_box">
-                <label className="me-2" htmlFor="email">Email</label>
-                <input onChange={(e)=>setChefLoginData({...chefLoginData, email: e.target.value})} value={chefLoginData.email} type="text" name="email" id="email" />
+        <div className="container py-5" style={{ maxWidth: "400px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Chef Login</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="email">Email</label>
+                        <input
+                            className="form-control"
+                            onChange={(e) => setChefLoginData({ ...chefLoginData, email: e.target.value })}
+                            value={chefLoginData.email}
+                            type="text"
+                            name="email"
+                            id="email"
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input
+                            className="form-control"
+                            onChange={(e) => setChefLoginData({ ...chefLoginData, password: e.target.value })}
+                            value={chefLoginData.password}
+                            type="password"
+                            name="password"
+                            id="password"
+                        />
+                    </div>
+
+                    <button className="btn btn-success w-100 mb-3" onClick={() => chefLogin(chefLoginData)}>Login</button>
+
+                    <div className="text-center">
+                        <Link to="/chefs">Back to chefs</Link>
+                    </div>
+
+                </div>
             </div>
-            <div className="password_box">
-                <label className="me-2" htmlFor="password">Password</label>
-                <input onChange={(e)=>setChefLoginData({...chefLoginData, password: e.target.value})} value={chefLoginData.password} type="password" name="password" id="password" />
-            </div>
-            <button className="btn btn-success" onClick={()=>chefLogin(chefLoginData)}>Login</button>
-            <Link to="/chefs">Back to chefs</Link>
+
         </div>
     )
 }

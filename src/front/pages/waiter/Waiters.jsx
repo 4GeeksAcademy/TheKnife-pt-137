@@ -1,35 +1,57 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useWaiter } from "../../hooks/useWaiter";
+import { useConfirmedDelete } from "../../hooks/useConfirmedDelete";
 
 const Waiters = () => {
 
     const { getWaiters, deleteWaiter } = useWaiter()
+    const { handleDelete } = useConfirmedDelete()
     const { store } = useGlobalReducer()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getWaiters()
+        setLoading(true)
+        getWaiters().finally(() => setLoading(false))
     }, [])
 
+    if (loading) return <p className="text-center mt-5">Loading...</p>
+
     const waitersList = store.waiters.map((waiter) => {
-        return <div key={waiter.id} className="waiter d-flex align-items-center gap-3">
-            <span>Name: {waiter.name}</span>
-            <span>Email: {waiter.email}</span>
-            <button className="btn btn-danger" onClick={() => deleteWaiter(waiter.id)}>Delete waiter</button>
-            <Link to={`/edit_waiter/${waiter.id}`}><button className="btn btn-warning">Edit waiter</button></Link>
-            <Link to={`/single_waiter/${waiter.id}`}><button className="btn btn-primary">View waiter</button></Link>
-        </div>
+        return <tr key={waiter.id}>
+            <td>{waiter.name}</td>
+            <td>{waiter.email}</td>
+            <td>{waiter.restaurant_name}</td>
+            <td className="d-flex gap-2">
+                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(deleteWaiter, waiter.id)}>Delete</button>
+                <Link to={`/edit_waiter/${waiter.id}`}><button className="btn btn-warning btn-sm">Edit</button></Link>
+                <Link to={`/single_waiter/${waiter.id}`}><button className="btn btn-primary btn-sm">View</button></Link>
+            </td>
+        </tr>
     })
 
     return (
-        <div className="waiter_page d-flex flex-column align-items-center gap-3 mt-4">
-            <Link to="/create_waiter"><button className="btn btn-primary">Add waiter</button></Link>
-            <Link to="/waiter_login"><button className="btn btn-success">Waiter login</button></Link>
-            <div className="waiters d-flex flex-column  align-items-center gap-2">
-                <h1>Waiters</h1>
-                {waitersList}
+        <div className="waiter_page container py-4">
+            <div className="d-flex gap-2 mb-4">
+                <Link to="/create_waiter"><button className="btn btn-primary">Add waiter</button></Link>
+                <Link to="/waiter_login"><button className="btn btn-success">Waiter login</button></Link>
+                <Link to="/waiter_dashboard"><button className="btn btn-dark">Waiter dashboard</button></Link>
             </div>
+            <h1 className="h4 mb-3">Waiters</h1>
+            <table className="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Restaurant name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {waitersList}
+                </tbody>
+            </table>
         </div>
     )
 }

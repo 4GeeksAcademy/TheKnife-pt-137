@@ -27,43 +27,60 @@ const EditTableForm = () => {
     }, [store.singleTable]);
     
     return (
-        <div className="table_form d-flex flex-column align-items-center gap-3">
-            <h1>Edit table</h1>
-            <div>
-                <label htmlFor="number">Number</label>
-                <input 
-                    onChange={(e) => setTableData({ ...tableData, number: e.target.value })} 
-                    value={tableData.number} 
-                    type="number" 
-                    name="number" 
-                    id="number" 
-                />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Edit table</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="number">Number</label>
+                        <input
+                            className="form-control"
+                            onChange={(e) => setTableData({ ...tableData, number: e.target.value })}
+                            value={tableData.number}
+                            type="number"
+                            name="number"
+                            id="number"
+                        />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="status">Status</label>
+                        <select
+                            className="form-select"
+                            onChange={(e) => setTableData({ ...tableData, status: e.target.value })}
+                            value={tableData.status}
+                            name="status"
+                            id="status"
+                        >
+                            <option value="">Select status</option>
+                            <option value="occupied">occupied</option>
+                            <option value="available">available</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="location">Location</label>
+                        <input
+                            className="form-control"
+                            onChange={(e) => setTableData({ ...tableData, location: e.target.value })}
+                            value={tableData.location}
+                            type="text"
+                            name="location"
+                            id="location"
+                        />
+                    </div>
+
+                    <button onClick={() => editTable(table_id, tableData)} className="btn btn-primary w-100 mb-3">Edit table</button>
+
+                    <div className="text-center">
+                        <Link to="/tables">Back to tables</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="status">Status</label>
-                <select 
-                    onChange={(e) => setTableData({ ...tableData, status: e.target.value })} 
-                    value={tableData.status} 
-                    name="status" 
-                    id="status"
-                >
-                    <option value="">Select status</option>
-                    <option value="occupied">occupied</option>
-                    <option value="available">available</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="location">Location</label>
-                <input 
-                    onChange={(e) => setTableData({ ...tableData, location: e.target.value })} 
-                    value={tableData.location} 
-                    type="text" 
-                    name="location" 
-                    id="location" 
-                />
-            </div>
-            <button onClick={() => editTable(table_id, tableData)} className="btn btn-primary">Edit table</button>
-            <Link to="/tables">Back to tables</Link>
+
         </div>
     );
 }

@@ -44,7 +44,7 @@ export async function editRecipeService(recipeId, recipeData) {
 /////////////////////////////////////////////////////////////////////////
 // Get all recipes
 export async function getAllRestaurantRecipesService(restaurant_id) {
-    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken") || localStorage.getItem("waitertoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
     const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes`, {
         method: "GET",
         headers: {

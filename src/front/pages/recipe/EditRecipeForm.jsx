@@ -41,34 +41,54 @@ function EditRecipeForm() {
     }
 
     if (!store.single_recipe) {
-        return <p>Cargando receta...</p>
+        return <p className="text-center mt-5">Cargando receta...</p>
     }
 
     return (
-        <div>
-            <h1>Editar receta</h1>
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
 
-            <form onSubmit={handleSubmit}>
-                <label>Nombre de la receta</label>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
+            <div className="card">
+                <div className="card-header text-center">Editar receta</div>
+                <div className="card-body">
 
-                <label>Pasos</label>
-                <textarea
-                    value={steps}
-                    onChange={(e) => setSteps(e.target.value)}
-                />
+                    <form onSubmit={handleSubmit}>
 
-                <input type="file" onChange={(e)=>uploadImage(e, "cocinapp_images",setImg_url, img_url)} />
+                        <div className="mb-3">
+                            <label className="form-label" htmlFor="name">Nombre de la receta</label>
+                            <input
+                                className="form-control"
+                                id="name"
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+                        </div>
 
-                <button type="submit">Guardar cambios</button>
-                <Link to="/recipes">
-                    Volver a recetas
-                </Link>
-            </form>
+                        <div className="mb-3">
+                            <label className="form-label" htmlFor="steps">Pasos</label>
+                            <textarea
+                                className="form-control"
+                                id="steps"
+                                value={steps}
+                                onChange={(e) => setSteps(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <input type="file" className="form-control" onChange={(e)=>uploadImage(e, "cocinapp_images",setImg_url, img_url)} />
+                        </div>
+
+                        <button type="submit" className="btn btn-primary w-100 mb-3">Guardar cambios</button>
+
+                        <div className="text-center">
+                            <Link to="/recipes">Volver a recetas</Link>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
         </div>
     )
 }

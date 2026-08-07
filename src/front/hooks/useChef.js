@@ -41,7 +41,7 @@ export function useChef() {
             const data = await chefLoginService(chefLoginData)
             const chefToken = data.token
             localStorage.setItem("cheftoken", chefToken)
-            console.log(data)
+            localStorage.setItem("chefData", JSON.stringify(data.chef))
             dispatch({type: "chef_login", payload: data})
             navigate("/chef_dashboard")
         } catch (error) {console.log(error)}
@@ -50,8 +50,18 @@ export function useChef() {
     // Chef logout
     function chefLogout() {
         localStorage.removeItem("cheftoken")
+        localStorage.removeItem("chefData")
         dispatch({type: "chef_logout"})
         navigate("/chef_login")
+    }
+
+    // Rehydrate the logged chef into the store after a page refresh
+    function rehydrateChef() {
+        const chefToken = localStorage.getItem("cheftoken")
+        const chefData = localStorage.getItem("chefData")
+        if (chefToken && chefData) {
+            dispatch({type: "chef_login", payload: {chef: JSON.parse(chefData)}})
+        }
     }
 
     // Delete chef
@@ -81,6 +91,7 @@ export function useChef() {
         createChef,
         editChef,
         chefLogin,
-        chefLogout
+        chefLogout,
+        rehydrateChef
     }
 }

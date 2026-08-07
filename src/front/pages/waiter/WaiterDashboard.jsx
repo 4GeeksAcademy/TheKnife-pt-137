@@ -26,11 +26,16 @@ const WaiterDashboard = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h1 className="mb-1">Welcome back, {currentWaiter.name}</h1>
+<<<<<<< HEAD
                     <h2 className="h5 text-muted mb-0">Restaurant: {currentWaiter.restaurant_name}</h2>
+=======
+                    <h2 className="h5 text-muted mb-0">Restaurant: {store.loggedWaiter.restaurant}</h2>
+>>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
                 </div>
                 <button onClick={waiterLogout} className="btn btn-primary">Log out</button>
             </div>
 
+<<<<<<< HEAD
             <div className="card">
                 <div className="card-header">Actions</div>
                 <div className="card-body">
@@ -60,6 +65,8 @@ const WaiterDashboard = () => {
                 </div>
             </div>
 
+=======
+>>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
         </div>
     )
 }

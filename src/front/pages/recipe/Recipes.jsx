@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useRecipe } from "../../hooks/useRecipe"
 import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { Link } from "react-router-dom"
@@ -8,51 +8,47 @@ const Recipes = () => {
     const { getRecipes, deleteRecipe } = useRecipe()
 
     const { store } = useGlobalReducer()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        getRecipes()
+        setLoading(true)
+        getRecipes().finally(() => setLoading(false))
     }, [])
 
+    if (loading) return <p className="text-center mt-5">Loading...</p>
+
     const recipeList = store.recipes.map((recipe) => {
-        return (
-            <div key={recipe.id} className="recipe d-flex flex-column gap-2 border p-3">
-                <span><strong>Nombre:</strong> {recipe.name}</span>
-                <span><strong>Pasos:</strong> {recipe.steps}</span>
-
-                <div className="d-flex gap-3 mt-2">
-                    <button 
-                        className="btn btn-danger"
-                        onClick={() => deleteRecipe(recipe.id)}
-                    >
-                        Delete recipe
-                    </button>
-
-                    <Link to={`/edit_recipe/${recipe.id}`}>
-                        <button className="btn btn-warning">Edit recipe</button>
-                    </Link>
-
-                    <Link to={`/recipe/${recipe.id}`}>
-                        <button className="btn btn-secondary">View recipe</button>
-                    </Link>
-                    <img src={recipe.img_url} height="150" width="200" />
-                </div>
-            </div>
-        )
+        return <tr key={recipe.id}>
+            <td><img src={recipe.img_url} height="50" width="50" style={{ objectFit: "cover" }} /></td>
+            <td>{recipe.name}</td>
+            <td>{recipe.steps}</td>
+            <td>{recipe.restaurant_name}</td>
+            <td className="d-flex gap-2">
+                <button className="btn btn-danger btn-sm" onClick={() => deleteRecipe(recipe.id)}>Delete</button>
+                <Link to={`/edit_recipe/${recipe.id}`}><button className="btn btn-warning btn-sm">Edit</button></Link>
+                <Link to={`/recipe/${recipe.id}`}><button className="btn btn-secondary btn-sm">View</button></Link>
+            </td>
+        </tr>
     })
 
     return (
-        <div className="recipes_page d-flex flex-column align-items-center gap-3 mt-4">
-
-            {/* Botón para ir al formulario de crear receta */}
-            <Link to="/create_recipe">
-                <button className="btn btn-primary">Add recipe</button>
-            </Link>
-
-            {/* Lista de recetas */}
-            <div className="recipes_list d-flex flex-column gap-4 mt-4">
-                <h1>Recipes</h1>
-                {recipeList}
-            </div>
+        <div className="recipes_page container py-4">
+            <Link to="/create_recipe"><button className="btn btn-primary mb-4">Add recipe</button></Link>
+            <h1 className="h4 mb-3">Recipes</h1>
+            <table className="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Nombre</th>
+                        <th>Pasos</th>
+                        <th>Restaurant</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {recipeList}
+                </tbody>
+            </table>
         </div>
     )
 }

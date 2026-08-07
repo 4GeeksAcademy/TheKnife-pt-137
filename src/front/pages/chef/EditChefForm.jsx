@@ -33,29 +33,44 @@ const EditChefForm = () => {
     })
     
     return (
-        <div className="chef_form d-flex flex-column align-items-center gap-3">
-            <h1>Edit chef</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e)=>setChefData({...chefData, name: e.target.value})} value={chefData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Edit chef</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e)=>setChefData({...chefData, name: e.target.value})} value={chefData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="email">Email</label>
+                        <input className="form-control" onChange={(e)=>setChefData({...chefData, email: e.target.value})} value={chefData.email} type="text" name="email" id="email" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="password">Password</label>
+                        <input className="form-control" onChange={(e)=>setChefData({...chefData, password: e.target.value})} value={chefData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="restaurantid">Restaurant</label>
+                        <select className="form-select" onChange={(e)=>setChefData({...chefData, restaurant_id: e.target.value})} value={chefData.restaurant_id} name="restaurantid" id="restaurantid">
+                            <option value="">Select a restaurant</option>
+                            {restaurants}
+                        </select>
+                    </div>
+
+                    <button onClick={()=>editChef(chef_id, chefData)} className="btn btn-primary w-100 mb-3">Edit chef</button>
+
+                    <div className="text-center">
+                        <Link to="/chefs">Back to chefs</Link>
+                    </div>
+
+                </div>
             </div>
-            <div>
-                <label htmlFor="email">Email</label>
-                <input onChange={(e)=>setChefData({...chefData, email: e.target.value})} value={chefData.email} type="text" name="email" id="email" />
-            </div>
-            <div>
-                <label htmlFor="phone">Password</label>
-                <input onChange={(e)=>setChefData({...chefData, password: e.target.value})} value={chefData.password} type="password" name="password" id="password" />
-            </div>
-            <div>
-                <label htmlFor="restaurantid">Restaurant</label>
-                <select onChange={(e)=>setChefData({...chefData, restaurant_id: e.target.value})} value={chefData.restaurant_id} name="restaurantid" id="restaurantid">
-                    <option value="">Select a restaurant</option>
-                    {restaurants}
-                </select>
-            </div>
-            <button onClick={()=>editChef(chef_id, chefData)} className="btn btn-primary">Edit chef</button>
-            <Link to="/chefs">Back to chefs</Link>
+
         </div>
     )
 }

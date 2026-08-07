@@ -37,50 +37,80 @@ const ProductsListForOrder = () => {
 
     const dishes = dishesProductList.map((dish) => {
         const dishAmount = getAmount(dish.id)
-        return <li key={dish.id} className="d-flex gap-2 align-items-center">
-            {dish.name}
-            <span>{dishAmount}</span>
-            <div className="d-flex flex-column">
-                <button onClick={()=>increaseAmount(dish.id)}>+</button>
-                <button onClick={()=>decreaseAmount(dish.id)}>-</button>
-            </div>
-            <Link to={`/single_product/${dish.id}`}><button className="btn btn-secondary">View product</button></Link>
-            <button onClick={()=>{
-                createOrderProduct({order_id: order_id, product_id: dish.id, amount: dishAmount})
-                }} className="btn btn-primary">Add to order</button>
-        </li>
+        return <tr key={dish.id}>
+            <td>{dish.name}</td>
+            <td>
+                <div className="btn-group btn-group-sm" role="group">
+                    <button className="btn btn-outline-secondary" onClick={()=>decreaseAmount(dish.id)}>-</button>
+                    <span className="btn btn-outline-secondary disabled">{dishAmount}</span>
+                    <button className="btn btn-outline-secondary" onClick={()=>increaseAmount(dish.id)}>+</button>
+                </div>
+            </td>
+            <td className="d-flex gap-2">
+                <Link to={`/single_product/${dish.id}`}><button className="btn btn-secondary btn-sm">View</button></Link>
+                <button onClick={()=>{
+                    createOrderProduct({order_id: order_id, product_id: dish.id, amount: dishAmount})
+                    }} className="btn btn-primary btn-sm">Add to order</button>
+            </td>
+        </tr>
     })
 
     const drinks = drinksProductList.map((drink) => {
         const drinkAmount = getAmount(drink.id)
-        return <li key={drink.id} className="d-flex align-items-center gap-2">
-            {drink.name}
-            <span>{drinkAmount}</span>
-            <div className="d-flex flex-column">
-                <button onClick={()=>increaseAmount(drink.id)}>+</button>
-                <button onClick={()=>decreaseAmount(drink.id)}>-</button>
-            </div>
-            <Link to={`/single_product/${drink.id}`}><button className="btn btn-secondary">View product</button></Link>
-            <button onClick={()=>{
-                createOrderProduct({order_id: order_id, product_id: drink.id})}} className="btn btn-primary">Add to order
-            </button>
-        </li>
+        return <tr key={drink.id}>
+            <td>{drink.name}</td>
+            <td>
+                <div className="btn-group btn-group-sm" role="group">
+                    <button className="btn btn-outline-secondary" onClick={()=>decreaseAmount(drink.id)}>-</button>
+                    <span className="btn btn-outline-secondary disabled">{drinkAmount}</span>
+                    <button className="btn btn-outline-secondary" onClick={()=>increaseAmount(drink.id)}>+</button>
+                </div>
+            </td>
+            <td className="d-flex gap-2">
+                <Link to={`/single_product/${drink.id}`}><button className="btn btn-secondary btn-sm">View</button></Link>
+                <button onClick={()=>{
+                    createOrderProduct({order_id: order_id, product_id: drink.id})}} className="btn btn-primary btn-sm">Add to order
+                </button>
+            </td>
+        </tr>
     })
 
     return (
-        <div className="products d-flex align-items-center justify-content-evenly">
-            <div className="dishes">
-                <h2>Dishes</h2>
-                <ul>
-                    {dishes}
-                </ul>
+        <div className="products container py-4">
+            <h1 className="h4 mb-3">Add products to order #{order_id}</h1>
+            <div className="row g-4">
+                <div className="dishes col-md-6">
+                    <h2 className="h5">Dishes</h2>
+                    <table className="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dishes}
+                        </tbody>
+                    </table>
+                </div>
+                <div className="drinks col-md-6">
+                    <h2 className="h5">Drinks</h2>
+                    <table className="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {drinks}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <div className="drinks">
-                <h2>Drinks</h2>
-                <ul>
-                    {drinks}
-                </ul>
-            </div>
+            <Link to={`/single_order/${order_id}`} className="d-inline-block mt-3">Back to order</Link>
         </div>
     )
 }

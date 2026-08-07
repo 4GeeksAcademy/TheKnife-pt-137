@@ -7,8 +7,6 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # Restaurant
-
-
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
     __table_args__ = (
@@ -26,10 +24,13 @@ class Restaurant(db.Model):
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(
-        back_populates="restaurant")
-    chef: Mapped["Chef"] = relationship(back_populates="restaurant")
-    waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant")
-    cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant")
+        back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    chef: Mapped["Chef"] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    tables: Mapped[list["Table"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    recipes: Mapped[list["Recipe"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+
 
     def serialize(self):
         return {
@@ -42,8 +43,6 @@ class Restaurant(db.Model):
         }
 
 # Waiter
-
-
 class Waiter(db.Model):
     __tablename__ = "waiter"
     __table_args__ = (
@@ -54,22 +53,22 @@ class Waiter(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="waiters")
+    orders: Mapped[list["Order"]] = relationship(back_populates="waiter")
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "restaurant_id": self.restaurant_id
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Cook
-
-
 class Cook(db.Model):
     __tablename__ = "cook"
     __table_args__ = (
@@ -80,7 +79,7 @@ class Cook(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="cooks")
@@ -95,8 +94,6 @@ class Cook(db.Model):
         }
 
 # Chef
-
-
 class Chef(db.Model):
     __tablename__ = "chef"
     __table_args__ = (
@@ -109,7 +106,7 @@ class Chef(db.Model):
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     # Foreign columns
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="SET NULL"), nullable=True)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="chef")
@@ -120,12 +117,10 @@ class Chef(db.Model):
             "name": self.name,
             "email": self.email,
             "restaurant_id": self.restaurant_id,
-            "restaurant_name": self.restaurant.name
+            "restaurant_name": self.restaurant.name if self.restaurant else None
         }
 
 # Table (mesa)
-
-
 class Table(db.Model):
     __tablename__ = "table"
 
@@ -133,6 +128,13 @@ class Table(db.Model):
     number: Mapped[int] = mapped_column(nullable=False)
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     location: Mapped[str] = mapped_column(nullable=False)
+    active: Mapped[bool] = mapped_column(nullable=False, default=True)
+    # Foreign keys
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"), nullable=False)
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="tables")
+    orders: Mapped[list["Order"]] = relationship(back_populates="table")
 
     def serialize(self):
         return {
@@ -140,11 +142,12 @@ class Table(db.Model):
             "number": self.number,
             "status": self.status,
             "location": self.location,
+            "active": self.active,
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Product
-
-
 class Product(db.Model):
     __tablename__ = "product"
 
@@ -156,15 +159,13 @@ class Product(db.Model):
     active: Mapped[bool] = mapped_column(nullable=False, default=True)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign keys
-    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id"))
-    recipe_id: Mapped[int] = mapped_column(
-        ForeignKey("recipe.id"), nullable=True)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=True)
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="products")
     recipe: Mapped["Recipe"] = relationship(back_populates="product")
-    order_products: Mapped[list["OrderProduct"]
-                           ] = relationship(back_populates="product")
+    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="product")
 
     def serialize(self):
         return {
@@ -176,12 +177,11 @@ class Product(db.Model):
             "active": self.active,
             "restaurant_id": self.restaurant_id,
             "recipe_id": self.recipe_id,
-            "img_url": self.img_url
+            "img_url": self.img_url,
+            "restaurant_name": self.restaurant.name
         }
 
 # Recipe
-
-
 class Recipe(db.Model):
     __tablename__ = "recipe"
 
@@ -189,23 +189,24 @@ class Recipe(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(String(300), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
     product: Mapped["Product"] = relationship(back_populates="recipe")
-    recipe_ingredients: Mapped[list["RecipeIngredient"]
-                               ] = relationship(back_populates="recipe")
+    recipe_ingredients: Mapped[list["RecipeIngredient"]] = relationship(back_populates="recipe")
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="recipes")
 
     def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "steps": self.steps,
-            "img_url": self.img_url
+            "img_url": self.img_url,
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name
         }
 
 # Ingredients
-
-
 class Ingredient(db.Model):
     __tablename__ = "ingredient"
     __table_args__ = (
@@ -218,8 +219,7 @@ class Ingredient(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     # Relationships
-    recipe_ingredients: Mapped[list["RecipeIngredient"]
-                               ] = relationship(back_populates="ingredient")
+    recipe_ingredients: Mapped[list["RecipeIngredient"]] = relationship(back_populates="ingredient")
 
     def serialize(self):
         return {
@@ -230,22 +230,20 @@ class Ingredient(db.Model):
         }
 
 # Order
-
-
 class Order(db.Model):
     __tablename__ = "order"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     # (ForeignKey("table.id")) AQUÍ HAY QUE AÑADIR ESTAS FOREIGN KEYS CUANDO SE PUEDAN CREAR MESAS PORQUE AHORA MISMO NO PERMITE CREAR COMANDAS AL NO EXISTIR NINGUNA MESA
-    table_id: Mapped[int] = mapped_column()
-    waiter_id: Mapped[int] = mapped_column()  # (ForeignKey("waiter.id"))
-    state: Mapped[str] = mapped_column(
-        String(20), nullable=False, default="pending")
+    table_id: Mapped[int] = mapped_column(ForeignKey("table.id"))
+    waiter_id: Mapped[int] = mapped_column(ForeignKey("waiter.id", ondelete="SET NULL"), nullable=True)  
+    state: Mapped[str] = mapped_column(String(20), nullable=False, default="pending")
     date_time: Mapped[datetime] = mapped_column(default=datetime.now)
     people: Mapped[int] = mapped_column(nullable=False)
     # Relationships
-    order_products: Mapped[list["OrderProduct"]
-                           ] = relationship(back_populates="order")
+    order_products: Mapped[list["OrderProduct"]] = relationship(back_populates="order")
+    table: Mapped["Table"] = relationship(back_populates="orders")
+    waiter: Mapped["Waiter"] = relationship(back_populates="orders")
 
     def serialize(self):
         return {
@@ -292,17 +290,13 @@ class RecipeIngredient(db.Model):
     __tablename__ = "recipe_ingredient"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    ingredient_id: Mapped[int] = mapped_column(
-        ForeignKey("ingredient.id"), nullable=False)
-    recipe_id: Mapped[int] = mapped_column(
-        ForeignKey("recipe.id"), nullable=False)
+    ingredient_id: Mapped[int] = mapped_column(ForeignKey("ingredient.id"), nullable=False)
+    recipe_id: Mapped[int] = mapped_column(ForeignKey("recipe.id"), nullable=False)
     amount: Mapped[float] = mapped_column(nullable=False)
 
     # Relationships
-    ingredient: Mapped["Ingredient"] = relationship(
-        back_populates="recipe_ingredients")
-    recipe: Mapped["Recipe"] = relationship(
-        back_populates="recipe_ingredients")
+    ingredient: Mapped["Ingredient"] = relationship(back_populates="recipe_ingredients")
+    recipe: Mapped["Recipe"] = relationship(back_populates="recipe_ingredients")
 
     def serialize(self):
         return {

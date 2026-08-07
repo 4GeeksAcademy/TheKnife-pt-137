@@ -8,6 +8,7 @@ export const initialStore = () => {
     singleRestaurant: {},
     ingredients: [],
     singleIngredient: {},
+    inactiveIngredients: [],
     cooks: [],
     singleCook: {},
     loggedCook: {
@@ -92,6 +93,11 @@ export default function storeReducer(store, action = {}) {
         ...store,
         singleIngredient: action.payload,
       };
+    case "set_inactive_ingredients":
+      return {
+        ...store,
+        inactiveIngredients: action.payload,
+      };
     case "set_waiters":
       return {
         ...store,
@@ -151,6 +157,17 @@ export default function storeReducer(store, action = {}) {
           restaurant: action.payload.chef_restaurant,
         },
       };
+    case "update_logged_chef":
+      return {
+        ...store,
+        loggedChef: {
+          ...store.loggedChef,
+          chef: {
+            ...store.loggedChef.chef,
+            ...action.payload,
+          },
+        },
+      };
     case "set_recipe_ingredients":
       return {
         ...store,
@@ -173,7 +190,7 @@ export default function storeReducer(store, action = {}) {
     case "cook_logout":
       return {
         ...store,
-        singleCook: {
+        loggedCook: {
           cookAuth: false,
           cook: {},
           restaurant: "",
@@ -182,30 +199,12 @@ export default function storeReducer(store, action = {}) {
     case "chef_logout":
       return {
         ...store,
-        singleChef: {
+        loggedChef: {
           chefAuth: false,
           chef: {},
           restaurant: "",
         },
       };
-      case "cook_logout":
-        return {
-          ...store,
-          singleCook: {
-            cookAuth: false,
-            cook: {},
-            restaurant: ""
-          }
-        }
-      case "chef_logout":
-        return {
-          ...store,
-          singleChef: {
-            chefAuth: false,
-            chef: {},
-            restaurant: ""
-          }
-        }
       case "waiter_login":
         return {
           ...store,

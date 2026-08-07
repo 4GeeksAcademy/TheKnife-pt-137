@@ -17,11 +17,19 @@ const SingleTable = () => {
     }, [table_id]);
 
     return (
-        <div className="single_table">
-            <h1>number: {store.singleTable?.number}</h1>
-            <h2>status: {store.singleTable?.status}</h2>
-            <h3>location: {store.singleTable?.location}</h3>
-            <Link to="/tables">Back to tables</Link>
+        <div className="container py-4 d-flex flex-column align-items-center">
+
+            <div className="card" style={{ maxWidth: "500px" }}>
+                <div className="card-body">
+                    <h1 className="h4">Table #{store.singleTable?.number}</h1>
+                    <ul className="list-group list-group-flush mb-3">
+                        <li className="list-group-item"><strong>Status:</strong> {store.singleTable?.status}</li>
+                        <li className="list-group-item"><strong>Location:</strong> {store.singleTable?.location}</li>
+                    </ul>
+                    <Link to="/tables" className="btn btn-outline-secondary">Back to tables</Link>
+                </div>
+            </div>
+
         </div>
     );
 };

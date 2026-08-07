@@ -8,6 +8,9 @@ import {
   deleteCookService,
   editCookService,
   cookLoginService,
+  cookRegisterService,
+  getRestaurantCooksService,
+  deleteRestaurantCookService
 } from "../services/cookService";
 
 export function useCook() {
@@ -63,6 +66,7 @@ export function useCook() {
       const data = await cookLoginService(cookLoginData);
       const cookToken = data.token;
       localStorage.setItem("cooktoken", cookToken);
+      localStorage.setItem("cookData", JSON.stringify(data.cook));
       console.log(data);
       dispatch({ type: "cook_login", payload: data });
       navigate("/cook_dashboard");
@@ -71,12 +75,22 @@ export function useCook() {
     }
   }
 
-  // Chef logout
-    function cookLogout() {
-        localStorage.removeItem("cooktoken")
-        dispatch({type: "cook_logout"})
-        navigate("/cook_login")
+  // Cook logout
+  function cookLogout() {
+    localStorage.removeItem("cooktoken");
+    localStorage.removeItem("cookData");
+    dispatch({ type: "cook_logout" });
+    navigate("/cook_login");
+  }
+
+  // Rehydrate the logged cook into the store after a page refresh
+  function rehydrateCook() {
+    const cookToken = localStorage.getItem("cooktoken");
+    const cookData = localStorage.getItem("cookData");
+    if (cookToken && cookData) {
+      dispatch({ type: "cook_login", payload: { cook: JSON.parse(cookData) } });
     }
+  }
 
   // Edit cook
   async function editCook(cookId, cookData) {
@@ -90,6 +104,37 @@ export function useCook() {
     }
   }
 
+  //////////////////////////////////////////////////////////////////
+  // Chef registers a cook
+  async function cookRegister(restaurant_id, cookData) {
+    try {
+      const data = await cookRegisterService(restaurant_id, cookData);
+      console.log(data);
+      navigate("/chef_dashboard");
+      await getRestaurantCooks(restaurant_id)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Chef get cooks of his restaurant
+  async function getRestaurantCooks(restaurant_id) {
+    try {
+      const data = await getRestaurantCooksService(restaurant_id)
+      console.log(data)
+      dispatch({type: "set_cooks", payload: data})
+    } catch (error) {console.log(error)}
+  }
+
+  // Chef deletes a cook of his restaurant
+  async function deleteRestaurantCook(restaurant_id, cook_id) {
+    try {
+      const data = await deleteRestaurantCookService(restaurant_id, cook_id)
+      console.log(data)
+      getRestaurantCooks(restaurant_id)
+    } catch (error) {console.log(error)}
+  }
+
   return {
     getCooks,
     deleteCook,
@@ -97,6 +142,10 @@ export function useCook() {
     createCook,
     editCook,
     cookLogin,
-    cookLogout
+    cookLogout,
+    rehydrateCook,
+    cookRegister,
+    getRestaurantCooks,
+    deleteRestaurantCook
   };
 }

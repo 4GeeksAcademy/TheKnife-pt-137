@@ -10,15 +10,30 @@ const CreateIngredientForm = () => {
     const { addIngredient } = useIngredient()
 
     return (
-        <div className="ingredient_form d-flex flex-column align-items-center gap-3">
-            <h1>Create new ingredient</h1>
-            <div>
-                <label htmlFor="name">Name</label>
-                <input onChange={(e) => setIngredientData({ ...ingredientData, name: e.target.value })} value={ingredientData.name} type="text" name="name" id="name" />
+        <div className="container py-5" style={{ maxWidth: "500px" }}>
+
+            <div className="card">
+                <div className="card-header text-center">Create new ingredient</div>
+                <div className="card-body">
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="name">Name</label>
+                        <input className="form-control" onChange={(e) => setIngredientData({ ...ingredientData, name: e.target.value })} value={ingredientData.name} type="text" name="name" id="name" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e)=>uploadImage(e,"cocinapp_images",setIngredientData,ingredientData)} />
+                    </div>
+
+                    <button onClick={() => addIngredient(ingredientData)} className="btn btn-primary w-100 mb-3">Create new ingredient</button>
+
+                    <div className="text-center">
+                        <Link to="/ingredients">Back to ingredients</Link>
+                    </div>
+
+                </div>
             </div>
-            <input type="file" onChange={(e)=>uploadImage(e,"cocinapp_images",setIngredientData,ingredientData)} />
-            <button onClick={() => addIngredient(ingredientData)} className="btn btn-primary">Create new ingredient</button>
-            <Link to="/ingredients">Back to ingredients</Link>
+
         </div>
     )
 }
