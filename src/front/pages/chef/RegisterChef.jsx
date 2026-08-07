@@ -5,7 +5,7 @@ import storeReducer from "../../store";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { useRestaurant } from "../../hooks/useRestaurant";
 
-const CreateChefForm = () => {
+const RegisterChef = () => {
 
     const { store } = useGlobalReducer()
     const [chefData, setChefData] = useState({name: "", email: "", password: ""})
@@ -36,7 +36,7 @@ const CreateChefForm = () => {
                     <button onClick={()=>createChef(chefData)} className="btn btn-primary w-100 mb-3">Register new chef</button>
 
                     <div className="text-center">
-                        <Link to="/chefs">Back to chefs</Link>
+                        <Link to="/">Back to home</Link>
                     </div>
 
                 </div>
@@ -46,4 +46,4 @@ const CreateChefForm = () => {
     )
 }
 
-export default CreateChefForm;
+export default RegisterChef;

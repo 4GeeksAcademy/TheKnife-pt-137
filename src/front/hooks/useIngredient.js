@@ -77,7 +77,7 @@ export const useIngredient = () => {
         try {
             const data = await chefCreateIngredientService(ingredientData)
             console.log(data)
-            navigate("/chef_dashboard")
+            navigate("/chef_ingredients")
         } catch (error) {console.log(error)}
     }
 

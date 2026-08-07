@@ -84,6 +84,7 @@ import EditChefForm from "./pages/chef/EditChefForm";
 import SingleChef from "./pages/chef/SingleChef";
 import ChefLogin from "./pages/chef/ChefLogin";
 import ChefDashboard from "./pages/chef/ChefDashboard";
+import RegisterChef from "./pages/chef/RegisterChef";
 
 // INGREDIENTS imports
 import Ingredients from "./pages/ingredient/Ingredients";
@@ -194,6 +195,7 @@ export const router = createBrowserRouter(
       {/* Chefs */}
       <Route path="/chefs" element={<Chefs />} />
       <Route path="/create_chef" element={<CreateChefForm />} />
+      <Route path="/chef_register" element={<RegisterChef />} />
       <Route path="/single_chef/:chef_id" element={<SingleChef />} />
       <Route path="/edit_chef/:chef_id" element={<EditChefForm />} />
       <Route path="/chef_login" element={<ChefLogin />} />
