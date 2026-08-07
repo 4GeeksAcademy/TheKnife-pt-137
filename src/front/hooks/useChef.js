@@ -31,7 +31,7 @@ export function useChef() {
             const response = await createChefService(chefData)
             const data = await response.json()
             console.log(data)
-            navigate("/chefs")
+            navigate("/")
         } catch(error) {console.log(error)}
     }
 
