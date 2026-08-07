@@ -181,3 +181,27 @@ def edit_chef_restaurant(restaurant_id):
         setattr(restaurant, key, body[key])
     db.session.commit()
     return jsonify(restaurant.serialize()), 200
+
+# PATCH chef edits restaurant latitude and longitude
+@restaurant.route("/restaurants/<int:restaurant_id>/location", methods=["PATCH"])
+@jwt_required()
+def chef_edit_restaurant_coordinates(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "chef":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    restaurant = db.session.scalar(select(Restaurant).where(Restaurant.id == restaurant_id))
+    if not restaurant:
+        return jsonify({"message": "Restaurant not found"}), 404
+    body = request.get_json()
+    patch_mandatory_schema = ["address", "longitude", "latitude"]
+    for key in patch_mandatory_schema:
+        if key not in body or body[key] == "":
+            return jsonify({"message": "Some info is missing, body must have 'address', 'latitude' and 'longitude' "})
+    for key in body:
+        setattr(restaurant, key, body[key])
+    db.session.commit()
+    return jsonify({"message": "Restaurant coordinates successfully edited"}), 200

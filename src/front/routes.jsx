@@ -12,6 +12,7 @@ import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 
 // CocinApp imports
+import Maps from "./pages/Maps";
 
 // Products
 import Products from "./pages/product/Products";
@@ -118,6 +119,9 @@ export const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
+
+      {/* Google Maps */}
+      <Route path="/maps/:restaurant_id" element={<Maps />} />
 
       {/* Products */}
       <Route path="/products" element={<Products />} />
