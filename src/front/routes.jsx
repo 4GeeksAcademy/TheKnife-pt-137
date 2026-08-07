@@ -44,6 +44,14 @@ import ChefEditRestaurant from "./pages/restaurant/actions/ChefEditRestaurant";
 import ChefGetRestaurant from "./pages/restaurant/actions/ChefGetRestaurant";
 
 
+// Managers
+import Managers from "./pages/manager/Managers";
+import CreateManagerForm from "./pages/manager/CreateManagerForm";
+import EditManagerForm from "./pages/manager/EditManagerForm";
+import ManagerLogin from "./pages/manager/ManagerLogin";
+import ManagerDashboard from "./pages/manager/ManagerDashboard";
+
+
 // Waiters
 import Waiters from "./pages/waiter/Waiters";
 import CreateWaiterForm from "./pages/waiter/CreateWaiterForm";
@@ -140,7 +148,13 @@ export const router = createBrowserRouter(
       <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
       <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
       <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
-
+      
+      {/* Managers */}
+      <Route path="/managers" element={<Managers />} />
+      <Route path="/create_manager" element={<CreateManagerForm />} />
+      <Route path="/edit_manager/:manager_id" element={<EditManagerForm />} />
+      <Route path="/manager_login" element={<ManagerLogin />} />
+      <Route path="/manager_dashboard" element={<ManagerDashboard />} />
 
       {/* Ingredients */}
       <Route path="/ingredients" element={<Ingredients />} />
