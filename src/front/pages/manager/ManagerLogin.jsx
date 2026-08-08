@@ -1,25 +1,25 @@
 import { Link } from "react-router-dom"
-import { useChef } from "../../hooks/useChef"
+import { useManager } from "../../hooks/useManager"
 import { useState } from "react"
 
-const ChefLogin = () => {
+const ManagerLogin = () => {
 
-    const { chefLogin } = useChef()
-    const [chefLoginData, setChefLoginData] = useState({ email: "", password: "" })
+    const { managerLogin } = useManager()
+    const [managerLoginData, setManagerLoginData] = useState({ email: "", password: "" })
 
     return (
         <div className="container py-5" style={{ maxWidth: "400px" }}>
 
             <div className="card">
-                <div className="card-header text-center">Chef Login</div>
+                <div className="card-header text-center">Manager Login</div>
                 <div className="card-body">
 
                     <div className="mb-3">
                         <label className="form-label" htmlFor="email">Email</label>
                         <input
                             className="form-control"
-                            onChange={(e) => setChefLoginData({ ...chefLoginData, email: e.target.value })}
-                            value={chefLoginData.email}
+                            onChange={(e) => setManagerLoginData({ ...managerLoginData, email: e.target.value })}
+                            value={managerLoginData.email}
                             type="text"
                             name="email"
                             id="email"
@@ -30,18 +30,18 @@ const ChefLogin = () => {
                         <label className="form-label" htmlFor="password">Password</label>
                         <input
                             className="form-control"
-                            onChange={(e) => setChefLoginData({ ...chefLoginData, password: e.target.value })}
-                            value={chefLoginData.password}
+                            onChange={(e) => setManagerLoginData({ ...managerLoginData, password: e.target.value })}
+                            value={managerLoginData.password}
                             type="password"
                             name="password"
                             id="password"
                         />
                     </div>
 
-                    <button className="btn btn-success w-100 mb-3" onClick={() => chefLogin(chefLoginData)}>Login</button>
+                    <button className="btn btn-success w-100 mb-3" onClick={() => managerLogin(managerLoginData)}>Login</button>
 
                     <div className="text-center">
-                        <Link to="/">Back to home</Link>
+                        <Link to="/managers">Back to managers</Link>
                     </div>
 
                 </div>
@@ -51,4 +51,4 @@ const ChefLogin = () => {
     )
 }
 
-export default ChefLogin
+export default ManagerLogin

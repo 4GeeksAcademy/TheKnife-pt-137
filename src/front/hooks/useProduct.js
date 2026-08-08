@@ -13,7 +13,7 @@ import {
   getOneRestaurantProductService
 } from "../services/productService";
 import useGlobalReducer from "./useGlobalReducer";
-import { processDpr } from "@cloudinary/url-gen/backwards/transformationProcessing/processDpr";
+
 
 export function useProduct() {
   const { store, dispatch } = useGlobalReducer();

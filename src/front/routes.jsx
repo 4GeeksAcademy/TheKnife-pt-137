@@ -45,6 +45,14 @@ import ChefEditRestaurant from "./pages/restaurant/actions/ChefEditRestaurant";
 import ChefGetRestaurant from "./pages/restaurant/actions/ChefGetRestaurant";
 
 
+// Managers
+import Managers from "./pages/manager/Managers";
+import CreateManagerForm from "./pages/manager/CreateManagerForm";
+import EditManagerForm from "./pages/manager/EditManagerForm";
+import ManagerLogin from "./pages/manager/ManagerLogin";
+import ManagerDashboard from "./pages/manager/ManagerDashboard";
+
+
 // Waiters
 import Waiters from "./pages/waiter/Waiters";
 import CreateWaiterForm from "./pages/waiter/CreateWaiterForm";
@@ -77,6 +85,7 @@ import EditChefForm from "./pages/chef/EditChefForm";
 import SingleChef from "./pages/chef/SingleChef";
 import ChefLogin from "./pages/chef/ChefLogin";
 import ChefDashboard from "./pages/chef/ChefDashboard";
+import RegisterChef from "./pages/chef/RegisterChef";
 
 // INGREDIENTS imports
 import Ingredients from "./pages/ingredient/Ingredients";
@@ -144,7 +153,13 @@ export const router = createBrowserRouter(
       <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
       <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
       <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
-
+      
+      {/* Managers */}
+      <Route path="/managers" element={<Managers />} />
+      <Route path="/create_manager" element={<CreateManagerForm />} />
+      <Route path="/edit_manager/:manager_id" element={<EditManagerForm />} />
+      <Route path="/manager_login" element={<ManagerLogin />} />
+      <Route path="/manager_dashboard" element={<ManagerDashboard />} />
 
       {/* Ingredients */}
       <Route path="/ingredients" element={<Ingredients />} />
@@ -185,6 +200,7 @@ export const router = createBrowserRouter(
       {/* Chefs */}
       <Route path="/chefs" element={<Chefs />} />
       <Route path="/create_chef" element={<CreateChefForm />} />
+      <Route path="/chef_register" element={<RegisterChef />} />
       <Route path="/single_chef/:chef_id" element={<SingleChef />} />
       <Route path="/edit_chef/:chef_id" element={<EditChefForm />} />
       <Route path="/chef_login" element={<ChefLogin />} />

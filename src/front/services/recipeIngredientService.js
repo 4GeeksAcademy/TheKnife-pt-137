@@ -45,3 +45,72 @@ export const deleteRecipeIngredient = async (id) => {
     });
     return response.json();
 };
+
+/////////////////////////////////////////////////////////////////////////
+// Chef or cook gets the ingredients of a recipe of their restaurant
+export async function getRestaurantRecipeIngredientsService(restaurant_id, recipe_id) {
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
+    const response = await fetch(`${BASE_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/ingredients`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    const data = await response.json()
+    return data
+}
+
+// Chef adds an ingredient to a recipe of his restaurant
+export async function chefAddRecipeIngredientService(restaurant_id, recipe_id, recipeIngredientData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const newRecipeIngredient = {
+        ingredient_id: recipeIngredientData.ingredient_id,
+        amount: recipeIngredientData.amount
+    }
+    const response = await fetch(`${BASE_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/ingredients`, {
+        method: "POST",
+        body: JSON.stringify(newRecipeIngredient),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    const data = await response.json()
+    return data
+}
+
+// Chef edits an ingredient of a recipe of his restaurant
+export async function chefEditRecipeIngredientService(restaurant_id, recipe_id, recipe_ingredient_id, recipeIngredientData) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const editedRecipeIngredient = {
+        ingredient_id: recipeIngredientData.ingredient_id,
+        amount: recipeIngredientData.amount
+    }
+    const response = await fetch(`${BASE_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/ingredients/${recipe_ingredient_id}`, {
+        method: "PUT",
+        body: JSON.stringify(editedRecipeIngredient),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    const data = await response.json()
+    return data
+}
+
+// Chef removes an ingredient from a recipe of his restaurant
+export async function chefDeleteRecipeIngredientService(restaurant_id, recipe_id, recipe_ingredient_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${BASE_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/ingredients/${recipe_ingredient_id}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    const data = await response.json()
+    return data
+}
