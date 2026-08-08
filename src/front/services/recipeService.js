@@ -44,7 +44,7 @@ export async function editRecipeService(recipeId, recipeData) {
 /////////////////////////////////////////////////////////////////////////
 // Get all recipes
 export async function getAllRestaurantRecipesService(restaurant_id) {
-    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken") || localStorage.getItem("waitertoken")
     const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes`, {
         method: "GET",
         headers: {
@@ -76,7 +76,7 @@ export async function deleteRestaurantRecipeService(restaurant_id, recipe_id) {
 
 // GET one recipe
 export async function getOneRestaurantRecipeService(restaurant_id, recipe_id) {
-    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken") || localStorage.getItem("waitertoken")
     const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}`, {
         method: "GET",
         headers: {

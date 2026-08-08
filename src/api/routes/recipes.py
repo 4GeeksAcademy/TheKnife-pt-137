@@ -90,22 +90,14 @@ def edit_recipe(recipe_id):
 
 #####################################################################
 ##### CHEF
-<<<<<<< HEAD
-# GET all recipes of the restaurant (chef, cook or waiter)
-=======
 # GET all recipes of the restaurant (chef or cook)
->>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
 @recipe.route("/restaurants/<int:restaurant_id>/recipes")
 @jwt_required()
 def get_all_restaurant_recipes(restaurant_id):
     current_user, role = get_current_user()
     if not current_user:
         return jsonify({"message": "User not found"}), 404
-<<<<<<< HEAD
     if role not in ["chef", "cook", "waiter"]:
-=======
-    if role not in ["chef", "cook"]:
->>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
         return jsonify({"message": "Access forbidden"}), 403
     if current_user.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
@@ -114,22 +106,14 @@ def get_all_restaurant_recipes(restaurant_id):
     )).all()
     return jsonify([recipe.serialize() for recipe in all_restaurant_recipes]), 200
 
-<<<<<<< HEAD
-# GET one recipe of the restaurant (chef, cook or waiter)
-=======
 # GET one recipe of the restaurant (chef or cook)
->>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
 @recipe.route("/restaurants/<int:restaurant_id>/recipes/<int:recipe_id>")
 @jwt_required()
 def get_one_restaurant_recipe(restaurant_id, recipe_id):
     current_user, role = get_current_user()
     if not current_user:
         return jsonify({"message": "User not found"}), 404
-<<<<<<< HEAD
     if role not in ["chef", "cook", "waiter"]:
-=======
-    if role not in ["chef", "cook"]:
->>>>>>> 270bd387445cbc365d4d09ce997ee277d884ce7d
         return jsonify({"message": "Access forbidden"}), 403
     if current_user.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403

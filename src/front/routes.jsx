@@ -33,6 +33,7 @@ import CookRecipes from "./pages/recipe/actions/CookRecipes";
 import ChefCreateRecipe from "./pages/recipe/actions/ChefCreateRecipe";
 import ChefEditRecipe from "./pages/recipe/actions/ChefEditRecipe";
 import RestaurantSingleRecipe from "./pages/recipe/actions/RestaurantSingleRecipe";
+import WaiterRecipes from "./pages/recipe/actions/WaiterRecipes";
 
 // Restaurants
 import Restaurants from "./pages/restaurant/Restaurants";
@@ -130,6 +131,10 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
       <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
+      <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
+      <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
+      <Route path="/restaurants/:restaurant_id/waiter_recipes" element={<WaiterRecipes />} />
+      <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
 
       {/* Restaurants */}
       <Route path="/restaurants" element={<Restaurants />} />

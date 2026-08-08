@@ -41,6 +41,7 @@ export function useWaiter() {
             const data = await waiterLoginService(waiterLoginData)
             const waiterToken = data.token
             localStorage.setItem("waitertoken", waiterToken)
+            localStorage.setItem("waiterData", JSON.stringify(data.waiter))
             console.log(data)
             dispatch({type: "waiter_login", payload: data})
             navigate("/waiter_dashboard")
@@ -50,8 +51,18 @@ export function useWaiter() {
     // Waiter logout
     function waiterLogout() {
         localStorage.removeItem("waitertoken")
+        localStorage.removeItem("waiterData")
         dispatch({type: "waiter_logout"})
         navigate("/waiter_login")
+    }
+
+    // Rehydrate the logged waiter into the store after a page refresh
+    function rehydrateWaiter() {
+        const waiterToken = localStorage.getItem("waitertoken")
+        const waiterData = localStorage.getItem("waiterData")
+        if (waiterToken && waiterData) {
+            dispatch({type: "waiter_login", payload: {waiter: JSON.parse(waiterData)}})
+        }
     }
 
     // Delete waiter
@@ -111,6 +122,7 @@ export function useWaiter() {
         editWaiter,
         waiterLogin,
         waiterLogout,
+        rehydrateWaiter,
         waiterRegister,
         getRestaurantWaiters,
         deleteRestaurantWaiter
