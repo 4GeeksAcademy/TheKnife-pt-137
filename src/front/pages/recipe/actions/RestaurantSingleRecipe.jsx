@@ -7,10 +7,12 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 const RestaurantSingleRecipe = () => {
 
     const { store } = useGlobalReducer()
-    const { getOneRestaurantRecipe } = useRecipe()
+    const { getOneRestaurantRecipe, calculateRecipeCalories } = useRecipe()
     const { fetchRestaurantRecipeIngredients } = useRecipeIngredient()
     const { restaurant_id, recipe_id } = useParams()
     const [loading, setLoading] = useState(true)
+    const [caloriesLoading, setCaloriesLoading] = useState(false)
+    const [caloriesError, setCaloriesError] = useState(null)
     const isChef = !!localStorage.getItem("cheftoken")
 
     useEffect(() => {
@@ -20,6 +22,18 @@ const RestaurantSingleRecipe = () => {
             fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
         ]).finally(() => setLoading(false))
     }, [restaurant_id, recipe_id])
+
+    async function handleCalculateCalories() {
+        setCaloriesLoading(true)
+        setCaloriesError(null)
+        try {
+            await calculateRecipeCalories(restaurant_id, recipe_id)
+        } catch (error) {
+            setCaloriesError(error.message)
+        } finally {
+            setCaloriesLoading(false)
+        }
+    }
 
     if (loading) return <p className="text-center mt-5">Loading...</p>
 
@@ -46,6 +60,24 @@ const RestaurantSingleRecipe = () => {
                     ) : (
                         <p className="text-muted">Esta receta todavía no tiene ingredientes.</p>
                     )}
+
+                    <div className="mb-3">
+                        {store.single_recipe.calories ? (
+                            <p><strong>Calorías estimadas:</strong> {store.single_recipe.calories} kcal</p>
+                        ) : (
+                            isChef && store.recipeIngredients && store.recipeIngredients.length > 0 && (
+                                <button
+                                    type="button"
+                                    className="btn btn-outline-primary btn-sm"
+                                    disabled={caloriesLoading}
+                                    onClick={handleCalculateCalories}
+                                >
+                                    {caloriesLoading ? "Calculando..." : "Calcular calorías con IA"}
+                                </button>
+                            )
+                        )}
+                        {caloriesError && <div className="text-danger mt-2">{caloriesError}</div>}
+                    </div>
 
                     <div className="d-flex gap-2">
                         {isChef && <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-warning">Edit recipe</Link>}

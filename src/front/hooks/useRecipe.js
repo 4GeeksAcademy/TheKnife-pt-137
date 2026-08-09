@@ -10,7 +10,8 @@ import {
   chefCreateRecipeService,
   getOneRestaurantRecipeService,
   chefEditRecipeService,
-  generateRecipeFromImageService
+  generateRecipeFromImageService,
+  calculateRecipeCaloriesService
 } from "../services/recipeService";
 import { getActiveIngredientsService, chefCreateIngredientService } from "../services/ingredientService";
 import { chefAddRecipeIngredientService } from "../services/recipeIngredientService";
@@ -104,6 +105,14 @@ export function useRecipe() {
     }
   }
 
+  // Chef asks the AI to estimate the calories of a recipe from its saved
+  // ingredients. Updates the recipe in the store so the UI shows the new value.
+  async function calculateRecipeCalories(restaurant_id, recipe_id) {
+    const updatedRecipe = await calculateRecipeCaloriesService(restaurant_id, recipe_id);
+    dispatch({ type: "set_single_recipe", payload: updatedRecipe });
+    return updatedRecipe;
+  }
+
   // Chef uploads a dish photo and asks Claude to suggest a recipe from it.
   // Nothing is saved yet — the caller decides what to do with the suggestion.
   async function generateRecipeFromImage(restaurant_id, img_url) {
@@ -178,6 +187,7 @@ export function useRecipe() {
     getOneRestaurantRecipe,
     chefEditRecipe,
     generateRecipeFromImage,
-    chefCreateRecipeWithIngredients
+    chefCreateRecipeWithIngredients,
+    calculateRecipeCalories
   };
 }
