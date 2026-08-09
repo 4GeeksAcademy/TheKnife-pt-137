@@ -7,6 +7,10 @@ import {
   createTableService,
   deleteTableService,
   editTableService,
+  getAllRestaurantTablesService,
+  createRestaurantTableService,
+  editRestaurantTableService,
+  deleteRestaurantTableService,
 } from "../services/tableService";
 
 export function useTable() {
@@ -66,11 +70,50 @@ export function useTable() {
     }
   }
 
+  // Get all tables of the restaurant
+  async function getAllRestaurantTables(restaurant_id) {
+    try {
+      const data = await getAllRestaurantTablesService(restaurant_id)
+      dispatch({ type: "set_tables", payload: data })
+    } catch (error) { console.log(error) }
+  }
+
+  // Create a table for the restaurant
+  async function createRestaurantTable(restaurant_id, tableData) {
+    try {
+      const data = await createRestaurantTableService(restaurant_id, tableData)
+      console.log(data)
+      getAllRestaurantTables(restaurant_id)
+    } catch (error) { console.log(error) }
+  }
+
+  // Edit a table of the restaurant
+  async function editRestaurantTable(restaurant_id, table_id, tableData) {
+    try {
+      const data = await editRestaurantTableService(restaurant_id, table_id, tableData)
+      console.log(data)
+      getAllRestaurantTables(restaurant_id)
+    } catch (error) { console.log(error) }
+  }
+
+  // Delete a table of the restaurant
+  async function deleteRestaurantTable(restaurant_id, table_id) {
+    try {
+      const message = await deleteRestaurantTableService(restaurant_id, table_id)
+      console.log(message)
+      getAllRestaurantTables(restaurant_id)
+    } catch (error) { console.log(error) }
+  }
+
   return {
     getTables,
     deleteTable,
     getSingleTable,
     createTable,
     editTable,
+    getAllRestaurantTables,
+    createRestaurantTable,
+    editRestaurantTable,
+    deleteRestaurantTable
   };
 }

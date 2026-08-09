@@ -140,3 +140,27 @@ def cook_update_order_status(restaurant_id, order_id):
     order_to_update.state = new_state
     db.session.commit()
     return jsonify(order_to_update.serialize()), 200
+
+    # Waiter closes an order of his restaurant (done -> closed)
+@order.route("/restaurants/<int:restaurant_id>/orders/<int:order_id>/close", methods=["PUT"])
+@jwt_required()
+def waiter_close_order(restaurant_id, order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "waiter":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    order_to_close = db.session.scalar(
+        select(Order).join(Table, Order.table_id == Table.id).where(
+            Order.id == order_id, Table.restaurant_id == restaurant_id
+        )
+    )
+    if not order_to_close:
+        return jsonify({"message": "order not found"}), 404
+    if order_to_close.state != "done":
+        return jsonify({"message": "Order must be 'done' before closing"}), 400
+    order_to_close.state = "closed"
+    db.session.commit()
+    return jsonify(order_to_close.serialize()), 200

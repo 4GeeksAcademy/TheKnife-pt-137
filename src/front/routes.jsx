@@ -62,7 +62,7 @@ import WaiterLogin from "./pages/waiter/WaiterLogin";
 import WaiterDashboard from "./pages/waiter/WaiterDashboard";
 import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
-
+import WaiterTables from "./pages/table/actions/WaiterTables";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -76,7 +76,8 @@ import EditTableForm from "./pages/table/EditTableForm";
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
 import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
-
+import WaiterOrders from "./pages/order/actions/WaiterOrders";
+import WaiterCreateOrder from "./pages/order/actions/WaiterCreateOrder";
 
 // Chefs
 import Chefs from "./pages/chef/Chefs";
@@ -153,7 +154,7 @@ export const router = createBrowserRouter(
       <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
       <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
       <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
-      
+
       {/* Managers */}
       <Route path="/managers" element={<Managers />} />
       <Route path="/create_manager" element={<CreateManagerForm />} />
@@ -189,14 +190,18 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
       <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
-
+      <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
+      <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
+      <Route path="/restaurants/:restaurant_id/waiter_orders" element={<WaiterOrders />} />
+      <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
+      <Route path="/restaurants/:restaurant_id/waiter_orders/create" element={<WaiterCreateOrder />} />
 
       {/* Tables */}
       <Route path="/tables" element={<Tables />} />
       <Route path="/create_table" element={<CreateTableForm />} />
       <Route path="/single_table/:table_id" element={<SingleTable />} />
       <Route path="/edit_table/:table_id" element={<EditTableForm />} />
-
+      <Route path="/restaurants/:restaurant_id/waiter_tables" element={<WaiterTables />} />
       {/* Chefs */}
       <Route path="/chefs" element={<Chefs />} />
       <Route path="/create_chef" element={<CreateChefForm />} />

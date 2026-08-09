@@ -121,3 +121,17 @@ export async function updateOrderStatusService(restaurant_id, order_id, state) {
     }
     else throw new Error("Some error has ocurred")
 }
+
+// Waiter closes an order of his restaurant
+export async function closeOrderService(restaurant_id, order_id) {
+    const waiterToken = localStorage.getItem("waitertoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders/${order_id}/close`, {
+        method: "PUT",
+        headers: { "Authorization": `Bearer ${waiterToken}` }
+    })
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Error closing order")
+    }
+    return await response.json()
+}

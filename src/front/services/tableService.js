@@ -72,3 +72,66 @@ export async function editTableService(tableId, tableData) {
 
     return await response.json(); // Corregido: ahora devuelve el objeto JSON
 }
+
+/////////////////////////////////////////////////////////////////////////
+// Get all tables of the restaurant
+export async function getAllRestaurantTablesService(restaurant_id) {
+    const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    return await response.json()
+}
+
+// Create a table for the restaurant
+export async function createRestaurantTableService(restaurant_id, tableData) {
+    const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
+    const newTable = {
+        number: tableData.number,
+        status: tableData.status,
+        location: tableData.location
+    }
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables`, {
+        method: "POST",
+        body: JSON.stringify(newTable),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    if (!response.ok) throw new Error("Error creating table")
+    return await response.json()
+}
+
+// Edit a table of the restaurant
+export async function editRestaurantTableService(restaurant_id, table_id, tableData) {
+    const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
+    const editedTable = {
+        number: tableData.number,
+        status: tableData.status,
+        location: tableData.location
+    }
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables/${table_id}`, {
+        method: "PUT",
+        body: JSON.stringify(editedTable),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    if (!response.ok) throw new Error("Error editing table")
+    return await response.json()
+}
+
+// Delete a table of the restaurant
+export async function deleteRestaurantTableService(restaurant_id, table_id) {
+    const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables/${table_id}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    if (!response.ok) throw new Error("Error deleting table")
+    const data = await response.json()
+    return data.message
+}

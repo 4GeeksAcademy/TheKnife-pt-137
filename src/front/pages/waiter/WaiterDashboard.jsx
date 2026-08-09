@@ -45,22 +45,22 @@ const WaiterDashboard = () => {
                     <div className="mb-3">
                         <h6 className="text-muted">Comandas</h6>
                         <div className="d-flex gap-2">
-                            <Link to="/waiter_orders/create" className="btn btn-primary">Create comanda</Link>
-                            <Link to="/waiter_orders" className="btn btn-success">Comandas list</Link>
+                            <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_orders/create`} className="btn btn-primary">Create comanda</Link>
+                            <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_orders`} className="btn btn-success">Comandas list</Link>
                         </div>
                     </div>
 
                     <div className="mb-0">
                         <h6 className="text-muted">Mesas</h6>
                         <div className="d-flex gap-2">
-                            <Link to="/waiter_tables" className="btn btn-dark">Tables list</Link>
+                            <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_tables`} className="btn btn-dark">Tables list</Link>
                         </div>
                     </div>
-
                 </div>
-            </div>
 
+            </div>
         </div>
+
     )
 }
 

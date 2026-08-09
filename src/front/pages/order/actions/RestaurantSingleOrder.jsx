@@ -7,10 +7,11 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 const RestaurantSingleOrder = () => {
 
     const { store } = useGlobalReducer()
-    const { getSingleRestaurantOrder } = useOrder()
+    const { getSingleRestaurantOrder, closeOrder } = useOrder()
     const { getProductsOfAnOrder } = useOrderProduct()
     const { restaurant_id, order_id } = useParams()
     const [loading, setLoading] = useState(true)
+    const isWaiter = !!localStorage.getItem("waitertoken")
 
     useEffect(() => {
         setLoading(true)
@@ -43,6 +44,16 @@ const RestaurantSingleOrder = () => {
                             </li>
                         ))}
                     </ul>
+
+                    {isWaiter && store.singleOrder.state === "done" && (
+                        <button
+                            className="btn btn-success w-100 mb-2"
+                            onClick={() => closeOrder(restaurant_id, order_id)}
+                        >
+                            Close order
+                        </button>
+                    )}
+
                     <Link to={`/restaurants/${restaurant_id}/orders`} className="btn btn-outline-secondary">Back to orders</Link>
                 </div>
             </div>
