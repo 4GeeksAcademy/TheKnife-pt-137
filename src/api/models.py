@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Numeric, ForeignKey
+from sqlalchemy import String, Boolean, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
 from datetime import datetime
@@ -21,6 +21,8 @@ class Restaurant(db.Model):
     phone: Mapped[str] = mapped_column(String(15), nullable=False)
     address: Mapped[str] = mapped_column(String(100), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    latitude: Mapped[float] = mapped_column(nullable=True)
+    longitude: Mapped[float] = mapped_column(nullable=True)
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(
@@ -39,7 +41,9 @@ class Restaurant(db.Model):
             "email": self.email,
             "phone": self.phone,
             "address": self.address,
-            "img_url": self.img_url
+            "img_url": self.img_url,
+            "latitude": self.latitude,
+            "longitude": self.longitude
         }
 
 # Manager
@@ -207,7 +211,7 @@ class Recipe(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    steps: Mapped[str] = mapped_column(String(300), nullable=False)
+    steps: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 

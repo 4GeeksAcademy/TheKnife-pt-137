@@ -1,14 +1,24 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL
-// GET all waiters
+// GET all waiters (manager)
 export async function getWaitersService() {
-    const response = await fetch(`${backendURL}/waiters`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/waiters`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     const data = response.json();
     return data;
 }
 
-// GET single waiter
+// GET single waiter (manager)
 export async function getSingleWaiterService(waiterId) {
-    const response = await fetch(`${backendURL}/waiters/${waiterId}`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/waiters/${waiterId}`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     if (response.status === 404) throw new Error("Waiter not found")
     else if (response.status === 200) {
         const waiter = await response.json()
@@ -16,8 +26,9 @@ export async function getSingleWaiterService(waiterId) {
     }
 }
 
-// Create new waiter
+// Create new waiter (manager CRUD)
 export async function createWaiterService(waiterData) {
+    const managerToken = localStorage.getItem("managertoken")
     const newWaiter = {
         name: waiterData.name,
         email: waiterData.email,
@@ -28,7 +39,8 @@ export async function createWaiterService(waiterData) {
         method: "POST",
         body: JSON.stringify(newWaiter),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 400) throw new Error("Some info is missing")
@@ -56,12 +68,14 @@ export async function waiterLoginService(waiterLoginData) {
     }
 }
 
-// Delete waiter
+// Delete waiter (manager)
 export async function deleteWaiterService(waiterId) {
+    const managerToken = localStorage.getItem("managertoken")
     const response = await fetch(`${backendURL}/waiters/${waiterId}`, {
         method: "DELETE",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("Waiter not found")
@@ -72,8 +86,9 @@ export async function deleteWaiterService(waiterId) {
 
 }
 
-// Edit waiter
+// Edit waiter (manager)
 export async function editWaiterService(waiterId, waiterData) {
+    const managerToken = localStorage.getItem("managertoken")
     const editedWaiter = {
         name: waiterData.name,
         email: waiterData.email,
@@ -83,7 +98,8 @@ export async function editWaiterService(waiterId, waiterData) {
         method: "PUT",
         body: JSON.stringify(editedWaiter),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("Waiter not found")

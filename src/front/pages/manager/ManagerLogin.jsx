@@ -41,7 +41,7 @@ const ManagerLogin = () => {
                     <button className="btn btn-success w-100 mb-3" onClick={() => managerLogin(managerLoginData)}>Login</button>
 
                     <div className="text-center">
-                        <Link to="/managers">Back to managers</Link>
+                        <Link to="/">Back to Home</Link>
                     </div>
 
                 </div>

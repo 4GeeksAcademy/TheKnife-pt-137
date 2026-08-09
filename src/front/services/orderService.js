@@ -1,14 +1,24 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL
-// GET all orders
+// GET all orders (manager)
 export async function getOrdersService() {
-    const response = await fetch(`${backendURL}/orders`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/orders`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     const data = response.json();
     return data;
 }
 
-// GET single order
+// GET single order (manager)
 export async function getSingleOrderService(orderId) {
-    const response = await fetch(`${backendURL}/orders/${orderId}`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/orders/${orderId}`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     if (response.status === 404) throw new Error("order not found")
     else if (response.status === 200) {
         const order = await response.json()
@@ -16,8 +26,9 @@ export async function getSingleOrderService(orderId) {
     }
 }
 
-// Create new order
+// Create new order (manager)
 export async function createOrderService(orderData) {
+    const managerToken = localStorage.getItem("managertoken")
     const newOrder = {
         table_id: orderData.table_id,
         waiter_id: orderData.waiter_id,
@@ -27,19 +38,22 @@ export async function createOrderService(orderData) {
         method: "POST",
         body: JSON.stringify(newOrder),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 400) throw new Error("Some info is missing")
     else if (response.status === 200) return response;
 }
 
-// Delete order
+// Delete order (manager)
 export async function deleteOrderService(orderId) {
+    const managerToken = localStorage.getItem("managertoken")
     const response = await fetch(`${backendURL}/orders/${orderId}`, {
         method: "DELETE",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("order not found")
@@ -50,8 +64,9 @@ export async function deleteOrderService(orderId) {
 
 }
 
-// Edit order
+// Edit order (manager)
 export async function editOrderService(orderId, orderData) {
+    const managerToken = localStorage.getItem("managertoken")
     const editedOrder = {
         table_id: orderData.table_id,
         waiter_id: orderData.waiter_id,
@@ -62,7 +77,8 @@ export async function editOrderService(orderId, orderData) {
         method: "PUT",
         body: JSON.stringify(editedOrder),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("order not found")

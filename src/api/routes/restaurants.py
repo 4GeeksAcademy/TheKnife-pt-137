@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
-from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter
+from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager
 
 restaurant = Blueprint("restaurantbp", __name__)
 
@@ -10,16 +10,22 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"cook": Cook, "waiter": Waiter, "chef": Chef}
+    models = {"cook": Cook, "waiter": Waiter, "chef": Chef, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(
         select(user_model).where(user_model.email == email))
     return current_user, role
 
-# BASIC ADMIN CRUD ENDPOINTS
+# BASIC MANAGER CRUD ENDPOINTS
 # GET Restaurants
 @restaurant.route("/restaurants")
+@jwt_required()
 def get_restaurants():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_restaurants = db.session.scalars(select(Restaurant)).all()
     all_restaurants_dicts = [restaurant.serialize()
                              for restaurant in all_restaurants]
@@ -27,7 +33,13 @@ def get_restaurants():
 
 # GET single restaurant
 @restaurant.route("/restaurants/<int:restaurant_id>")
+@jwt_required()
 def get_single_restaurant(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_restaurant = db.session.scalar(
         select(Restaurant).where(Restaurant.id == restaurant_id))
     if not single_restaurant:
@@ -36,7 +48,13 @@ def get_single_restaurant(restaurant_id):
 
 # POST create a restaurant
 @restaurant.route("/restaurants", methods=["POST"])
+@jwt_required()
 def create_restaurant():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     restaurant_mandatory_schema = ["name", "email", "phone", "address"]
     for key in restaurant_mandatory_schema:
@@ -55,7 +73,13 @@ def create_restaurant():
 
 # DELETE a restaurant
 @restaurant.route("/restaurants/<int:restaurant_id>", methods=["DELETE"])
+@jwt_required()
 def delete_restaurant(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     restaurant_to_delete = db.session.scalar(
         select(Restaurant).where(Restaurant.id == restaurant_id))
     if not restaurant_to_delete:
@@ -78,7 +102,13 @@ def delete_restaurant(restaurant_id):
 
 # PUT: edit a restaurant
 @restaurant.route("/restaurants/<int:restaurant_id>", methods=["PUT"])
+@jwt_required()
 def edit_restaurant(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     restaurant_to_edit = db.session.scalar(
         select(Restaurant).where(Restaurant.id == restaurant_id))
     if not restaurant_to_edit:
@@ -181,3 +211,27 @@ def edit_chef_restaurant(restaurant_id):
         setattr(restaurant, key, body[key])
     db.session.commit()
     return jsonify(restaurant.serialize()), 200
+
+# PATCH chef edits restaurant latitude and longitude
+@restaurant.route("/restaurants/<int:restaurant_id>/location", methods=["PATCH"])
+@jwt_required()
+def chef_edit_restaurant_coordinates(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "chef":
+        return jsonify({"message": "Access forbidden"}), 403
+    if current_user.restaurant_id != restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    restaurant = db.session.scalar(select(Restaurant).where(Restaurant.id == restaurant_id))
+    if not restaurant:
+        return jsonify({"message": "Restaurant not found"}), 404
+    body = request.get_json()
+    patch_mandatory_schema = ["address", "longitude", "latitude"]
+    for key in patch_mandatory_schema:
+        if key not in body or body[key] == "":
+            return jsonify({"message": "Some info is missing, body must have 'address', 'latitude' and 'longitude' "}), 400
+    for key in patch_mandatory_schema:
+        setattr(restaurant, key, body[key])
+    db.session.commit()
+    return jsonify({"message": "Restaurant coordinates successfully edited"}), 200

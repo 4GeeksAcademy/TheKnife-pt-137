@@ -9,36 +9,12 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1">CocinApp</span>
 				</Link>
 				<div className="ml-auto d-flex gap-2">
-					<Link to="/products">
-						<button className="btn btn-primary">Product CRUD</button>
+					<Link to="/create_manager">
+						<button className="btn btn-outline-primary">Register manager</button>
 					</Link>
-					<Link to="/recipes">
-						<button className="btn btn-primary">Recipes CRUD</button>
+					<Link to="/manager_dashboard">
+						<button className="btn btn-primary">Manager dashboard</button>
 					</Link>
-					<Link to="/restaurants">
-						<button className="btn btn-primary">Restaurants CRUD</button>
-					</Link>
-					<Link to="/ingredients">
-						<button className="btn btn-primary">Ingredients CRUD</button>
-					</Link>
-					<Link to="/waiters">
-						<button className="btn btn-primary">Waiters CRUD</button>
-					</Link>
-					<Link to="/orders">
-						<button className="btn btn-primary">Orders CRUD</button>
-					</Link>
-					<Link to="/tables">
-						<button className="btn btn-primary">Tables CRUD</button>
-					</Link>	
-					<Link to="/chefs">
-						<button className="btn btn-primary">Chefs CRUD</button>
-					</Link>
-					<Link to="/cooks">
-						<button className="btn btn-primary">Cooks CRUD</button>
-					</Link>
-					<Link to="/managers">
-                        <button className="btn btn-primary">Managers CRUD</button>
-                    </Link>
 				</div>
 			</div>
 		</nav>

@@ -46,6 +46,7 @@ const ChefDashboard = () => {
                     <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
                     <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
                     <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
+                    <Link to={`/maps/${currentChef.restaurant_id}`}><button className="btn btn-outline-success">Map</button></Link>
                 </div>
             </div>
 

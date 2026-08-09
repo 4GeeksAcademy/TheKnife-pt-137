@@ -20,6 +20,7 @@ sqlalchemy = "*"
 flask-cors = "*"
 flask-jwt-extended = "*"
 flask = "*"
+anthropic = "*"
 
 [requires]
 python_version = "3.13"

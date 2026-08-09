@@ -9,7 +9,7 @@ const RegisterChef = () => {
 
     const { store } = useGlobalReducer()
     const [chefData, setChefData] = useState({name: "", email: "", password: ""})
-    const { createChef } = useChef()
+    const { registerChef } = useChef()
 
     return (
         <div className="container py-5" style={{ maxWidth: "500px" }}>
@@ -33,7 +33,7 @@ const RegisterChef = () => {
                         <input className="form-control" onChange={(e)=>setChefData({...chefData, password: e.target.value})} value={chefData.password} type="password" name="password" id="password" />
                     </div>
 
-                    <button onClick={()=>createChef(chefData)} className="btn btn-primary w-100 mb-3">Register new chef</button>
+                    <button onClick={()=>registerChef(chefData)} className="btn btn-primary w-100 mb-3">Register new chef</button>
 
                     <div className="text-center">
                         <Link to="/">Back to home</Link>

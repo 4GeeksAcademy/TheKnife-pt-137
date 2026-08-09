@@ -1,45 +1,63 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export async function getRecipesService() {
-  const response = await fetch(BACKEND_URL + "/recipes");
-  const data = await response.json();
-  return data;
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(BACKEND_URL + "/recipes", {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
+    const data = await response.json()
+    return data
 }
 
 export async function getSingleRecipeService(recipeId) {
-  const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`);
-  const data = await response.json();
-  return data;
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
+    const data = await response.json()
+    return data
 }
 
 export async function createRecipeService(recipeData) {
-  const response = await fetch(BACKEND_URL + "/recipes", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(recipeData),
-  });
-  return response;
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(BACKEND_URL + "/recipes", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
+        },
+        body: JSON.stringify(recipeData)
+    })
+    return response
 }
 
 export async function deleteRecipeService(recipeId) {
-  const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`, {
-    method: "DELETE",
-  });
-  const data = await response.json();
-  return data;
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`, {
+        method: "DELETE",
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
+    const data = await response.json()
+    return data
 }
 
 export async function editRecipeService(recipeId, recipeData) {
-  const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(recipeData),
-  });
-  return response;
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(BACKEND_URL + `/recipes/${recipeId}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
+        },
+        body: JSON.stringify(recipeData)
+    })
+    return response
 }
 /////////////////////////////////////////////////////////////////////////
 // Get all recipes
@@ -130,6 +148,26 @@ export async function chefEditRecipeService(
   );
   if (response.status === 404) throw new Error("Recipe not found");
   else if (response.status === 200) return response;
+}
+
+// Chef uploads a dish photo and gets back an AI-generated recipe suggestion
+// (name, steps and ingredients). Nothing is saved to the database yet.
+export async function generateRecipeFromImageService(restaurant_id, img_url) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/generate_recipe`, {
+        method: "POST",
+        body: JSON.stringify({ img_url }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Some error has ocurred")
+    }
+    const data = await response.json()
+    return data
 }
 
 // Chef creates a recipe

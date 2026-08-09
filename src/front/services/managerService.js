@@ -1,7 +1,12 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL
-// GET all managers
+// GET all managers (manager)
 export async function getManagersService() {
-    const response = await fetch(`${backendURL}/managers`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/managers`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     const data = response.json();
     return data;
 }
@@ -44,12 +49,14 @@ export async function managerLoginService(managerLoginData) {
     }
 }
 
-// Delete manager
+// Delete manager (manager)
 export async function deleteManagerService(managerId) {
+    const managerToken = localStorage.getItem("managertoken")
     const response = await fetch(`${backendURL}/managers/${managerId}`, {
         method: "DELETE",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("manager not found")
@@ -60,8 +67,9 @@ export async function deleteManagerService(managerId) {
 
 }
 
-// Edit manager
+// Edit manager (manager)
 export async function editManagerService(managerId, managerData) {
+    const managerToken = localStorage.getItem("managertoken")
     const editedManager = {
         name: managerData.name,
         email: managerData.email,
@@ -71,7 +79,8 @@ export async function editManagerService(managerId, managerData) {
         method: "PUT",
         body: JSON.stringify(editedManager),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("manager not found")

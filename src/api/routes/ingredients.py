@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
-from api.models import db, Ingredient, Chef, Cook, Waiter
+from api.models import db, Ingredient, Chef, Cook, Waiter, Manager
 
 ingredient = Blueprint("ingredientbp", __name__)
 
@@ -9,7 +9,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
@@ -18,7 +18,13 @@ def get_current_user():
 # GET: obtener TODOS los ingredientes
 # -----------------------------
 @ingredient.route("/ingredients")
+@jwt_required()
 def get_ingredients():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_ingredients = db.session.scalars(select(Ingredient)).all()
     all_ingredients_dicts = [ing.serialize() for ing in all_ingredients]
     return jsonify(list(all_ingredients_dicts)), 200
@@ -28,7 +34,13 @@ def get_ingredients():
 # GET: obtener UN ingrediente concreto
 # --------------------------------
 @ingredient.route("/ingredients/<int:ingredient_id>")
+@jwt_required()
 def get_single_ingredient(ingredient_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_ingredient = db.session.scalar(
         select(Ingredient).where(Ingredient.id == ingredient_id)
     )
@@ -43,7 +55,13 @@ def get_single_ingredient(ingredient_id):
 # POST: crear un nuevo ingrediente
 # -----------------------------
 @ingredient.route("/ingredients", methods=["POST"])
+@jwt_required()
 def create_ingredient():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
 
     ingredient_mandatory_schema = ["name"]
@@ -69,7 +87,13 @@ def create_ingredient():
 # DELETE: eliminar un ingrediente
 # -----------------------------
 @ingredient.route("/ingredients/<int:ingredient_id>", methods=["DELETE"])
+@jwt_required()
 def delete_ingredient(ingredient_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     ingredient_to_delete = db.session.scalar(
         select(Ingredient).where(Ingredient.id == ingredient_id)
     )
@@ -87,7 +111,13 @@ def delete_ingredient(ingredient_id):
 # PUT: editar un ingrediente
 # -----------------------------
 @ingredient.route("/ingredients/<int:ingredient_id>", methods=["PUT"])
+@jwt_required()
 def edit_ingredient(ingredient_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     ingredient_to_edit = db.session.scalar(
         select(Ingredient).where(Ingredient.id == ingredient_id)
     )
