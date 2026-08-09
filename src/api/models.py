@@ -213,6 +213,7 @@ class Recipe(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     steps: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    calories: Mapped[int] = mapped_column(nullable=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
@@ -226,6 +227,7 @@ class Recipe(db.Model):
             "name": self.name,
             "steps": self.steps,
             "img_url": self.img_url,
+            "calories": self.calories,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name
         }
