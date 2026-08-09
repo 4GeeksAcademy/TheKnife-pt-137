@@ -1,14 +1,24 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL;
-// GET all restaurants
+// GET all restaurants (manager)
 export async function getRestaurantsService() {
-  const response = await fetch(`${backendURL}/restaurants`);
+  const managerToken = localStorage.getItem("managertoken");
+  const response = await fetch(`${backendURL}/restaurants`, {
+    headers: {
+      Authorization: `Bearer ${managerToken}`,
+    },
+  });
   const data = response.json();
   return data;
 }
 
-// GET single restaurant
+// GET single restaurant (manager)
 export async function getSingleRestaurantService(restaurantId) {
-  const response = await fetch(`${backendURL}/restaurants/${restaurantId}`);
+  const managerToken = localStorage.getItem("managertoken");
+  const response = await fetch(`${backendURL}/restaurants/${restaurantId}`, {
+    headers: {
+      Authorization: `Bearer ${managerToken}`,
+    },
+  });
   if (response.status === 404) throw new Error("Restaurant not found");
   else if (response.status === 200) {
     const restaurant = await response.json();
@@ -16,8 +26,9 @@ export async function getSingleRestaurantService(restaurantId) {
   }
 }
 
-// Create new Restaurant
+// Create new Restaurant (manager)
 export async function createRestaurantService(restaurantData) {
+  const managerToken = localStorage.getItem("managertoken");
   const newRestaurant = {
     name: restaurantData.name,
     email: restaurantData.email,
@@ -30,18 +41,21 @@ export async function createRestaurantService(restaurantData) {
     body: JSON.stringify(newRestaurant),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${managerToken}`,
     },
   });
   if (response.status === 400) throw new Error("Some info is missing");
   else if (response.status === 200) return response;
 }
 
-// Delete Restaurant
+// Delete Restaurant (manager)
 export async function deleteRestaurantService(restaurantId) {
+  const managerToken = localStorage.getItem("managertoken");
   const response = await fetch(`${backendURL}/restaurants/${restaurantId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${managerToken}`,
     },
   });
   if (response.status === 404) throw new Error("Restaurant not found");
@@ -51,8 +65,9 @@ export async function deleteRestaurantService(restaurantId) {
   }
 }
 
-// Edit Restaurant
+// Edit Restaurant (manager)
 export async function editRestaurantService(restaurantId, restaurantData) {
+  const managerToken = localStorage.getItem("managertoken");
   const editedRestaurant = {
     name: restaurantData.name,
     email: restaurantData.email,
@@ -65,6 +80,7 @@ export async function editRestaurantService(restaurantId, restaurantData) {
     body: JSON.stringify(editedRestaurant),
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${managerToken}`,
     },
   });
   if (response.status === 404) throw new Error("Restaurant not found");

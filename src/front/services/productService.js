@@ -1,14 +1,24 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL
-// GET all products
+// GET all products (manager)
 export async function getProductsService() {
-    const response = await fetch(`${backendURL}/products`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/products`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     const data = response.json();
     return data;
 }
 
-// GET single product
+// GET single product (manager)
 export async function getSingleProductService(productId) {
-    const response = await fetch(`${backendURL}/products/${productId}`)
+    const managerToken = localStorage.getItem("managertoken")
+    const response = await fetch(`${backendURL}/products/${productId}`, {
+        headers: {
+            "Authorization": `Bearer ${managerToken}`
+        }
+    })
     if (response.status === 404) throw new Error("Product not found")
     else if (response.status === 200) {
         const product = await response.json()
@@ -16,8 +26,9 @@ export async function getSingleProductService(productId) {
     }
 }
 
-// Create new product
+// Create new product (manager)
 export async function createProductService(productData) {
+    const managerToken = localStorage.getItem("managertoken")
     const newProduct = {
         name: productData.name,
         description: productData.description,
@@ -31,19 +42,22 @@ export async function createProductService(productData) {
         method: "POST",
         body: JSON.stringify(newProduct),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 400) throw new Error("Some info is missing")
     else if (response.status === 200) return response;
 }
 
-// Delete product
+// Delete product (manager)
 export async function deleteProductService(productId) {
+    const managerToken = localStorage.getItem("managertoken")
     const response = await fetch(`${backendURL}/products/${productId}`, {
         method: "DELETE",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("Product not found")
@@ -54,8 +68,9 @@ export async function deleteProductService(productId) {
 
 }
 
-// Edit product
+// Edit product (manager)
 export async function editProductService(productId, productData) {
+    const managerToken = localStorage.getItem("managertoken")
     const editedProduct = {
         name: productData.name,
         description: productData.description,
@@ -68,7 +83,8 @@ export async function editProductService(productId, productData) {
         method: "PUT",
         body: JSON.stringify(editedProduct),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${managerToken}`
         }
     })
     if (response.status === 404) throw new Error("Product not found")

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, jwt_required
 from sqlalchemy import select
-from api.models import db, Cook, Restaurant, Chef, Waiter
+from api.models import db, Cook, Restaurant, Chef, Waiter, Manager
 
 cook = Blueprint("cookbp", __name__)
 
@@ -9,7 +9,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
@@ -17,14 +17,26 @@ def get_current_user():
 # Endpoints
 # GET cooks
 @cook.route("/cooks")
+@jwt_required()
 def get_cooks():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_cooks = db.session.scalars(select(Cook)).all()
     all_cooks_dicts = [cook.serialize() for cook in all_cooks]
     return jsonify(list(all_cooks_dicts)), 200
 
 # GET single cook
 @cook.route("/cooks/<int:cook_id>")
+@jwt_required()
 def get_single_cook(cook_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_cook = db.session.scalar(
         select(Cook).where(Cook.id == cook_id))
     if not single_cook:
@@ -33,7 +45,13 @@ def get_single_cook(cook_id):
 
 # POST register a cook
 @cook.route("/cooks", methods=["POST"])
+@jwt_required()
 def cook_register():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     cook_mandatory_schema = ["name", "email", "password", "restaurant_id"]
     for key in cook_mandatory_schema:
@@ -66,7 +84,13 @@ def cook_login():
 
 # DELETE a cook
 @cook.route("/cooks/<int:cook_id>", methods=["DELETE"])
+@jwt_required()
 def delete_cook(cook_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     cook_to_delete = db.session.scalar(
         select(Cook).where(Cook.id == cook_id))
     if not cook_to_delete:
@@ -77,7 +101,13 @@ def delete_cook(cook_id):
 
 # PUT: edit a cook
 @cook.route("/cooks/<int:cook_id>", methods=["PUT"])
+@jwt_required()
 def edit_cook(cook_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     cook_to_edit = db.session.scalar(
         select(Cook).where(Cook.id == cook_id))
     if not cook_to_edit:

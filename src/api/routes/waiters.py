@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, get_jwt_identity, create_access_token, jwt_required
 from sqlalchemy import select
-from api.models import db, Waiter, Restaurant, Chef, Cook
+from api.models import db, Waiter, Restaurant, Chef, Cook, Manager
 
 waiter = Blueprint("waiterbp", __name__)
 
@@ -9,7 +9,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
@@ -17,14 +17,26 @@ def get_current_user():
 # Endpoints
 # GET waiters
 @waiter.route("/waiters")
+@jwt_required()
 def get_waiters():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_waiters = db.session.scalars(select(Waiter)).all()
     all_waiters_dicts = [waiter.serialize() for waiter in all_waiters]
     return jsonify(list(all_waiters_dicts)), 200
 
 # GET single waiter
 @waiter.route("/waiters/<int:waiter_id>")
+@jwt_required()
 def get_single_waiter(waiter_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_waiter = db.session.scalar(
         select(Waiter).where(Waiter.id == waiter_id))
     if not single_waiter:
@@ -33,7 +45,13 @@ def get_single_waiter(waiter_id):
 
 # POST register a waiter
 @waiter.route("/waiters", methods=["POST"])
+@jwt_required()
 def waiter_register():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     waiter_mandatory_schema = ["name", "email", "password", "restaurant_id"]
     for key in waiter_mandatory_schema:
@@ -69,7 +87,13 @@ def waiter_login():
 
 # DELETE a waiter
 @waiter.route("/waiters/<int:waiter_id>", methods=["DELETE"])
+@jwt_required()
 def delete_waiter(waiter_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     waiter_to_delete = db.session.scalar(
         select(Waiter).where(Waiter.id == waiter_id))
     if not waiter_to_delete:
@@ -80,7 +104,13 @@ def delete_waiter(waiter_id):
 
 # PUT: edit a waiter
 @waiter.route("/waiters/<int:waiter_id>", methods=["PUT"])
+@jwt_required()
 def edit_waiter(waiter_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     waiter_to_edit = db.session.scalar(
         select(Waiter).where(Waiter.id == waiter_id))
     if not waiter_to_edit:

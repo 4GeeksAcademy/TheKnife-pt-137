@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt, create_access_token
 from sqlalchemy import select
-from api.models import db, Recipe, RecipeIngredient, Chef, Cook, Waiter
+from api.models import db, Recipe, RecipeIngredient, Chef, Cook, Waiter, Manager
 
 recipe = Blueprint("recipebp", __name__)
 
@@ -9,19 +9,31 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
 
 @recipe.route("/recipes")
+@jwt_required()
 def get_recipes():
-    all_recipes = db.session.scalars(select(Recipe)).all() 
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
+    all_recipes = db.session.scalars(select(Recipe)).all()
     all_recipes_dicts = [rec.serialize() for rec in all_recipes]
     return jsonify(list(all_recipes_dicts)), 200
 
 @recipe.route("/recipes/<int:recipe_id>")
+@jwt_required()
 def get_single_recipe(recipe_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_recipe = db.session.scalar(
         select(Recipe).where(Recipe.id == recipe_id)
     )
@@ -30,7 +42,13 @@ def get_single_recipe(recipe_id):
     return jsonify(single_recipe.serialize()), 200
 
 @recipe.route("/recipes", methods=["POST"])
+@jwt_required()
 def create_recipe():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     recipe_mandatory_schema = ["name", "steps", "restaurant_id"]
     for key in recipe_mandatory_schema:
@@ -49,7 +67,13 @@ def create_recipe():
     return jsonify(new_recipe.serialize()), 200
 
 @recipe.route("/recipes/<int:recipe_id>", methods=["DELETE"])
+@jwt_required()
 def delete_recipe(recipe_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     recipe_to_delete = db.session.scalar(
         select(Recipe).where(Recipe.id == recipe_id)
     )
@@ -70,7 +94,13 @@ def delete_recipe(recipe_id):
     return jsonify({"message": "Recipe deleted successfully"}), 200
 
 @recipe.route("/recipes/<int:recipe_id>", methods=["PUT"])
+@jwt_required()
 def edit_recipe(recipe_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     recipe_to_edit = db.session.scalar(
         select(Recipe).where(Recipe.id == recipe_id)
     )

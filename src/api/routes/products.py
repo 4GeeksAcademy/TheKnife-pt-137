@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
-from api.models import db, Product, Recipe, Chef, Cook, Waiter, RecipeIngredient
+from api.models import db, Product, Recipe, Chef, Cook, Waiter, RecipeIngredient, Manager
 
 product = Blueprint("productbp", __name__)
 
@@ -10,7 +10,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(
         select(user_model).where(user_model.email == email))
@@ -19,14 +19,26 @@ def get_current_user():
 # Endpoints
 # GET Products
 @product.route("/products")
+@jwt_required()
 def get_products():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_products = db.session.scalars(select(Product)).all()
     all_products_dicts = [product.serialize() for product in all_products]
     return jsonify(list(all_products_dicts)), 200
 
 # GET single product
 @product.route("/products/<int:product_id>")
+@jwt_required()
 def get_single_product(product_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_product = db.session.scalar(
         select(Product).where(Product.id == product_id))
     if not single_product:
@@ -35,7 +47,13 @@ def get_single_product(product_id):
 
 # POST create a product
 @product.route("/products", methods=["POST"])
+@jwt_required()
 def create_product():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     product_mandatory_schema = ["name", "sell_price", "type", "restaurant_id"]
     for key in product_mandatory_schema:
@@ -61,7 +79,13 @@ def create_product():
 
 # DELETE a product
 @product.route("/products/<int:product_id>", methods=["DELETE"])
+@jwt_required()
 def delete_product(product_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     product_to_delete = db.session.scalar(
         select(Product).where(Product.id == product_id))
     if not product_to_delete:
@@ -72,7 +96,13 @@ def delete_product(product_id):
 
 # PUT: edit a product
 @product.route("/products/<int:product_id>", methods=["PUT"])
+@jwt_required()
 def edit_product(product_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     product_to_edit = db.session.scalar(
         select(Product).where(Product.id == product_id))
     if not product_to_edit:

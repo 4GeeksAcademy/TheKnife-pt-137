@@ -1,15 +1,25 @@
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
-// GET all cooks
+// GET all cooks (manager)
 export async function getCooksService() {
-  const response = await fetch(`${backendURL}/cooks`);
+  const managerToken = localStorage.getItem("managertoken");
+  const response = await fetch(`${backendURL}/cooks`, {
+    headers: {
+      "Authorization": `Bearer ${managerToken}`,
+    },
+  });
   const data = response.json();
   return data;
 }
 
-// GET single cook
+// GET single cook (manager)
 export async function getSingleCookService(cookId) {
-  const response = await fetch(`${backendURL}/cooks/${cookId}`);
+  const managerToken = localStorage.getItem("managertoken");
+  const response = await fetch(`${backendURL}/cooks/${cookId}`, {
+    headers: {
+      "Authorization": `Bearer ${managerToken}`,
+    },
+  });
   if (response.status === 404) throw new Error("Cook not found");
   else if (response.status === 200) {
     const cook = await response.json();
@@ -17,8 +27,9 @@ export async function getSingleCookService(cookId) {
   }
 }
 
-// Create new cook
+// Create new cook (manager CRUD)
 export async function createCookService(cookData) {
+  const managerToken = localStorage.getItem("managertoken");
   const newCook = {
     name: cookData.name,
     email: cookData.email,
@@ -30,6 +41,7 @@ export async function createCookService(cookData) {
     body: JSON.stringify(newCook),
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${managerToken}`,
     },
   });
   if (response.status === 400) throw new Error("Some info is missing");
@@ -54,12 +66,14 @@ export async function cookLoginService(cookLoginData) {
     }
 }
 
-// Delete cook
+// Delete cook (manager)
 export async function deleteCookService(cookId) {
+  const managerToken = localStorage.getItem("managertoken");
   const response = await fetch(`${backendURL}/cooks/${cookId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${managerToken}`,
     },
   });
   if (response.status === 404) throw new Error("Cook not found");
@@ -69,8 +83,9 @@ export async function deleteCookService(cookId) {
   }
 }
 
-// Edit cook
+// Edit cook (manager)
 export async function editCookService(cookId, cookData) {
+  const managerToken = localStorage.getItem("managertoken");
   const editedCook = {
     name: cookData.name,
     email: cookData.email,
@@ -81,6 +96,7 @@ export async function editCookService(cookId, cookData) {
     body: JSON.stringify(editedCook),
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${managerToken}`,
     },
   });
   if (response.status === 404) throw new Error("Cook not found");

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from sqlalchemy import select
-from api.models import db, Order, Chef, Waiter, Cook, Table
+from api.models import db, Order, Chef, Waiter, Cook, Table, Manager
 
 order = Blueprint("orderbp", __name__)
 
@@ -9,7 +9,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
@@ -17,14 +17,26 @@ def get_current_user():
 # Endpoints
 # GET orders
 @order.route("/orders")
+@jwt_required()
 def get_orders():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     all_orders = db.session.scalars(select(Order)).all()
     all_orders_dicts = [order.serialize() for order in all_orders]
     return jsonify(list(all_orders_dicts)), 200
 
 # GET single order
 @order.route("/orders/<int:order_id>")
+@jwt_required()
 def get_single_order(order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     single_order = db.session.scalar(
         select(Order).where(Order.id == order_id))
     if not single_order:
@@ -33,7 +45,13 @@ def get_single_order(order_id):
 
 # POST create a order
 @order.route("/orders", methods=["POST"])
+@jwt_required()
 def create_order():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
     order_mandatory_schema = ["table_id", "waiter_id", "people"]
     for key in order_mandatory_schema:
@@ -50,7 +68,13 @@ def create_order():
 
 # DELETE a order
 @order.route("/orders/<int:order_id>", methods=["DELETE"])
+@jwt_required()
 def delete_order(order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     order_to_delete = db.session.scalar(
         select(Order).where(Order.id == order_id))
     if not order_to_delete:
@@ -61,7 +85,13 @@ def delete_order(order_id):
 
 # PUT: edit a order
 @order.route("/orders/<int:order_id>", methods=["PUT"])
+@jwt_required()
 def edit_order(order_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "manager":
+        return jsonify({"message": "Access forbidden"}), 403
     order_to_edit = db.session.scalar(
         select(Order).where(Order.id == order_id))
     if not order_to_edit:

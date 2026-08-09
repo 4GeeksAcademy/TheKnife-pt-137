@@ -32,8 +32,22 @@ const ManagerDashboard = () => {
 
             <div className="card">
                 <div className="card-header">Actions</div>
-                <div className="card-body d-flex gap-2">
-                    <Link to="/managers" className="btn btn-dark">Managers list</Link>
+                <div className="card-body">
+                    <div className="mb-0">
+                        <h6 className="text-muted">CRUD resources</h6>
+                        <div className="d-flex flex-wrap gap-2">
+                            <Link to="/products" className="btn btn-primary">Products</Link>
+                            <Link to="/recipes" className="btn btn-secondary">Recipes</Link>
+                            <Link to="/restaurants" className="btn btn-success">Restaurants</Link>
+                            <Link to="/ingredients" className="btn btn-warning">Ingredients</Link>
+                            <Link to="/orders" className="btn btn-danger">Orders</Link>
+                            <Link to="/tables" className="btn btn-info">Tables</Link>
+                            <Link to="/chefs" className="btn btn-dark">Chefs</Link>
+                            <Link to="/cooks" className="btn btn-outline-primary">Cooks</Link>
+                            <Link to="/waiters" className="btn btn-outline-secondary">Waiters</Link>
+                            <Link to="/managers" className="btn btn-outline-dark">Managers</Link>
+                        </div>
+                    </div>
                 </div>
             </div>
 

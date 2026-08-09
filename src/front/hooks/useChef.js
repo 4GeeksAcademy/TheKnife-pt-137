@@ -1,7 +1,7 @@
 // Services imports
 import { useNavigate } from "react-router-dom";
 import useGlobalReducer from "./useGlobalReducer";
-import { getChefsService, getSingleChefService, createChefService, deleteChefService, editChefService, chefLoginService } from "../services/chefService";
+import { getChefsService, getSingleChefService, createChefService, chefRegisterService, deleteChefService, editChefService, chefLoginService } from "../services/chefService";
 
 export function useChef() {
 
@@ -25,13 +25,23 @@ export function useChef() {
         } catch (error) {console.log(error)}
     }
 
-    // Create chef
+    // Create chef (manager CRUD -> POST /chefs, requires manager)
     async function createChef(chefData) {
         try {
             const response = await createChefService(chefData)
             const data = await response.json()
             console.log(data)
             navigate("/")
+        } catch(error) {console.log(error)}
+    }
+
+    // Public chef self-registration (-> POST /chef_register, no manager needed)
+    async function registerChef(chefData) {
+        try {
+            const response = await chefRegisterService(chefData)
+            const data = await response.json()
+            console.log(data)
+            navigate("/chef_login")
         } catch(error) {console.log(error)}
     }
 
@@ -89,6 +99,7 @@ export function useChef() {
         deleteChef,
         getSingleChef,
         createChef,
+        registerChef,
         editChef,
         chefLogin,
         chefLogout,

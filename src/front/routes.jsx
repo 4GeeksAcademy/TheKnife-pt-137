@@ -12,6 +12,7 @@ import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 
 // CocinApp imports
+import { ManagerRoute } from "./components/ManagerRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 
@@ -125,93 +126,93 @@ export const router = createBrowserRouter(
         
       <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
 
-      {/* Products */}
-      <Route path="/products" element={<Products />} />
-      <Route path="/create_product" element={<CreateProductForm />} />
-      <Route path="/edit_product/:product_id" element={<EditProductForm />} />
-      <Route path="/single_product/:product_id" element={<SingleProduct />} />
+      {/* Products (CRUD genérico -> solo manager) */}
+      <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
+      <Route path="/create_product" element={<ManagerRoute><CreateProductForm /></ManagerRoute>} />
+      <Route path="/edit_product/:product_id" element={<ManagerRoute><EditProductForm /></ManagerRoute>} />
+      <Route path="/single_product/:product_id" element={<ManagerRoute><SingleProduct /></ManagerRoute>} />
       <Route path="/restaurants/:restaurant_id/create_product" element={<ChefProductCreate />} />
       <Route path="/restaurants/:restaurant_id/products" element={<ChefRestaurantProducts />} />
       <Route path="/restaurants/:restaurant_id/edit_product/:product_id" element={<ChefEditProduct />} />
       <Route path="/restaurants/:restaurant_id/single_product/:product_id" element={<ChefSingleProduct />} />
 
-      {/* Recipes */}
-      <Route path="/recipes" element={<Recipes />} />
-      <Route path="/create_recipe" element={<CreateRecipeForm />} />
-      <Route path="/recipe/:recipe_id" element={<SingleRecipe />} />
-      <Route path="/edit_recipe/:recipe_id" element={<EditRecipeForm />} />
+      {/* Recipes (CRUD genérico -> solo manager) */}
+      <Route path="/recipes" element={<ManagerRoute><Recipes /></ManagerRoute>} />
+      <Route path="/create_recipe" element={<ManagerRoute><CreateRecipeForm /></ManagerRoute>} />
+      <Route path="/recipe/:recipe_id" element={<ManagerRoute><SingleRecipe /></ManagerRoute>} />
+      <Route path="/edit_recipe/:recipe_id" element={<ManagerRoute><EditRecipeForm /></ManagerRoute>} />
       <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
       <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
       <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
 
-      {/* Restaurants */}
-      <Route path="/restaurants" element={<Restaurants />} />
-      <Route path="/create_restaurant" element={<CreateRestaurantForm />} />
-      <Route path="/single_restaurant/:restaurant_id" element={<SingleRestaurant />} />
-      <Route path="/edit_restaurant/:restaurant_id" element={<EditRestaurantForm />} />
+      {/* Restaurants (CRUD genérico -> solo manager) */}
+      <Route path="/restaurants" element={<ManagerRoute><Restaurants /></ManagerRoute>} />
+      <Route path="/create_restaurant" element={<ManagerRoute><CreateRestaurantForm /></ManagerRoute>} />
+      <Route path="/single_restaurant/:restaurant_id" element={<ManagerRoute><SingleRestaurant /></ManagerRoute>} />
+      <Route path="/edit_restaurant/:restaurant_id" element={<ManagerRoute><EditRestaurantForm /></ManagerRoute>} />
       <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
       <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
       <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
       
-      {/* Managers */}
-      <Route path="/managers" element={<Managers />} />
+      {/* Managers (CRUD genérico -> solo manager; registro/login/dashboard públicos) */}
+      <Route path="/managers" element={<ManagerRoute><Managers /></ManagerRoute>} />
       <Route path="/create_manager" element={<CreateManagerForm />} />
-      <Route path="/edit_manager/:manager_id" element={<EditManagerForm />} />
+      <Route path="/edit_manager/:manager_id" element={<ManagerRoute><EditManagerForm /></ManagerRoute>} />
       <Route path="/manager_login" element={<ManagerLogin />} />
       <Route path="/manager_dashboard" element={<ManagerDashboard />} />
 
-      {/* Ingredients */}
-      <Route path="/ingredients" element={<Ingredients />} />
-      <Route path="/ingredients/create" element={<CreateIngredientForm />} />
-      <Route path="/ingredients/:ingredient_id" element={<SingleIngredient />} />
-      <Route path="/ingredients/edit/:ingredient_id" element={<EditIngredientForm />} />
+      {/* Ingredients (CRUD genérico -> solo manager) */}
+      <Route path="/ingredients" element={<ManagerRoute><Ingredients /></ManagerRoute>} />
+      <Route path="/ingredients/create" element={<ManagerRoute><CreateIngredientForm /></ManagerRoute>} />
+      <Route path="/ingredients/:ingredient_id" element={<ManagerRoute><SingleIngredient /></ManagerRoute>} />
+      <Route path="/ingredients/edit/:ingredient_id" element={<ManagerRoute><EditIngredientForm /></ManagerRoute>} />
       <Route path="/chef_ingredients" element={<ChefIngredients />} />
       <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
       <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
       <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
 
-      {/* Waiters */}
-      <Route path="/waiters" element={<Waiters />} />
-      <Route path="/create_waiter" element={<CreateWaiterForm />} />
-      <Route path="/single_waiter/:waiter_id" element={<SingleWaiter />} />
-      <Route path="/edit_waiter/:waiter_id" element={<EditWaiterForm />} />
+      {/* Waiters (CRUD genérico -> solo manager) */}
+      <Route path="/waiters" element={<ManagerRoute><Waiters /></ManagerRoute>} />
+      <Route path="/create_waiter" element={<ManagerRoute><CreateWaiterForm /></ManagerRoute>} />
+      <Route path="/single_waiter/:waiter_id" element={<ManagerRoute><SingleWaiter /></ManagerRoute>} />
+      <Route path="/edit_waiter/:waiter_id" element={<ManagerRoute><EditWaiterForm /></ManagerRoute>} />
       <Route path="/waiter_login" element={<WaiterLogin />} />
       <Route path="/waiter_dashboard" element={<WaiterDashboard />} />
       <Route path="/restaurants/:restaurant_id/register_waiter" element={<RegisterWaiter />} />
       <Route path="/restaurants/:restaurant_id/waiters" element={<RestaurantWaiters />} />
 
-      {/* Orders */}
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/create_order" element={<CreateOrderForm />} />
-      <Route path="/single_order/:order_id" element={<SingleOrder />} />
-      <Route path="/edit_order/:order_id" element={<EditOrderForm />} />
+      {/* Orders (CRUD genérico -> solo manager) */}
+      <Route path="/orders" element={<ManagerRoute><Orders /></ManagerRoute>} />
+      <Route path="/create_order" element={<ManagerRoute><CreateOrderForm /></ManagerRoute>} />
+      <Route path="/single_order/:order_id" element={<ManagerRoute><SingleOrder /></ManagerRoute>} />
+      <Route path="/edit_order/:order_id" element={<ManagerRoute><EditOrderForm /></ManagerRoute>} />
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
       <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
 
 
-      {/* Tables */}
-      <Route path="/tables" element={<Tables />} />
-      <Route path="/create_table" element={<CreateTableForm />} />
-      <Route path="/single_table/:table_id" element={<SingleTable />} />
-      <Route path="/edit_table/:table_id" element={<EditTableForm />} />
+      {/* Tables (CRUD genérico -> solo manager) */}
+      <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
+      <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
+      <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
+      <Route path="/edit_table/:table_id" element={<ManagerRoute><EditTableForm /></ManagerRoute>} />
 
-      {/* Chefs */}
-      <Route path="/chefs" element={<Chefs />} />
-      <Route path="/create_chef" element={<CreateChefForm />} />
+      {/* Chefs (CRUD genérico -> solo manager; register/login/dashboard aparte) */}
+      <Route path="/chefs" element={<ManagerRoute><Chefs /></ManagerRoute>} />
+      <Route path="/create_chef" element={<ManagerRoute><CreateChefForm /></ManagerRoute>} />
       <Route path="/chef_register" element={<RegisterChef />} />
-      <Route path="/single_chef/:chef_id" element={<SingleChef />} />
-      <Route path="/edit_chef/:chef_id" element={<EditChefForm />} />
+      <Route path="/single_chef/:chef_id" element={<ManagerRoute><SingleChef /></ManagerRoute>} />
+      <Route path="/edit_chef/:chef_id" element={<ManagerRoute><EditChefForm /></ManagerRoute>} />
       <Route path="/chef_login" element={<ChefLogin />} />
       <Route path="/chef_dashboard" element={<ChefDashboard />} />
 
-      {/* Cooks */}
-      <Route path="/cooks" element={<Cooks />} />
-      <Route path="/create_cook" element={<CreateCookForm />} />
-      <Route path="/single_cook/:cook_id" element={<SingleCook />} />
-      <Route path="/edit_cook/:cook_id" element={<EditCookForm />} />
+      {/* Cooks (CRUD genérico -> solo manager) */}
+      <Route path="/cooks" element={<ManagerRoute><Cooks /></ManagerRoute>} />
+      <Route path="/create_cook" element={<ManagerRoute><CreateCookForm /></ManagerRoute>} />
+      <Route path="/single_cook/:cook_id" element={<ManagerRoute><SingleCook /></ManagerRoute>} />
+      <Route path="/edit_cook/:cook_id" element={<ManagerRoute><EditCookForm /></ManagerRoute>} />
       <Route path="/cook_login" element={<CookLogin />} />
       <Route path="/cook_dashboard" element={<CookDashboard />} />
       <Route path="/restaurants/:restaurant_id/register_cook" element={<RegisterCook />} />
