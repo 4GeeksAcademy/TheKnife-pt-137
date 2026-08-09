@@ -94,11 +94,11 @@ export async function editProductService(productId, productData) {
 /////////////////////////////////////////////////////////////////////////
 // Get all products
 export async function getAllRestaurantProductsService(restaurant_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken")
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
         }
     })
     if (!response.ok) throw new Error("Some error has ocurred");
@@ -110,11 +110,11 @@ export async function getAllRestaurantProductsService(restaurant_id) {
 
 // GET one product
 export async function getOneRestaurantProductService(restaurant_id, product_id) {
-    const chefToken = localStorage.getItem("cheftoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken")
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/products/${product_id}`, {
         method: "GET",
         headers: {
-            "Authorization": `Bearer ${chefToken}`
+            "Authorization": `Bearer ${token}`
         }
     })
     if (response.status === 404) throw new Error("Product not found")

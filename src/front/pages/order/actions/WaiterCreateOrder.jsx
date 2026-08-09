@@ -7,10 +7,9 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer";
 const WaiterCreateOrder = () => {
 
     const { store } = useGlobalReducer()
-    const { createOrder } = useOrder()
+    const { waiterCreateOrder } = useOrder()
     const { getAllRestaurantTables } = useTable()
     const { restaurant_id } = useParams()
-    const currentWaiter = store.loggedWaiter.waiter
 
     const [orderData, setOrderData] = useState({ table_id: "", people: "" })
 
@@ -18,14 +17,17 @@ const WaiterCreateOrder = () => {
         getAllRestaurantTables(restaurant_id)
     }, [])
 
-    const tables = store.tables.map((table) => (
-        <option value={table.id} key={table.id}>Table #{table.number} — {table.location}</option>
-    ))
+    const tables = store.tables
+        .filter((table) => table.status === "free")
+        .map((table) => (
+            <option value={table.id} key={table.id}>Table #{table.number} — {table.location}</option>
+        ))
 
     function handleSubmit(e) {
         e.preventDefault()
-        createOrder(
-            { ...orderData, waiter_id: currentWaiter.id },
+        waiterCreateOrder(
+            restaurant_id,
+            orderData,
             `/restaurants/${restaurant_id}/waiter_orders`
         )
     }

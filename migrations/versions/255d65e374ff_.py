@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 903e52872f7e
+Revision ID: 255d65e374ff
 Revises: 
-Create Date: 2026-08-02 08:25:18.035838
+Create Date: 2026-08-09 18:36:22.733259
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '903e52872f7e'
+revision = '255d65e374ff'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,21 +26,13 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name', name='unique_ingredient_name')
     )
-    op.create_table('order',
+    op.create_table('manager',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('table_id', sa.Integer(), nullable=False),
-    sa.Column('waiter_id', sa.Integer(), nullable=False),
-    sa.Column('state', sa.String(length=20), nullable=False),
-    sa.Column('date_time', sa.DateTime(), nullable=False),
-    sa.Column('people', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('recipe',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=120), nullable=False),
-    sa.Column('steps', sa.String(length=300), nullable=False),
-    sa.Column('img_url', sa.String(length=500), nullable=True),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('name', sa.String(length=20), nullable=False),
+    sa.Column('email', sa.String(length=30), nullable=False),
+    sa.Column('password', sa.String(length=255), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email', name='unique_manager_email')
     )
     op.create_table('restaurant',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -49,25 +41,20 @@ def upgrade():
     sa.Column('phone', sa.String(length=15), nullable=False),
     sa.Column('address', sa.String(length=100), nullable=False),
     sa.Column('img_url', sa.String(length=500), nullable=True),
+    sa.Column('latitude', sa.Float(), nullable=True),
+    sa.Column('longitude', sa.Float(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('address', name='unique_restaurant_address'),
     sa.UniqueConstraint('email', name='unique_restaurant_email'),
     sa.UniqueConstraint('phone', name='unique_restaurant_phone')
-    )
-    op.create_table('table',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('number', sa.Integer(), nullable=False),
-    sa.Column('status', sa.String(length=20), nullable=False),
-    sa.Column('location', sa.String(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('chef',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=20), nullable=False),
     sa.Column('email', sa.String(length=30), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
-    sa.Column('restaurant_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ),
+    sa.Column('restaurant_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='SET NULL'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email', name='unique_chef_email'),
     sa.UniqueConstraint('restaurant_id', name='unique_restaurant_chef')
@@ -78,9 +65,49 @@ def upgrade():
     sa.Column('email', sa.String(length=30), nullable=False),
     sa.Column('password', sa.String(length=255), nullable=False),
     sa.Column('restaurant_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email', name='unique_cook_email')
+    )
+    op.create_table('recipe',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=120), nullable=False),
+    sa.Column('steps', sa.Text(), nullable=False),
+    sa.Column('img_url', sa.String(length=500), nullable=True),
+    sa.Column('restaurant_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('table',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('number', sa.Integer(), nullable=False),
+    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('location', sa.String(), nullable=False),
+    sa.Column('active', sa.Boolean(), nullable=False),
+    sa.Column('restaurant_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('waiter',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=20), nullable=False),
+    sa.Column('email', sa.String(length=30), nullable=False),
+    sa.Column('password', sa.String(length=255), nullable=False),
+    sa.Column('restaurant_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('email', name='unique_waiter_email')
+    )
+    op.create_table('order',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('table_id', sa.Integer(), nullable=False),
+    sa.Column('waiter_id', sa.Integer(), nullable=True),
+    sa.Column('state', sa.String(length=20), nullable=False),
+    sa.Column('date_time', sa.DateTime(), nullable=False),
+    sa.Column('people', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['table_id'], ['table.id'], ),
+    sa.ForeignKeyConstraint(['waiter_id'], ['waiter.id'], ondelete='SET NULL'),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('product',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -93,7 +120,7 @@ def upgrade():
     sa.Column('restaurant_id', sa.Integer(), nullable=False),
     sa.Column('recipe_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
-    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ),
+    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('recipe_ingredient',
@@ -105,29 +132,32 @@ def upgrade():
     sa.ForeignKeyConstraint(['recipe_id'], ['recipe.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('waiter',
+    op.create_table('order_product',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name', sa.String(length=20), nullable=False),
-    sa.Column('email', sa.String(length=30), nullable=False),
-    sa.Column('password', sa.String(length=255), nullable=False),
-    sa.Column('restaurant_id', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email', name='unique_waiter_email')
+    sa.Column('order_id', sa.Integer(), nullable=False),
+    sa.Column('product_id', sa.Integer(), nullable=False),
+    sa.Column('amount', sa.Integer(), nullable=False),
+    sa.Column('unit_price', sa.Float(), nullable=False),
+    sa.Column('comment', sa.String(length=120), nullable=True),
+    sa.ForeignKeyConstraint(['order_id'], ['order.id'], ),
+    sa.ForeignKeyConstraint(['product_id'], ['product.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('waiter')
+    op.drop_table('order_product')
     op.drop_table('recipe_ingredient')
     op.drop_table('product')
+    op.drop_table('order')
+    op.drop_table('waiter')
+    op.drop_table('table')
+    op.drop_table('recipe')
     op.drop_table('cook')
     op.drop_table('chef')
-    op.drop_table('table')
     op.drop_table('restaurant')
-    op.drop_table('recipe')
-    op.drop_table('order')
+    op.drop_table('manager')
     op.drop_table('ingredient')
     # ### end Alembic commands ###

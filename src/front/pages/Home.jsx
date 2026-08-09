@@ -25,6 +25,15 @@ export const Home = () => {
                      </div>
                  </div>
              </div>
+
+             <div className="col-md-5">
+                 <div className="card h-100">
+                     <div className="card-header text-center">Waiter</div>
+                     <div className="card-body d-flex flex-column gap-2">
+                         <Link to="/waiter_login" className="btn btn-outline-primary">Waiter Login</Link>
+                     </div>
+                 </div>
+             </div>
          </div>
         </div>
     );

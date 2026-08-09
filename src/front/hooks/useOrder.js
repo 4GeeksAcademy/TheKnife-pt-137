@@ -11,6 +11,7 @@ import {
   getSingleRestaurantOrderService,
   updateOrderStatusService,
   closeOrderService,
+  waiterCreateOrderService,
 } from "../services/orderService";
 
 export function useOrder() {
@@ -69,6 +70,18 @@ export function useOrder() {
       navigate("/orders");
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  // Waiter creates a new order on a free table of his restaurant
+  async function waiterCreateOrder(restaurant_id, orderData, redirectTo) {
+    try {
+      const order = await waiterCreateOrderService(restaurant_id, orderData);
+      console.log(order);
+      navigate(redirectTo || `/restaurants/${restaurant_id}/waiter_orders`);
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
     }
   }
 
@@ -133,5 +146,6 @@ export function useOrder() {
     getSingleRestaurantOrder,
     updateOrderStatus,
     closeOrder,
+    waiterCreateOrder,
   };
 }

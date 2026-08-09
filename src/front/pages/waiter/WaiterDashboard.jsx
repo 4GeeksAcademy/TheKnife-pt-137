@@ -36,13 +36,6 @@ const WaiterDashboard = () => {
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <h6 className="text-muted">Recipes</h6>
-                        <div className="d-flex gap-2">
-                            <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_recipes`} className="btn btn-danger">Recipes list</Link>
-                        </div>
-                    </div>
-
-                    <div className="mb-3">
                         <h6 className="text-muted">Comandas</h6>
                         <div className="d-flex gap-2">
                             <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_orders/create`} className="btn btn-primary">Create comanda</Link>

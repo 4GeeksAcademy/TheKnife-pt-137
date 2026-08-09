@@ -36,7 +36,6 @@ import CookRecipes from "./pages/recipe/actions/CookRecipes";
 import ChefCreateRecipe from "./pages/recipe/actions/ChefCreateRecipe";
 import ChefEditRecipe from "./pages/recipe/actions/ChefEditRecipe";
 import RestaurantSingleRecipe from "./pages/recipe/actions/RestaurantSingleRecipe";
-import WaiterRecipes from "./pages/recipe/actions/WaiterRecipes";
 
 // Restaurants
 import Restaurants from "./pages/restaurant/Restaurants";
@@ -150,7 +149,6 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
       <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
       <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
-      <Route path="/restaurants/:restaurant_id/waiter_recipes" element={<WaiterRecipes />} />
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
 
       {/* Restaurants (CRUD genérico -> solo manager) */}
@@ -204,6 +202,7 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/waiter_orders/create" element={<WaiterCreateOrder />} />
 
       {/* Tables (CRUD genérico -> solo manager) */}
+      <Route path="/restaurants/:restaurant_id/waiter_tables" element={<WaiterTables />} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />

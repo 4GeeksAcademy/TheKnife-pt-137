@@ -138,6 +138,28 @@ export async function updateOrderStatusService(restaurant_id, order_id, state) {
     else throw new Error("Some error has ocurred")
 }
 
+// Waiter creates a new order on a free table of his restaurant
+export async function waiterCreateOrderService(restaurant_id, orderData) {
+    const waiterToken = localStorage.getItem("waitertoken")
+    const newOrder = {
+        table_id: orderData.table_id,
+        people: orderData.people
+    }
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders`, {
+        method: "POST",
+        body: JSON.stringify(newOrder),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${waiterToken}`
+        }
+    })
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Error creating order")
+    }
+    return await response.json()
+}
+
 // Waiter closes an order of his restaurant
 export async function closeOrderService(restaurant_id, order_id) {
     const waiterToken = localStorage.getItem("waitertoken")
