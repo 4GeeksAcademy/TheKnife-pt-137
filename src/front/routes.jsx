@@ -13,6 +13,7 @@ import { Demo } from "./pages/Demo";
 
 // CocinApp imports
 import Maps from "./pages/Maps";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 // Products
 import Products from "./pages/product/Products";
@@ -121,7 +122,8 @@ export const router = createBrowserRouter(
       <Route path="/demo" element={<Demo />} />
 
       {/* Google Maps */}
-      <Route path="/maps/:restaurant_id" element={<Maps />} />
+        
+      <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
 
       {/* Products */}
       <Route path="/products" element={<Products />} />

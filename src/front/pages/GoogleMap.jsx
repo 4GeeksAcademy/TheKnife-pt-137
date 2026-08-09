@@ -1,18 +1,24 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { APIProvider, Map } from '@vis.gl/react-google-maps';
+import { Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 
-const GoogleMap = ({latitude, longitude}) => (
-
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+const GoogleMap = ({latitude, longitude, setCoordsData}) => (
         <Map
             style={{ width: '100vw', height: '100vh' }}
-            defaultCenter={{ lat: latitude, lng: longitude }}
-            defaultZoom={3}
+            center={{ lat: latitude, lng: longitude }}
+            defaultZoom={15}
             gestureHandling='greedy'
             disableDefaultUI
-        />
-    </APIProvider>
+            mapId="DEMO_MAP_ID"
+            ><AdvancedMarker position={{ lat: latitude, lng: longitude }} draggable={true} onDragEnd={(e) => {
+                const newLat = e.latLng.lat()
+                const newLng = e.latLng.lng()
+                setCoordsData(prev => ({
+                    ...prev,
+                    latitude: newLat,
+                    longitude: newLng
+                }))
+            }} /></Map>
+            
 );
 
 export default GoogleMap;

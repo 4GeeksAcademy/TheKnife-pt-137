@@ -200,8 +200,8 @@ def chef_edit_restaurant_coordinates(restaurant_id):
     patch_mandatory_schema = ["address", "longitude", "latitude"]
     for key in patch_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing, body must have 'address', 'latitude' and 'longitude' "})
-    for key in body:
+            return jsonify({"message": "Some info is missing, body must have 'address', 'latitude' and 'longitude' "}), 400
+    for key in patch_mandatory_schema:
         setattr(restaurant, key, body[key])
     db.session.commit()
     return jsonify({"message": "Restaurant coordinates successfully edited"}), 200
