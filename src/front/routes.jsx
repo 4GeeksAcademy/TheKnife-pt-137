@@ -113,6 +113,14 @@ import RestaurantCooks from "./pages/cook/actions/RestaurantCooks";
 // OrderProducts
 import ProductsListForOrder from "./pages/order/ProductsListForOrder";
 
+// Hosts
+import Hosts from "./pages/host/Hosts";
+import EditHostForm from "./pages/host/EditHostForm";
+import SingleHost from "./pages/host/SingleHost";
+import HostLogin from "./pages/host/HostLogin";
+import HostDashboard from "./pages/host/HostDashboard";
+import RegisterHost from "./pages/host/actions/RegisterHost";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
 
@@ -229,6 +237,14 @@ export const router = createBrowserRouter(
 
       {/* OrderProducts */}
       <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />
+
+      {/* Hosts (CRUD genérico -> solo manager; login/dashboard aparte; registro por chef) */}
+      <Route path="/hosts" element={<ManagerRoute><Hosts /></ManagerRoute>} />
+      <Route path="/edit_host/:host_id" element={<ManagerRoute><EditHostForm /></ManagerRoute>} />
+      <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
+      <Route path="/host_login" element={<HostLogin />} />
+      <Route path="/host_dashboard" element={<HostDashboard />} />
+      <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
 
     </Route>
   )

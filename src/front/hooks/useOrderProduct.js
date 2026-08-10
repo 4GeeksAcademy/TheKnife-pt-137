@@ -38,9 +38,11 @@ export function useOrderProduct() {
             const data = await response.json()
             console.log(data)
             getProductsOfAnOrder(orderProductData.order_id)
+            return true
         } catch(error) {
             console.log(error)
             alert(error.message)
+            return false
         }
     }
 

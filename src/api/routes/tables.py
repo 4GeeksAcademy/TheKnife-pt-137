@@ -113,7 +113,7 @@ def edit_table(table_id):
             
     for key in body:
         setattr(table_to_edit, key, body[key])
-        
+
     db.session.commit()
     return jsonify(table_to_edit.serialize()), 200
 

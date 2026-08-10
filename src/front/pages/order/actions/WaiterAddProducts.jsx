@@ -7,16 +7,20 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 const WaiterAddProducts = () => {
 
     const { store } = useGlobalReducer()
-    const { createOrderProduct } = useOrderProduct()
+    const { createOrderProduct, getProductsOfAnOrder } = useOrderProduct()
     const { getAllRestaurantProducts } = useProduct()
     const { restaurant_id, order_id } = useParams()
     const [loading, setLoading] = useState(true)
     const [addAmounts, setAddAmounts] = useState({})
+    const [addedProducts, setAddedProducts] = useState({})
 
     useEffect(() => {
         setLoading(true)
-        getAllRestaurantProducts(restaurant_id).finally(() => setLoading(false))
-    }, [restaurant_id])
+        Promise.all([
+            getAllRestaurantProducts(restaurant_id),
+            getProductsOfAnOrder(order_id)
+        ]).finally(() => setLoading(false))
+    }, [restaurant_id, order_id])
 
     function getAddAmount(productId) {
         return addAmounts[productId] ?? 1
@@ -27,12 +31,21 @@ const WaiterAddProducts = () => {
             [productId]: Math.max(1, getAddAmount(productId) + delta)
         })
     }
-    function handleAddProduct(productId) {
-        createOrderProduct({
+    async function handleAddProduct(productId) {
+        const success = await createOrderProduct({
             order_id,
             product_id: productId,
             amount: getAddAmount(productId)
         })
+        if (success) {
+            setAddedProducts((prev) => ({ ...prev, [productId]: true }))
+            setTimeout(() => {
+                setAddedProducts((prev) => {
+                    const { [productId]: _removed, ...rest } = prev
+                    return rest
+                })
+            }, 1200)
+        }
     }
 
     if (loading) return <p className="text-center mt-5">Loading...</p>
@@ -42,6 +55,7 @@ const WaiterAddProducts = () => {
 
     function renderProductRow(product) {
         const amount = getAddAmount(product.id)
+        const justAdded = !!addedProducts[product.id]
         return (
             <tr key={product.id}>
                 <td>{product.name}</td>
@@ -53,7 +67,14 @@ const WaiterAddProducts = () => {
                     </div>
                 </td>
                 <td>
-                    <button className="btn btn-primary btn-sm" onClick={() => handleAddProduct(product.id)}>Add to order</button>
+                    <button
+                        className={`btn btn-sm ${justAdded ? "btn-success" : "btn-primary"}`}
+                        style={{ minWidth: "110px" }}
+                        onClick={() => handleAddProduct(product.id)}
+                        disabled={justAdded}
+                    >
+                        {justAdded ? "✓ Added" : "Add to order"}
+                    </button>
                 </td>
             </tr>
         )
@@ -94,7 +115,9 @@ const WaiterAddProducts = () => {
                     </table>
                 </div>
             </div>
-            <Link to={`/restaurants/${restaurant_id}/orders/${order_id}`} className="d-inline-block mt-3">Back to order</Link>
+            <Link to={`/restaurants/${restaurant_id}/orders/${order_id}`} className="d-inline-block mt-3">
+                Back to order {store.orderProducts.length > 0 && `(${store.orderProducts.length})`}
+            </Link>
         </div>
     )
 }
