@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
 from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table
+from haversine import haversine
 
 restaurant = Blueprint("restaurantbp", __name__)
 
@@ -242,3 +243,30 @@ def chef_edit_restaurant_coordinates(restaurant_id):
         setattr(restaurant, key, body[key])
     db.session.commit()
     return jsonify({"message": "Restaurant coordinates successfully edited"}), 200
+
+# Client gets close restaurants by location
+# FALTA CERRAR ENDPOINT A CLIENTES, CUANDO LA TABLA Y EL CRUD ESTÉ HECHO
+@restaurant.route("/restaurants/nearby")
+def get_restaurants_by_location():
+    args_schema = ["latitude", "longitude", "radius"]
+    for arg in args_schema:
+        if arg not in request.args or request.args[arg] == "":
+            return jsonify({"message": "The url args must have latitude, longitude and radius"}), 400
+    try:
+        latitude = float(request.args.get("latitude"))
+        longitude = float(request.args.get("longitude"))
+        radius = float(request.args.get("radius"))
+    except ValueError:
+        return jsonify({"message": "All args must be numbers"}), 400
+    start_point = (latitude, longitude)
+    restaurants = db.session.scalars(select(Restaurant)).all()
+    close_restaurants = []
+    for restaurant in restaurants:
+        if restaurant.latitude is None or restaurant.longitude is None:
+            continue
+        distance_between = haversine(start_point, (restaurant.latitude, restaurant.longitude))
+        if distance_between < radius:
+            close_restaurants.append(restaurant)
+    close_restaurant_dicts = [restaurant.serialize() for restaurant in close_restaurants]
+    return jsonify(close_restaurant_dicts), 200
+    
