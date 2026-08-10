@@ -42,46 +42,60 @@ const ChefDashboard = () => {
             <div className="card mb-4">
                 <div className="card-header">Restaurant</div>
                 <div className="card-body d-flex gap-2">
-                    <Link style={{display: store.loggedChef.chef.restaurant_id ? "none" : "block"}} to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
-                    <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
-                    <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
-                    <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
-                    <Link to={`/maps/${currentChef.restaurant_id}`}><button className="btn btn-outline-success">Map</button></Link>
+                    {currentChef.restaurant_id ? (
+                        <>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
+                            <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
+                            <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
+                            <Link to={`/maps/${currentChef.restaurant_id}`}><button className="btn btn-outline-success">Map</button></Link>
+                        </>
+                    ) : (
+                        <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
+                    )}
                 </div>
             </div>
 
-            <div className="card">
-                <div className="card-header">Actions</div>
-                <div className="card-body">
+            {currentChef.restaurant_id && (
+                <div className="card">
+                    <div className="card-header">Actions</div>
+                    <div className="card-body">
 
-                    <div className="mb-3">
-                        <h6 className="text-muted">Waiters</h6>
-                        <div className="d-flex gap-2">
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`} className="btn btn-primary">Register a waiter</Link>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`} className="btn btn-warning">Waiter list</Link>
+                        <div className="mb-3">
+                            <h6 className="text-muted">Waiters</h6>
+                            <div className="d-flex gap-2">
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`} className="btn btn-primary">Register a waiter</Link>
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`} className="btn btn-warning">Waiter list</Link>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="mb-3">
-                        <h6 className="text-muted">Cooks</h6>
-                        <div className="d-flex gap-2">
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`} className="btn btn-primary">Register a Cook</Link>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`} className="btn btn-warning">Cook list</Link>
+                        <div className="mb-3">
+                            <h6 className="text-muted">Cooks</h6>
+                            <div className="d-flex gap-2">
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`} className="btn btn-primary">Register a Cook</Link>
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`} className="btn btn-warning">Cook list</Link>
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="mb-0">
-                        <h6 className="text-muted">Management</h6>
-                        <div className="d-flex gap-2">
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`} className="btn btn-danger">Recipes list</Link>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/orders`} className="btn btn-success">Orders list</Link>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/products`} className="btn btn-dark">Products list</Link>
-                            <Link to="/chef_ingredients" className="btn btn-info">Ingredients list</Link>
+                        <div className="mb-3">
+                            <h6 className="text-muted">Host</h6>
+                            <div className="d-flex gap-2">
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_host`} className="btn btn-primary">Register a host</Link>
+                            </div>
                         </div>
-                    </div>
 
+                        <div className="mb-0">
+                            <h6 className="text-muted">Management</h6>
+                            <div className="d-flex gap-2">
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`} className="btn btn-danger">Recipes list</Link>
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/orders`} className="btn btn-success">Orders list</Link>
+                                <Link to={`/restaurants/${currentChef.restaurant_id}/products`} className="btn btn-dark">Products list</Link>
+                                <Link to="/chef_ingredients" className="btn btn-info">Ingredients list</Link>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
+            )}
 
         </div>
     )

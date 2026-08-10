@@ -1,12 +1,10 @@
 // Services imports
-import { useNavigate } from "react-router-dom";
 import { getOrderProductsService, getSingleOrderProductService, createOrderProductService, deleteOrderProductService, editOrderProductService, getProductsOfAnOrderService } from "../services/orderProductService";
 import useGlobalReducer from "./useGlobalReducer";
 
 export function useOrderProduct() {
 
     const {store, dispatch} = useGlobalReducer()
-    const navigate = useNavigate()
 
     // GET order-products
     async function getOrderProducts() {
@@ -39,7 +37,13 @@ export function useOrderProduct() {
             const response = await createOrderProductService(orderProductData)
             const data = await response.json()
             console.log(data)
-        } catch(error) {console.log(error)}
+            getProductsOfAnOrder(orderProductData.order_id)
+            return true
+        } catch(error) {
+            console.log(error)
+            alert(error.message)
+            return false
+        }
     }
 
     // Delete order-product
@@ -48,7 +52,10 @@ export function useOrderProduct() {
             const message = await deleteOrderProductService(orderProductId)
             console.log(message)
             getProductsOfAnOrder(orderId)
-        } catch(error) {console.log(error)}
+        } catch(error) {
+            console.log(error)
+            alert(error.message)
+        }
     }
 
     // Edit order-product
@@ -57,8 +64,11 @@ export function useOrderProduct() {
             const response = await editOrderProductService(orderProductId, orderProductData)
             const data = await response.json()
             console.log(data)
-            navigate("/order_products")
-        } catch (error) {console.log(error)}
+            getProductsOfAnOrder(orderProductData.order_id)
+        } catch (error) {
+            console.log(error)
+            alert(error.message)
+        }
     }
 
     return {

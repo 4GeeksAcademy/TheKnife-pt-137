@@ -64,7 +64,8 @@ import WaiterLogin from "./pages/waiter/WaiterLogin";
 import WaiterDashboard from "./pages/waiter/WaiterDashboard";
 import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
-
+import WaiterTables from "./pages/table/actions/WaiterTables";
+import WaiterCreateTable from "./pages/table/actions/WaiterCreateTable";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -78,7 +79,7 @@ import EditTableForm from "./pages/table/EditTableForm";
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
 import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
-
+import WaiterAddProducts from "./pages/order/actions/WaiterAddProducts";
 
 // Chefs
 import Chefs from "./pages/chef/Chefs";
@@ -111,6 +112,14 @@ import RestaurantCooks from "./pages/cook/actions/RestaurantCooks";
 
 // OrderProducts
 import ProductsListForOrder from "./pages/order/ProductsListForOrder";
+
+// Hosts
+import Hosts from "./pages/host/Hosts";
+import EditHostForm from "./pages/host/EditHostForm";
+import SingleHost from "./pages/host/SingleHost";
+import HostLogin from "./pages/host/HostLogin";
+import HostDashboard from "./pages/host/HostDashboard";
+import RegisterHost from "./pages/host/actions/RegisterHost";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -146,6 +155,9 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
       <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
+      <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
+      <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
+      <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
 
       {/* Restaurants (CRUD genérico -> solo manager) */}
       <Route path="/restaurants" element={<ManagerRoute><Restaurants /></ManagerRoute>} />
@@ -191,9 +203,14 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
       <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
-
+      <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
+      <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
+      <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
+      <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<WaiterAddProducts />} />
 
       {/* Tables (CRUD genérico -> solo manager) */}
+      <Route path="/restaurants/:restaurant_id/waiter_tables" element={<WaiterTables />} />
+      <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<WaiterCreateTable />} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
@@ -220,6 +237,14 @@ export const router = createBrowserRouter(
 
       {/* OrderProducts */}
       <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />
+
+      {/* Hosts (CRUD genérico -> solo manager; login/dashboard aparte; registro por chef) */}
+      <Route path="/hosts" element={<ManagerRoute><Hosts /></ManagerRoute>} />
+      <Route path="/edit_host/:host_id" element={<ManagerRoute><EditHostForm /></ManagerRoute>} />
+      <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
+      <Route path="/host_login" element={<HostLogin />} />
+      <Route path="/host_dashboard" element={<HostDashboard />} />
+      <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
 
     </Route>
   )

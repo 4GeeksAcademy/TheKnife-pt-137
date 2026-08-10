@@ -37,7 +37,7 @@ const WaiterLogin = () => {
                         <button className="btn btn-success w-100 mb-3" type="submit">Login</button>
 
                         <div className="text-center">
-                            <Link to="/waiters">Back to waiters</Link>
+                            <Link to="/">Back to Home</Link>
                         </div>
 
                     </form>

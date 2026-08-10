@@ -49,7 +49,7 @@ export const deleteRecipeIngredient = async (id) => {
 /////////////////////////////////////////////////////////////////////////
 // Chef or cook gets the ingredients of a recipe of their restaurant
 export async function getRestaurantRecipeIngredientsService(restaurant_id, recipe_id) {
-    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken")
+    const token = localStorage.getItem("cheftoken") || localStorage.getItem("cooktoken") || localStorage.getItem("waitertoken")
     const response = await fetch(`${BASE_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/ingredients`, {
         method: "GET",
         headers: {
