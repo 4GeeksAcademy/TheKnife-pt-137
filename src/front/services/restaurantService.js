@@ -201,3 +201,15 @@ export async function editRestaurantCoordsService(restaurant_id, coordsData) {
   const message = await response.json();
   return message;
 }
+
+export async function getNearbyRestaurantsService(startPointData) {
+  const response = await fetch(
+    `${backendURL}/restaurants/nearby?latitude=${startPointData.latitude}&longitude=${startPointData.longitude}&radius=${startPointData.radius}`)
+    if (!response.ok) {
+      const data = await response.json()
+      const errorMessage = data.message
+      throw new Error(errorMessage)
+    }
+    const data = await response.json()
+    return data;
+}
