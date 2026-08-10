@@ -10,7 +10,7 @@ ai_recipe = Blueprint("airecipebp", __name__)
 # El cliente lee la variable de entorno ANTHROPIC_API_KEY automáticamente
 client = anthropic.Anthropic()
 
-# Schema que fuerza a Claude a devolver siempre esta forma exacta de JSON
+# Schema para mandar a la API d Claude que le fuerza a seguirlo a la hora de devolver la respuesta
 RECIPE_SCHEMA = {
     "type": "object",
     "properties": {
@@ -63,9 +63,7 @@ def get_current_user():
 
 #####################################################################
 ##### CHEF
-# POST: el chef manda la img_url de Cloudinary y recibe una receta generada por IA.
-# No se guarda en la base de datos aquí: el chef la revisa/edita y la guarda con
-# el endpoint de crear receta que ya existe.
+# POST: A partir de una imagen, el chef puede sacar los datos de una receta y aceptarlos o modificar algo antes de guardarla
 @ai_recipe.route("/restaurants/<int:restaurant_id>/generate_recipe", methods=["POST"])
 @jwt_required()
 def generate_recipe_from_image(restaurant_id):
@@ -116,8 +114,7 @@ def generate_recipe_from_image(restaurant_id):
 
 #####################################################################
 ##### CHEF
-# POST: el chef pide una estimación de calorías a partir de los ingredientes
-# que la receta ya tiene guardados. El resultado se guarda en Recipe.calories.
+# POST: Estimación de calorías para la receta de un restaurante
 @ai_recipe.route("/restaurants/<int:restaurant_id>/recipes/<int:recipe_id>/calculate_calories", methods=["POST"])
 @jwt_required()
 def calculate_recipe_calories(restaurant_id, recipe_id):
@@ -167,9 +164,6 @@ def calculate_recipe_calories(restaurant_id, recipe_id):
 
     if response.stop_reason == "refusal":
         return jsonify({"message": "The AI declined to process this recipe"}), 422
-
-    # Con el thinking activado, content[0] puede ser el bloque de pensamiento
-    # interno en vez del texto con el JSON, así que buscamos el bloque de texto.
     text_block = next(block for block in response.content if block.type == "text")
     result = json.loads(text_block.text)
     single_recipe.calories = result["calories"]
