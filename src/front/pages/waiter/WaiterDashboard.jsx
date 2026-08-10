@@ -49,8 +49,7 @@ const WaiterDashboard = () => {
         waiterCreateOrder(currentWaiter.restaurant_id, { table_id: selectedTable.id, people })
     }
 
-    const freeTables = store.tables.filter((table) => table.status === "free")
-    const occupiedTables = store.tables.filter((table) => table.status === "occupied")
+    const sortedTables = [...store.tables].sort((a, b) => a.number - b.number)
 
     const usedNumbers = store.tables.map((table) => table.number)
     let nextFixedNumber = null
@@ -116,14 +115,8 @@ const WaiterDashboard = () => {
                 </div>
             </div>
 
-            <h4 className="h6 text-muted">Free</h4>
-            <div className="d-flex flex-wrap gap-4 mb-4">
-                {freeTables.map(renderTableCircle)}
-            </div>
-
-            <h4 className="h6 text-muted">Occupied</h4>
-            <div className="d-flex flex-wrap gap-4">
-                {occupiedTables.map(renderTableCircle)}
+            <div className="d-flex flex-nowrap gap-4 overflow-auto pb-2">
+                {sortedTables.map(renderTableCircle)}
             </div>
 
             {selectedTable && (
