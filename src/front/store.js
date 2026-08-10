@@ -44,6 +44,14 @@ export const initialStore = () => {
       waiter: {},
       restaurant: "",
     },
+    hosts: [],
+    singleHost: {},
+    restaurantHost: null,
+    loggedHost: {
+      hostAuth: false,
+      host: {},
+      restaurant: "",
+    },
   };
 };
 
@@ -255,6 +263,39 @@ export default function storeReducer(store, action = {}) {
             restaurant: "",
           },
         };
+    case "set_hosts":
+      return {
+        ...store,
+        hosts: action.payload,
+      };
+    case "set_single_host":
+      return {
+        ...store,
+        singleHost: action.payload,
+      };
+    case "set_restaurant_host":
+      return {
+        ...store,
+        restaurantHost: action.payload,
+      };
+    case "host_login":
+      return {
+        ...store,
+        loggedHost: {
+          hostAuth: true,
+          host: action.payload.host,
+          restaurant: action.payload.host_restaurant,
+        },
+      };
+    case "host_logout":
+      return {
+        ...store,
+        loggedHost: {
+          hostAuth: false,
+          host: {},
+          restaurant: "",
+        },
+      };
     default:
       return store;
   }

@@ -26,6 +26,7 @@ from api.routes.recipe_ingredient import recipe_ingredient
 from api.routes.cooks import cook
 from api.routes.order_products import order_product
 from api.routes.managers import manager
+from api.routes.hosts import host
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -71,6 +72,7 @@ app.register_blueprint(recipe_ingredient)
 app.register_blueprint(cook)
 app.register_blueprint(order_product)
 app.register_blueprint(manager)
+app.register_blueprint(host)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

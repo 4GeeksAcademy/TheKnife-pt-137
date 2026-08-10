@@ -28,6 +28,7 @@ class Restaurant(db.Model):
     products: Mapped[list["Product"]] = relationship(
         back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     chef: Mapped["Chef"] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    host: Mapped["Host"] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     waiters: Mapped[list["Waiter"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     tables: Mapped[list["Table"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
@@ -134,6 +135,33 @@ class Chef(db.Model):
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="chef")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name if self.restaurant else None
+        }
+
+# Host (anfitrión / recepción de reservas)
+class Host(db.Model):
+    __tablename__ = "host"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_host_email"),
+        db.UniqueConstraint("restaurant_id", name="unique_restaurant_host"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    # Foreign columns
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="SET NULL"), nullable=True)
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="host")
 
     def serialize(self):
         return {
