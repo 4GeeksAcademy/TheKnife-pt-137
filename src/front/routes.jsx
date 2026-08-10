@@ -65,6 +65,7 @@ import WaiterDashboard from "./pages/waiter/WaiterDashboard";
 import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
 import WaiterTables from "./pages/table/actions/WaiterTables";
+import WaiterCreateTable from "./pages/table/actions/WaiterCreateTable";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -78,8 +79,7 @@ import EditTableForm from "./pages/table/EditTableForm";
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
 import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
-import WaiterOrders from "./pages/order/actions/WaiterOrders";
-import WaiterCreateOrder from "./pages/order/actions/WaiterCreateOrder";
+import WaiterAddProducts from "./pages/order/actions/WaiterAddProducts";
 
 // Chefs
 import Chefs from "./pages/chef/Chefs";
@@ -197,12 +197,12 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
       <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
       <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
-      <Route path="/restaurants/:restaurant_id/waiter_orders" element={<WaiterOrders />} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
-      <Route path="/restaurants/:restaurant_id/waiter_orders/create" element={<WaiterCreateOrder />} />
+      <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<WaiterAddProducts />} />
 
       {/* Tables (CRUD genérico -> solo manager) */}
       <Route path="/restaurants/:restaurant_id/waiter_tables" element={<WaiterTables />} />
+      <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<WaiterCreateTable />} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />

@@ -168,7 +168,8 @@ class Table(db.Model):
             "location": self.location,
             "active": self.active,
             "restaurant_id": self.restaurant_id,
-            "restaurant_name": self.restaurant.name
+            "restaurant_name": self.restaurant.name,
+            "current_order_id": next((o.id for o in self.orders if o.state != "closed"), None)
         }
 
 # Product

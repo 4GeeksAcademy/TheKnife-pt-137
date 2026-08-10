@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
-from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager
+from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table
 
 restaurant = Blueprint("restaurantbp", __name__)
 
@@ -167,6 +167,13 @@ def chef_create_restaurant():
     db.session.add(new_restaurant)
     db.session.flush()
     user.restaurant_id = new_restaurant.id
+    for number in range(1, 8):
+        db.session.add(Table(
+            number=number,
+            status="free",
+            location="Main hall",
+            restaurant_id=new_restaurant.id
+        ))
     db.session.commit()
     return jsonify(new_restaurant.serialize()), 200
 

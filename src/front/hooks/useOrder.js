@@ -74,11 +74,10 @@ export function useOrder() {
   }
 
   // Waiter creates a new order on a free table of his restaurant
-  async function waiterCreateOrder(restaurant_id, orderData, redirectTo) {
+  async function waiterCreateOrder(restaurant_id, orderData) {
     try {
       const order = await waiterCreateOrderService(restaurant_id, orderData);
-      console.log(order);
-      navigate(redirectTo || `/restaurants/${restaurant_id}/waiter_orders`);
+      navigate(`/restaurants/${restaurant_id}/orders/${order.id}`);
     } catch (error) {
       console.log(error);
       alert(error.message);

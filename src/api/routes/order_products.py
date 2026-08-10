@@ -97,6 +97,8 @@ def create_order_product():
     product = db.session.scalar(select(Product).where(Product.id == body["product_id"]))
     if not product:
         return jsonify({"message": "Product not found"}), 404
+    if order_obj.state in ["doing", "done"]:
+        order_obj.state = "pending"
     new_order_product = OrderProduct(
         order_id=body.get("order_id"),
         product_id=body.get("product_id"),

@@ -4,23 +4,16 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { Link, useParams } from "react-router-dom"
 
 const WaiterTables = () => {
-    const { getAllRestaurantTables, createRestaurantTable, editRestaurantTable, deleteRestaurantTable } = useTable()
+    const { getAllRestaurantTables, editRestaurantTable, deleteRestaurantTable } = useTable()
     const { store } = useGlobalReducer()
     const { restaurant_id } = useParams()
 
-    const [newTable, setNewTable] = useState({ number: "", status: "free", location: "" })
     const [editingId, setEditingId] = useState(null)
     const [editData, setEditData] = useState({ number: "", status: "", location: "" })
 
     useEffect(() => {
         getAllRestaurantTables(restaurant_id)
     }, [])
-
-    function handleCreate(e) {
-        e.preventDefault()
-        createRestaurantTable(restaurant_id, newTable)
-        setNewTable({ number: "", status: "free", location: "" })
-    }
 
     function startEditing(table) {
         setEditingId(table.id)
@@ -44,7 +37,6 @@ const WaiterTables = () => {
                             onChange={(e) => setEditData({ ...editData, status: e.target.value })}>
                             <option value="free">Free</option>
                             <option value="occupied">Occupied</option>
-                            <option value="reserved">Reserved</option>
                         </select>
                         <input className="form-control mb-2" value={editData.location}
                             onChange={(e) => setEditData({ ...editData, location: e.target.value })} placeholder="Location" required />
@@ -76,31 +68,6 @@ const WaiterTables = () => {
     return (
         <div className="container py-4">
             <h1 className="h4 mb-3">Tables</h1>
-
-            <form className="card p-3 mb-4" onSubmit={handleCreate}>
-                <h2 className="h6">New table</h2>
-                <div className="row g-2">
-                    <div className="col-md-3">
-                        <input className="form-control" type="number" placeholder="Number" required
-                            value={newTable.number} onChange={(e) => setNewTable({ ...newTable, number: e.target.value })} />
-                    </div>
-                    <div className="col-md-3">
-                        <select className="form-select" value={newTable.status}
-                            onChange={(e) => setNewTable({ ...newTable, status: e.target.value })}>
-                            <option value="free">Free</option>
-                            <option value="occupied">Occupied</option>
-                            <option value="reserved">Reserved</option>
-                        </select>
-                    </div>
-                    <div className="col-md-4">
-                        <input className="form-control" placeholder="Location" required
-                            value={newTable.location} onChange={(e) => setNewTable({ ...newTable, location: e.target.value })} />
-                    </div>
-                    <div className="col-md-2">
-                        <button type="submit" className="btn btn-primary w-100">Add</button>
-                    </div>
-                </div>
-            </form>
 
             <div className="row g-3">
                 {tablesList}
