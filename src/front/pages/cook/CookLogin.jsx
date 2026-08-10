@@ -43,7 +43,7 @@ const CookLogin = () => {
                     <button className="btn btn-success w-100 mb-3" onClick={() => cookLogin(cookLoginData)}>Login</button>
 
                     <div className="text-center">
-                        <Link to="/cooks">Back to cooks</Link>
+                        <Link to="/">Back to home</Link>
                     </div>
 
                 </div>

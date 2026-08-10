@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, Numeric, ForeignKey
+from sqlalchemy import String, Boolean, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
 from datetime import datetime
@@ -239,8 +239,9 @@ class Recipe(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120), nullable=False)
-    steps: Mapped[str] = mapped_column(String(300), nullable=False)
+    steps: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    calories: Mapped[int] = mapped_column(nullable=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
@@ -254,6 +255,7 @@ class Recipe(db.Model):
             "name": self.name,
             "steps": self.steps,
             "img_url": self.img_url,
+            "calories": self.calories,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name
         }
@@ -332,7 +334,8 @@ class OrderProduct(db.Model):
             "amount": self.amount,
             "unit_price": self.unit_price,
             "comment": self.comment,
-            "product_name": self.product.name
+            "product_name": self.product.name,
+            "product_type": self.product.type
         }
 
 # RecipeIngredient

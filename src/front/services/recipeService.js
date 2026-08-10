@@ -128,6 +128,44 @@ export async function chefEditRecipeService(restaurant_id, recipe_id, recipeData
     else if (response.status === 200) return response;
 }
 
+// Chef uploads a dish photo and gets back an AI-generated recipe suggestion
+// (name, steps and ingredients). Nothing is saved to the database yet.
+export async function generateRecipeFromImageService(restaurant_id, img_url) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/generate_recipe`, {
+        method: "POST",
+        body: JSON.stringify({ img_url }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Some error has ocurred")
+    }
+    const data = await response.json()
+    return data
+}
+
+// Chef asks the AI to estimate the calories of a recipe from its saved
+// ingredients. The backend saves the result and returns the updated recipe.
+export async function calculateRecipeCaloriesService(restaurant_id, recipe_id) {
+    const chefToken = localStorage.getItem("cheftoken")
+    const response = await fetch(`${BACKEND_URL}/restaurants/${restaurant_id}/recipes/${recipe_id}/calculate_calories`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${chefToken}`
+        }
+    })
+    if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Some error has ocurred")
+    }
+    const data = await response.json()
+    return data
+}
+
 // Chef creates a recipe
 export async function chefCreateRecipeService(restaurant_id, recipeData) {
     const chefToken = localStorage.getItem("cheftoken")

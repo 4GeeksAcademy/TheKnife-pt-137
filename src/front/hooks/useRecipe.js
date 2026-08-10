@@ -9,8 +9,12 @@ import {
   deleteRestaurantRecipeService,
   chefCreateRecipeService,
   getOneRestaurantRecipeService,
-  chefEditRecipeService
+  chefEditRecipeService,
+  generateRecipeFromImageService,
+  calculateRecipeCaloriesService
 } from "../services/recipeService";
+import { getActiveIngredientsService, chefCreateIngredientService } from "../services/ingredientService";
+import { chefAddRecipeIngredientService } from "../services/recipeIngredientService";
 
 import useGlobalReducer from "./useGlobalReducer";
 export function useRecipe() {
@@ -101,6 +105,54 @@ export function useRecipe() {
     }
   }
 
+  // Chef asks the AI to estimate the calories of a recipe from its saved
+  // ingredients. Updates the recipe in the store so the UI shows the new value.
+  async function calculateRecipeCalories(restaurant_id, recipe_id) {
+    const updatedRecipe = await calculateRecipeCaloriesService(restaurant_id, recipe_id);
+    dispatch({ type: "set_single_recipe", payload: updatedRecipe });
+    return updatedRecipe;
+  }
+
+  // Chef uploads a dish photo and asks Claude to suggest a recipe from it.
+  // Nothing is saved yet — the caller decides what to do with the suggestion.
+  async function generateRecipeFromImage(restaurant_id, img_url) {
+    const suggestion = await generateRecipeFromImageService(restaurant_id, img_url);
+    return suggestion; // { name, steps, ingredients: [{ name, amount }] }
+  }
+
+  // Chef creates the recipe and links the AI-suggested ingredients to it.
+  // For each suggested ingredient: reuse it if an ingredient with that name
+  // already exists (ingredients are shared across restaurants), otherwise
+  // create it, then attach it to the new recipe with its suggested amount.
+  async function chefCreateRecipeWithIngredients(restaurant_id, recipeData, aiIngredients = []) {
+    try {
+      const newRecipe = await chefCreateRecipeService(restaurant_id, recipeData);
+
+      if (aiIngredients.length > 0) {
+        const existingIngredients = await getActiveIngredientsService();
+
+        for (const suggestion of aiIngredients) {
+          let match = existingIngredients.find(
+            (ing) => ing.name.toLowerCase() === suggestion.name.toLowerCase()
+          );
+
+          if (!match) {
+            match = await chefCreateIngredientService({ name: suggestion.name });
+          }
+
+          await chefAddRecipeIngredientService(restaurant_id, newRecipe.id, {
+            ingredient_id: match.id,
+            amount: suggestion.amount
+          });
+        }
+      }
+
+      navigate("/chef_dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // Chef or cook gets one recipe of the restaurant
   async function getOneRestaurantRecipe(restaurant_id, recipe_id) {
     try {
@@ -133,6 +185,9 @@ export function useRecipe() {
     deleteRestaurantRecipe,
     chefCreateRecipe,
     getOneRestaurantRecipe,
-    chefEditRecipe
+    chefEditRecipe,
+    generateRecipeFromImage,
+    chefCreateRecipeWithIngredients,
+    calculateRecipeCalories
   };
 }
