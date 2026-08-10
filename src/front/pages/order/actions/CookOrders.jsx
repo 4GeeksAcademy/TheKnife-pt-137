@@ -29,6 +29,7 @@ const CookOrders = () => {
                             <li className="list-group-item"><strong>People:</strong> {order.people}</li>
                         </ul>
                         <div className="d-flex gap-2 mt-auto">
+                            <Link to={`/restaurants/${restaurant_id}/orders/${order.id}`}><button className="btn btn-primary btn-sm">View order</button></Link>
                             {order.state === "pending" &&
                                 <button className="btn btn-warning btn-sm" onClick={() => updateOrderStatus(restaurant_id, order.id, "doing")}>Start cooking</button>
                             }

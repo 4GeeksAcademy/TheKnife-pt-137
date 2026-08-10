@@ -306,7 +306,8 @@ class OrderProduct(db.Model):
             "amount": self.amount,
             "unit_price": self.unit_price,
             "comment": self.comment,
-            "product_name": self.product.name
+            "product_name": self.product.name,
+            "product_type": self.product.type
         }
 
 # RecipeIngredient
