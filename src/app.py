@@ -12,6 +12,7 @@ from api.models import db
 # from api.routes4geeks import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from api.cloudinary_config import setup_cloudinary
 
 ### Blueprints imports
 from api.routes.products import product
@@ -52,6 +53,9 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 jwt = JWTManager(app)
 
 db.init_app(app)
+
+# configure the Cloudinary SDK (used to auto-generate ingredient images)
+setup_cloudinary()
 
 # add the admin
 setup_admin(app)
