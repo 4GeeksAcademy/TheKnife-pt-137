@@ -78,6 +78,13 @@ import Tables from "./pages/table/Tables";
 import CreateTableForm from "./pages/table/CreateTableForm";
 import SingleTable from "./pages/table/SingleTable";
 import EditTableForm from "./pages/table/EditTableForm";
+
+// Reservations
+import Reservations from "./pages/reservation/Reservations";
+import CreateReservationForm from "./pages/reservation/CreateReservationForm";
+import SingleReservation from "./pages/reservation/SingleReservation";
+import EditReservationForm from "./pages/reservation/EditReservationForm";
+
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
 import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
@@ -223,6 +230,12 @@ export const router = createBrowserRouter(
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
       <Route path="/edit_table/:table_id" element={<ManagerRoute><EditTableForm /></ManagerRoute>} />
+
+      {/* Reservations (CRUD genérico -> solo manager) */}
+      <Route path="/reservations" element={<ManagerRoute><Reservations /></ManagerRoute>} />
+      <Route path="/create_reservation" element={<ManagerRoute><CreateReservationForm /></ManagerRoute>} />
+      <Route path="/single_reservation/:reservation_id" element={<ManagerRoute><SingleReservation /></ManagerRoute>} />
+      <Route path="/edit_reservation/:reservation_id" element={<ManagerRoute><EditReservationForm /></ManagerRoute>} />
 
       {/* Chefs (CRUD genérico -> solo manager; register/login/dashboard aparte) */}
       <Route path="/chefs" element={<ManagerRoute><Chefs /></ManagerRoute>} />

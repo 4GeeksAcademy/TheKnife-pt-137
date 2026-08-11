@@ -33,6 +33,7 @@ class Restaurant(db.Model):
     cooks: Mapped[list["Cook"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     tables: Mapped[list["Table"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     recipes: Mapped[list["Recipe"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
+    reservations: Mapped[list["Reservation"]] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
 
 
     def serialize(self):
@@ -308,6 +309,39 @@ class Order(db.Model):
             "state": self.state,
             "date_time": self.date_time,
             "people": self.people,
+        }
+
+# Reservation
+class Reservation(db.Model):
+    __tablename__ = "reservation"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"), nullable=False)
+    table_id: Mapped[int] = mapped_column(ForeignKey("table.id", ondelete="SET NULL"), nullable=True)
+    customer_name: Mapped[str] = mapped_column(String(60), nullable=False)
+    phone: Mapped[str] = mapped_column(String(20), nullable=True)
+    party_size: Mapped[int] = mapped_column(nullable=False)
+    reservation_time: Mapped[datetime] = mapped_column(nullable=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="waiting")
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now)
+
+    # Relationships
+    restaurant: Mapped["Restaurant"] = relationship(back_populates="reservations")
+    table: Mapped["Table"] = relationship()
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "restaurant_id": self.restaurant_id,
+            "restaurant_name": self.restaurant.name,
+            "table_id": self.table_id,
+            "table_number": self.table.number if self.table else None,
+            "customer_name": self.customer_name,
+            "phone": self.phone,
+            "party_size": self.party_size,
+            "reservation_time": self.reservation_time,
+            "status": self.status,
+            "created_at": self.created_at
         }
 
 # Order-product
