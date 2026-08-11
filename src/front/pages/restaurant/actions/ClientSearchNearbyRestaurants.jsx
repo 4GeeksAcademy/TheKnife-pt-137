@@ -11,6 +11,7 @@ const ClientSearchNearbyRestaurants = () => {
     const locationRef = useRef(null)
     const places = useMapsLibrary("places")
     const map = useMap()
+    const [selectedRestaurant, setSelectedRestaurant] = useState(null)
 
     useEffect(() => {
         if (!places || !locationRef.current) return
@@ -25,6 +26,7 @@ const ClientSearchNearbyRestaurants = () => {
                 longitude: longitude
             }))
         })
+        map.setZoom(12)
     }, [places])
 
     useEffect(() => {
@@ -33,7 +35,6 @@ const ClientSearchNearbyRestaurants = () => {
             lat: Number(startPointData.latitude),
             lng: Number(startPointData.longitude)
         })
-        map.setZoom(12)
     }, [map, startPointData.latitude, startPointData.longitude])
 
     async function handleSubmit(e) {
@@ -58,11 +59,11 @@ const ClientSearchNearbyRestaurants = () => {
                         </div>
 
                         <div className="row mb-3">
-                            <div className="col-6">
+                            <div className="col-6" style={{display: "none"}}>
                                 <label className="form-label" htmlFor="latitude">Latitude</label>
                                 <input className="form-control" type="text" id="latitude" onChange={(e) => setStartPointData({ ...startPointData, latitude: e.target.value })} value={startPointData.latitude} />
                             </div>
-                            <div className="col-6">
+                            <div className="col-6" style={{display: "none"}}>
                                 <label className="form-label" htmlFor="longitude">Longitude</label>
                                 <input className="form-control" type="text" id="longitude" onChange={(e) => setStartPointData({ ...startPointData, longitude: e.target.value })} value={startPointData.longitude} />
                             </div>
@@ -83,23 +84,37 @@ const ClientSearchNearbyRestaurants = () => {
                     {startPointData.latitude && startPointData.longitude ?
                         <AdvancedMarker
                             draggable={true}
-                            onDragEnd={(e) => {
-                                setStartPointData({ ...startPointData, latitude: e.latLng.lat(), longitude: e.latLng.lng() })
-                                getNearbyRestaurants(startPointData)
-                            }}
-                            position={{ lat: startPointData.latitude, lng: startPointData.longitude }}><div style={{ fontSize: "32px" }}>📍</div></AdvancedMarker> : null}
+                            onDragEnd={(e) => {setStartPointData({ ...startPointData, latitude: e.latLng.lat(), longitude: e.latLng.lng()})}}
+                            position={{ lat: Number(startPointData.latitude), lng: Number(startPointData.longitude) }}><div style={{ fontSize: "32px" }}>📍</div></AdvancedMarker> : null}
 
                     {store.restaurants.map((restaurant) => {
-                        console.log(
-                            restaurant.id,
-                            restaurant.latitude,
-                            restaurant.longitude)
                         return <AdvancedMarker
                             key={restaurant.id}
                             position={{ lat: Number(restaurant.latitude), lng: Number(restaurant.longitude) }}
+                            onClick={()=>setSelectedRestaurant(restaurant)}
                         ><div style={{ fontSize: "32px" }}>🍽️</div></AdvancedMarker>
                     })}
                 </Map>
+                {selectedRestaurant ? (
+                    <div className="card mt-3 shadow-sm border-0">
+                        <div className="card-body d-flex align-items-start">
+                            <div style={{ fontSize: "28px" }} className="me-3">🍽️</div>
+                            <div className="flex-grow-1">
+                                <h5 className="card-title mb-1">{selectedRestaurant.name}</h5>
+                                <p className="card-text text-muted mb-0">
+                                    <span className="me-1">📍</span>
+                                    {selectedRestaurant.address}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                aria-label="Close"
+                                onClick={() => setSelectedRestaurant(null)}
+                            ></button>
+                        </div>
+                    </div>
+                ) : null}
             </div>
 
 
