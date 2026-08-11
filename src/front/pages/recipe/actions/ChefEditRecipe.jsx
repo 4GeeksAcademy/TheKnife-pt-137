@@ -21,8 +21,14 @@ const ChefEditRecipe = () => {
     const { restaurant_id, recipe_id } = useParams()
     const { uploadImage } = useCloudinary()
 
+    const [ingredientQuery, setIngredientQuery] = useState("")
     const [ingredientId, setIngredientId] = useState("")
     const [amount, setAmount] = useState("")
+
+    const allIngredients = [...(store.ingredients || []), ...(store.inactiveIngredients || [])]
+    const matchingIngredients = ingredientQuery
+        ? allIngredients.filter((ing) => ing.name.toLowerCase().includes(ingredientQuery.toLowerCase()))
+        : []
 
     useEffect(() => {
         getOneRestaurantRecipe(restaurant_id, recipe_id)
@@ -41,10 +47,22 @@ const ChefEditRecipe = () => {
         }
     }, [store.single_recipe])
 
+    function handleSelectIngredient(ing) {
+        setIngredientId(ing.id)
+        setIngredientQuery(ing.name)
+    }
+
+    function handleQueryChange(e) {
+        setIngredientQuery(e.target.value)
+        setIngredientId("")
+    }
+
     function handleAddIngredient(e) {
         e.preventDefault()
+        if (!ingredientId) return
         chefAddRecipeIngredient(restaurant_id, recipe_id, { ingredient_id: ingredientId, amount: amount })
         setIngredientId("")
+        setIngredientQuery("")
         setAmount("")
     }
 
@@ -128,26 +146,37 @@ const ChefEditRecipe = () => {
                     )}
 
                     <form onSubmit={handleAddIngredient}>
-                        <div className="mb-2">
+                        <div className="mb-2 position-relative">
                             <label className="form-label">Ingrediente</label>
-                            <select
-                                className="form-select"
-                                value={ingredientId}
-                                onChange={(e) => setIngredientId(e.target.value)}
-                                required
-                            >
-                                <option value="">-- Selecciona un ingrediente --</option>
-                                {store.ingredients && store.ingredients.map((ing) => (
-                                    <option key={ing.id} value={ing.id}>
-                                        {ing.name}
-                                    </option>
-                                ))}
-                                {store.inactiveIngredients && store.inactiveIngredients.map((ing) => (
-                                    <option key={ing.id} value={ing.id}>
-                                        {ing.name} (inactivo)
-                                    </option>
-                                ))}
-                            </select>
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Escribe el nombre del ingrediente..."
+                                value={ingredientQuery}
+                                onChange={handleQueryChange}
+                                autoComplete="off"
+                            />
+                            {ingredientQuery && !ingredientId && (
+                                matchingIngredients.length > 0 ? (
+                                    <ul className="list-group position-absolute w-100" style={{ zIndex: 10, maxHeight: "200px", overflowY: "auto" }}>
+                                        {matchingIngredients.map((ing) => (
+                                            <li
+                                                key={ing.id}
+                                                className="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                                style={{ cursor: "pointer" }}
+                                                onClick={() => handleSelectIngredient(ing)}
+                                            >
+                                                {ing.name}
+                                                <span className={`badge ${ing.active ? "bg-success" : "bg-secondary"}`}>
+                                                    {ing.active ? "Activo" : "Inactivo"}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <div className="form-text text-muted">No se encontró ningún ingrediente con ese nombre.</div>
+                                )
+                            )}
                         </div>
                         <div className="mb-2">
                             <label className="form-label">Cantidad</label>
@@ -160,7 +189,7 @@ const ChefEditRecipe = () => {
                                 required
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary w-100">Añadir ingrediente</button>
+                        <button type="submit" className="btn btn-primary w-100" disabled={!ingredientId || !amount}>Añadir ingrediente</button>
                     </form>
 
                 </div>
