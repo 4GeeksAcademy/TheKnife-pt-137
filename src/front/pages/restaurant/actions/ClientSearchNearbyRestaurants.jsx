@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useRestaurant } from "../../../hooks/useRestaurant"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
-import { useMapsLibrary } from "@vis.gl/react-google-maps"
+import { useMapsLibrary, Map, useMap, AdvancedMarker } from "@vis.gl/react-google-maps"
 
 const ClientSearchNearbyRestaurants = () => {
 
@@ -10,6 +10,7 @@ const ClientSearchNearbyRestaurants = () => {
     const [startPointData, setStartPointData] = useState({ latitude: "", longitude: "", radius: "" })
     const locationRef = useRef(null)
     const places = useMapsLibrary("places")
+    const map = useMap()
 
     useEffect(() => {
         if (!places || !locationRef.current) return
@@ -26,11 +27,23 @@ const ClientSearchNearbyRestaurants = () => {
         })
     }, [places])
 
+    useEffect(() => {
+        if (!map || !startPointData.latitude || !startPointData.longitude) return
+        map.panTo({
+            lat: Number(startPointData.latitude),
+            lng: Number(startPointData.longitude)
+        })
+        map.setZoom(12)
+    }, [map, startPointData.latitude, startPointData.longitude])
+
     async function handleSubmit(e) {
         e.preventDefault()
         getNearbyRestaurants(startPointData)
     }
 
+    const center = startPointData.latitude && startPointData.longitude ?
+        { lat: startPointData.latitude, lng: startPointData.longitude } :
+        { lat: 40.4169, lng: -3.7033 }
     return (
         <div className="container py-4" style={{ maxWidth: "700px" }}>
 
@@ -65,24 +78,30 @@ const ClientSearchNearbyRestaurants = () => {
                 </div>
             </div>
 
-            <div className="row g-3">
-                {store.restaurants.length > 0 ? store.restaurants.map((restaurant) => (
-                    <div key={restaurant.id} className="col-md-6">
-                        <div className="card h-100">
-                            {restaurant.img_url &&
-                                <img src={restaurant.img_url} className="card-img-top" style={{ height: "150px", objectFit: "cover" }} />
-                            }
-                            <div className="card-body">
-                                <h2 className="h5 card-title">{restaurant.name}</h2>
-                                <p className="card-text text-muted mb-1">{restaurant.address}</p>
-                                <p className="card-text small">{restaurant.phone}</p>
-                            </div>
-                        </div>
-                    </div>
-                )) : (
-                    <p className="text-center text-muted">No restaurants found nearby. Try a different location or radius.</p>
-                )}
+            <div style={{ width: "100%", height: "500px" }}>
+                <Map defaultCenter={center} defaultZoom={6} mapId="DEMO_MAP_ID" onClick={(e) => setStartPointData({ ...startPointData, latitude: e.detail.latLng.lat, longitude: e.detail.latLng.lng })}>
+                    {startPointData.latitude && startPointData.longitude ?
+                        <AdvancedMarker
+                            draggable={true}
+                            onDragEnd={(e) => {
+                                setStartPointData({ ...startPointData, latitude: e.latLng.lat(), longitude: e.latLng.lng() })
+                                getNearbyRestaurants(startPointData)
+                            }}
+                            position={{ lat: startPointData.latitude, lng: startPointData.longitude }}><div style={{ fontSize: "32px" }}>📍</div></AdvancedMarker> : null}
+
+                    {store.restaurants.map((restaurant) => {
+                        console.log(
+                            restaurant.id,
+                            restaurant.latitude,
+                            restaurant.longitude)
+                        return <AdvancedMarker
+                            key={restaurant.id}
+                            position={{ lat: Number(restaurant.latitude), lng: Number(restaurant.longitude) }}
+                        ><div style={{ fontSize: "32px" }}>🍽️</div></AdvancedMarker>
+                    })}
+                </Map>
             </div>
+
 
         </div>
     )
