@@ -138,3 +138,30 @@ export async function deactivateIngredientService(ingredient_id) {
         return data
     }
 }
+
+/////////////////////////////////////////////////////////////////////////
+// Cook gets all active ingredients (read only, image comes already generated)
+export async function getCookActiveIngredientsService() {
+    const cookToken = localStorage.getItem("cooktoken")
+    const response = await fetch(`${BASE_URL}/cook/ingredients`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${cookToken}` }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    const data = await response.json()
+    return data
+}
+
+// Cook gets one ingredient
+export async function getCookSingleIngredientService(ingredient_id) {
+    const cookToken = localStorage.getItem("cooktoken")
+    const response = await fetch(`${BASE_URL}/cook/ingredients/${ingredient_id}`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${cookToken}` }
+    })
+    if (response.status === 404) throw new Error("Ingredient not found")
+    else if (response.status === 200) {
+        const data = await response.json()
+        return data
+    }
+}

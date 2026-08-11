@@ -13,7 +13,9 @@ import {
     getOneIngredientService,
     chefCreateIngredientService,
     chefEditIngredientService,
-    deactivateIngredientService
+    deactivateIngredientService,
+    getCookActiveIngredientsService,
+    getCookSingleIngredientService
 } from "../services/ingredientService";
 
 export const useIngredient = () => {
@@ -100,6 +102,23 @@ export const useIngredient = () => {
         } catch (error) {console.log(error)}
     }
 
+    /////////////////////////////////////////////////
+    // Cook gets all active ingredients
+    async function fetchCookActiveIngredients() {
+        try {
+            const data = await getCookActiveIngredientsService()
+            dispatch({type: "set_ingredients", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+    // Cook gets one ingredient
+    async function fetchCookSingleIngredient(ingredient_id) {
+        try {
+            const data = await getCookSingleIngredientService(ingredient_id)
+            dispatch({type: "set_single_ingredient", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
     return {
         fetchIngredients,
         fetchSingleIngredient,
@@ -111,6 +130,8 @@ export const useIngredient = () => {
         fetchChefSingleIngredient,
         chefCreateIngredient,
         chefEditIngredient,
-        deactivateIngredient
+        deactivateIngredient,
+        fetchCookActiveIngredients,
+        fetchCookSingleIngredient
     };
 };
