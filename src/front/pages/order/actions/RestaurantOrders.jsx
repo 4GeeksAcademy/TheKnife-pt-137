@@ -41,7 +41,7 @@ const RestaurantOrders = () => {
             <div className="orders row g-3">
                 {ordersList}
             </div>
-            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
+            <Link to={!!localStorage.getItem("cheftoken") ? "/chef_dashboard" : "/cook_dashboard"} className="d-inline-block mt-3">Back to dashboard</Link>
         </div>
     )
 }
