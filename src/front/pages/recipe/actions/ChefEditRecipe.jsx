@@ -17,7 +17,7 @@ const ChefEditRecipe = () => {
         chefUpdateRecipeIngredient,
         chefRemoveRecipeIngredient
     } = useRecipeIngredient()
-    const { fetchActiveIngredients } = useIngredient()
+    const { fetchActiveIngredients, fetchInactiveIngredients } = useIngredient()
     const { restaurant_id, recipe_id } = useParams()
     const { uploadImage } = useCloudinary()
 
@@ -28,6 +28,7 @@ const ChefEditRecipe = () => {
         getOneRestaurantRecipe(restaurant_id, recipe_id)
         fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
         fetchActiveIngredients()
+        fetchInactiveIngredients()
     }, [])
 
     useEffect(() => {
@@ -139,6 +140,11 @@ const ChefEditRecipe = () => {
                                 {store.ingredients && store.ingredients.map((ing) => (
                                     <option key={ing.id} value={ing.id}>
                                         {ing.name}
+                                    </option>
+                                ))}
+                                {store.inactiveIngredients && store.inactiveIngredients.map((ing) => (
+                                    <option key={ing.id} value={ing.id}>
+                                        {ing.name} (inactivo)
                                     </option>
                                 ))}
                             </select>

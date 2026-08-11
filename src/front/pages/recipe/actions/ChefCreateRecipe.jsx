@@ -22,6 +22,7 @@ function ChefCreateRecipe() {
     const [aiIngredients, setAiIngredients] = useState([])
     const [aiLoading, setAiLoading] = useState(false)
     const [aiError, setAiError] = useState(null)
+    const [submitting, setSubmitting] = useState(false)
 
     async function handleGenerateWithAI() {
         if (!img_url.img_url) return
@@ -39,14 +40,20 @@ function ChefCreateRecipe() {
         }
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault()
+        if (submitting) return
+        setSubmitting(true)
         const recipeData = {
             name: name,
             steps: steps,
             img_url: img_url.img_url,
         }
-        chefCreateRecipeWithIngredients(restaurant_id, recipeData, aiIngredients)
+        try {
+            await chefCreateRecipeWithIngredients(restaurant_id, recipeData, aiIngredients)
+        } finally {
+            setSubmitting(false)
+        }
     }
 
 
@@ -114,7 +121,9 @@ function ChefCreateRecipe() {
                             </div>
                         )}
 
-                        <button type="submit" className="btn btn-primary w-100 mb-3">Create recipe</button>
+                        <button type="submit" className="btn btn-primary w-100 mb-3" disabled={submitting}>
+                            {submitting ? "Creating..." : "Create recipe"}
+                        </button>
 
                         <div className="text-center">
                             <Link to={`/restaurants/${restaurant_id}/recipes`}>

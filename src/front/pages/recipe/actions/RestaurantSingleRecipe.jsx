@@ -81,6 +81,7 @@ const RestaurantSingleRecipe = () => {
 
                     <div className="d-flex gap-2">
                         {isChef && <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-warning">Edit recipe</Link>}
+                        <Link to={`/restaurants/${restaurant_id}/recipe/${recipe_id}/ingredients`} className="btn btn-info">View ingredients</Link>
                         <Link to={isChef ? `/restaurants/${restaurant_id}/recipes` : `/restaurants/${restaurant_id}/cook_recipes`} className="btn btn-outline-secondary">Back to recipes</Link>
                     </div>
                 </div>

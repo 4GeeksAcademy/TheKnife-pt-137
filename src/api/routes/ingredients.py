@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
 from api.models import db, Ingredient, Chef, Cook, Waiter, Manager
+from api.ingredient_image import generate_ingredient_image_url
 
 ingredient = Blueprint("ingredientbp", __name__)
 
@@ -13,6 +14,17 @@ def get_current_user():
     user_model = models[role]
     current_user = db.session.scalar(select(user_model).where(user_model.email == email))
     return current_user, role
+
+# Si el ingrediente todavía no tiene imagen, la busca en TheMealDB a partir del
+# nombre y la sube a Cloudinary. Así cualquier rol que vea un ingrediente lo ve
+# automáticamente con su foto, sin tener que subirla a mano.
+def ensure_ingredient_image(single_ingredient):
+    if not single_ingredient.img_url:
+        generated_url = generate_ingredient_image_url(single_ingredient.name)
+        if generated_url:
+            single_ingredient.img_url = generated_url
+            db.session.commit()
+    return single_ingredient
 
 # -----------------------------
 # GET: obtener TODOS los ingredientes
@@ -26,7 +38,7 @@ def get_ingredients():
     if role != "manager":
         return jsonify({"message": "Access forbidden"}), 403
     all_ingredients = db.session.scalars(select(Ingredient)).all()
-    all_ingredients_dicts = [ing.serialize() for ing in all_ingredients]
+    all_ingredients_dicts = [ensure_ingredient_image(ing).serialize() for ing in all_ingredients]
     return jsonify(list(all_ingredients_dicts)), 200
 
 
@@ -48,7 +60,7 @@ def get_single_ingredient(ingredient_id):
     if not single_ingredient:
         return jsonify({"message": "Ingredient not found"}), 404
 
-    return jsonify(single_ingredient.serialize()), 200
+    return jsonify(ensure_ingredient_image(single_ingredient).serialize()), 200
 
 
 # -----------------------------
@@ -158,7 +170,7 @@ def chef_get_active_ingredients():
     active_ingredients = db.session.scalars(
         select(Ingredient).where(Ingredient.active == True)
     ).all()
-    return jsonify([ing.serialize() for ing in active_ingredients]), 200
+    return jsonify([ensure_ingredient_image(ing).serialize() for ing in active_ingredients]), 200
 
 # GET all inactive ingredients (chef only)
 @ingredient.route("/chef/ingredients/inactive")
@@ -188,7 +200,42 @@ def chef_get_single_ingredient(ingredient_id):
     )
     if not single_ingredient:
         return jsonify({"message": "Ingredient not found"}), 404
-    return jsonify(single_ingredient.serialize()), 200
+    return jsonify(ensure_ingredient_image(single_ingredient).serialize()), 200
+
+#####################################################################
+##### COOK #####
+# El cocinero solo necesita ver los ingredientes (con su imagen generada
+# automáticamente), no gestionarlos: crear/editar/desactivar sigue siendo cosa del chef.
+
+# GET all active ingredients (cook only)
+@ingredient.route("/cook/ingredients")
+@jwt_required()
+def cook_get_active_ingredients():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "cook":
+        return jsonify({"message": "Access forbidden"}), 403
+    active_ingredients = db.session.scalars(
+        select(Ingredient).where(Ingredient.active == True)
+    ).all()
+    return jsonify([ensure_ingredient_image(ing).serialize() for ing in active_ingredients]), 200
+
+# GET one ingredient (cook only)
+@ingredient.route("/cook/ingredients/<int:ingredient_id>")
+@jwt_required()
+def cook_get_single_ingredient(ingredient_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "cook":
+        return jsonify({"message": "Access forbidden"}), 403
+    single_ingredient = db.session.scalar(
+        select(Ingredient).where(Ingredient.id == ingredient_id)
+    )
+    if not single_ingredient:
+        return jsonify({"message": "Ingredient not found"}), 404
+    return jsonify(ensure_ingredient_image(single_ingredient).serialize()), 200
 
 # POST create an ingredient (chef only)
 @ingredient.route("/chef/create_ingredient", methods=["POST"])
@@ -204,6 +251,17 @@ def chef_create_ingredient():
         return jsonify({
             "message": "Missing info. Body must include 'name', 'img_url' is optional."
         }), 400
+
+    # Los ingredientes se comparten entre restaurantes: si ya existe uno con ese
+    # nombre (por ejemplo, dos peticiones casi simultáneas al crear una receta
+    # con ingredientes sugeridos por IA) lo reutilizamos en vez de romper por la
+    # restricción unique_ingredient_name.
+    existing_ingredient = db.session.scalar(
+        select(Ingredient).where(Ingredient.name == body.get("name"))
+    )
+    if existing_ingredient:
+        return jsonify(existing_ingredient.serialize()), 200
+
     new_ingredient = Ingredient(
         name=body.get("name"),
         img_url=body.get("img_url"),

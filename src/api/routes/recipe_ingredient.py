@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
 from api.models import db, RecipeIngredient, Recipe, Chef, Cook, Waiter
+from api.routes.ingredients import ensure_ingredient_image
 
 recipe_ingredient = Blueprint("recipeingredientbp", __name__)
 
@@ -147,6 +148,8 @@ def get_restaurant_recipe_ingredients(restaurant_id, recipe_id):
     recipe_ingredients = db.session.scalars(
         select(RecipeIngredient).where(RecipeIngredient.recipe_id == recipe_id)
     ).all()
+    for ri in recipe_ingredients:
+        ensure_ingredient_image(ri.ingredient)
     return jsonify([ri.serialize() for ri in recipe_ingredients]), 200
 
 # POST chef adds an ingredient to a recipe of his restaurant

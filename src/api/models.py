@@ -360,5 +360,6 @@ class RecipeIngredient(db.Model):
             "ingredient_id": self.ingredient_id,
             "recipe_id": self.recipe_id,
             "amount": self.amount,
-            "ingredient_name": self.ingredient.name
+            "ingredient_name": self.ingredient.name,
+            "ingredient_img_url": self.ingredient.img_url
         }
