@@ -57,16 +57,18 @@ def create_restaurant():
     if role != "manager":
         return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url is optional'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url is optional'."}), 400
     new_restaurant = Restaurant(
         name=body.get("name"),
         email=body.get("email"),
         phone=body.get("phone"),
         address=body.get("address"),
-        img_url=body.get("img_url")
+        img_url=body.get("img_url"),
+        description=body.get("description"),
+        food_type=body.get("food_type")
     )
     db.session.add(new_restaurant)
     db.session.commit()
@@ -115,10 +117,10 @@ def edit_restaurant(restaurant_id):
     if not restaurant_to_edit:
         return jsonify({"message": "Restaurant not found"}), 404
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url' is optional."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url' is optional."}), 400
     for key in body:
         setattr(restaurant_to_edit, key, body[key])
     db.session.commit()
@@ -154,16 +156,18 @@ def chef_create_restaurant():
     if chef_restaurant:
         return jsonify({"message": "Chef already owns a restaurant"}), 409
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url is optional'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url is optional'."}), 400
     new_restaurant = Restaurant(
         name=body.get("name"),
         email=body.get("email"),
         phone=body.get("phone"),
         address=body.get("address"),
-        img_url=body.get("img_url")
+        img_url=body.get("img_url"),
+        description=body.get("description"),
+        food_type=body.get("food_type")
     )
     db.session.add(new_restaurant)
     db.session.flush()
@@ -211,10 +215,10 @@ def edit_chef_restaurant(restaurant_id):
     if restaurant.id != current_user.restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url' is optional."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url' is optional."}), 400
     for key in body:
         setattr(restaurant, key, body[key])
     db.session.commit()

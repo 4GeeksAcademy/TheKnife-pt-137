@@ -101,10 +101,16 @@ const ClientSearchNearbyRestaurants = () => {
                             <div style={{ fontSize: "28px" }} className="me-3">🍽️</div>
                             <div className="flex-grow-1">
                                 <h5 className="card-title mb-1">{selectedRestaurant.name}</h5>
-                                <p className="card-text text-muted mb-0">
+                                {selectedRestaurant.food_type && (
+                                    <span className="badge bg-secondary mb-2">{selectedRestaurant.food_type}</span>
+                                )}
+                                <p className="card-text text-muted mb-1">
                                     <span className="me-1">📍</span>
                                     {selectedRestaurant.address}
                                 </p>
+                                {selectedRestaurant.description && (
+                                    <p className="card-text mb-0">{selectedRestaurant.description}</p>
+                                )}
                             </div>
                             <button
                                 type="button"

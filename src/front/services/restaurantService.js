@@ -35,6 +35,8 @@ export async function createRestaurantService(restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(`${backendURL}/restaurants`, {
     method: "POST",
@@ -74,6 +76,8 @@ export async function editRestaurantService(restaurantId, restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(`${backendURL}/restaurants/${restaurantId}`, {
     method: "PUT",
@@ -116,6 +120,8 @@ export async function chefCreateRestaurantService(restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(`${backendURL}/create_restaurant`, {
     method: "POST",
@@ -140,6 +146,8 @@ export async function chefEditRestaurantService(restaurant_id, restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(
     `${backendURL}/edit_restaurant/${restaurant_id}`,
