@@ -19,10 +19,7 @@ const WaiterDashboard = () => {
     const [people, setPeople] = useState("")
 
     useEffect(() => {
-        const waiterLogged = !!localStorage.getItem("waitertoken")
-        if (!waiterLogged) {
-            navigate("/waiter_login")
-        } else if (!store.loggedWaiter.waiter.id) {
+        if (!store.loggedWaiter.waiter.id) {
             rehydrateWaiter()
         }
     }, [])

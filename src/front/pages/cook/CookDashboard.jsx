@@ -1,20 +1,16 @@
 import { useEffect } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useCook } from "../../hooks/useCook";
 
 
 const CookDashBoard = () => {
 
     const { store } = useGlobalReducer()
-    const navigate = useNavigate()
     const { cookLogout, rehydrateCook } = useCook()
 
     useEffect(() => {
-        const cookLogged = !!localStorage.getItem("cooktoken")
-        if (!cookLogged) {
-            navigate("/cook_login")
-        } else if (!store.loggedCook.cook.id) {
+        if (!store.loggedCook.cook.id) {
             rehydrateCook()
         }
     }, [])

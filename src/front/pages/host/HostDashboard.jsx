@@ -1,19 +1,14 @@
 import { useEffect } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
-import { useNavigate } from "react-router-dom";
 import { useHost } from "../../hooks/useHost";
 
 const HostDashboard = () => {
 
     const { store } = useGlobalReducer();
-    const navigate = useNavigate();
     const { hostLogout, rehydrateHost } = useHost();
 
     useEffect(() => {
-        const hostLogged = !!localStorage.getItem("hosttoken");
-        if (!hostLogged) {
-            navigate("/host_login");
-        } else if (!store.loggedHost.host.id) {
+        if (!store.loggedHost.host.id) {
             rehydrateHost();
         }
     }, []);

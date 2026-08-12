@@ -12,6 +12,7 @@ const RestaurantSingleOrder = () => {
     const { restaurant_id, order_id } = useParams()
     const [loading, setLoading] = useState(true)
     const isWaiter = !!localStorage.getItem("waitertoken")
+    const isCook = !!localStorage.getItem("cooktoken")
 
     const canEditProducts = isWaiter && store.singleOrder.state !== "closed"
 
@@ -104,6 +105,8 @@ const RestaurantSingleOrder = () => {
 
                     {isWaiter ? (
                         <Link to="/waiter_dashboard" className="btn btn-outline-secondary">Back to dashboard</Link>
+                    ) : isCook ? (
+                        <Link to={`/restaurants/${restaurant_id}/cook_orders`} className="btn btn-outline-secondary">Back to orders</Link>
                     ) : (
                         <Link to={`/restaurants/${restaurant_id}/orders`} className="btn btn-outline-secondary">Back to orders</Link>
                     )}

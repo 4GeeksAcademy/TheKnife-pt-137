@@ -1,21 +1,17 @@
 import { useEffect } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useChef } from "../../hooks/useChef";
 import { useRestaurant } from "../../hooks/useRestaurant";
 
 const ChefDashboard = () => {
 
     const { store } = useGlobalReducer()
-    const navigate = useNavigate()
-    const { chefLogout, chefLogin, rehydrateChef } = useChef()
+    const { chefLogout, rehydrateChef } = useChef()
     const { chefDeleteRestaurant } = useRestaurant()
 
     useEffect(() => {
-        const chefLogged = !!localStorage.getItem("cheftoken")
-        if (!chefLogged) {
-            navigate("/chef_login")
-        } else if (!store.loggedChef.chef.id) {
+        if (!store.loggedChef.chef.id) {
             rehydrateChef()
         }
     }, [])
