@@ -15,8 +15,8 @@ export const Navbar = () => {
 					<Link to="/manager_dashboard">
 						<button className="btn btn-primary">Manager dashboard</button>
 					</Link>
-					<Link to="/restaurants/nearby_search">
-						<button className="btn btn-primary">Look nearby app restaurants</button>
+					<Link to="/client_login">
+						<button className="btn btn-primary">Client login</button>
 					</Link>
 				</div>
 			</div>

@@ -203,8 +203,14 @@ export async function editRestaurantCoordsService(restaurant_id, coordsData) {
 }
 
 export async function getNearbyRestaurantsService(startPointData) {
+  const clientToken = localStorage.getItem("clienttoken")
   const response = await fetch(
-    `${backendURL}/restaurants/nearby?latitude=${startPointData.latitude}&longitude=${startPointData.longitude}&radius=${startPointData.radius}`)
+    `${backendURL}/restaurants/nearby?latitude=${startPointData.latitude}&longitude=${startPointData.longitude}&radius=${startPointData.radius}`,
+    {
+      headers: {
+        "Authorization": `Bearer ${clientToken}`
+      }
+    })
     if (!response.ok) {
       const data = await response.json()
       const errorMessage = data.message

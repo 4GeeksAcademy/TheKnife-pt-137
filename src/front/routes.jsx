@@ -13,6 +13,7 @@ import { Demo } from "./pages/Demo";
 
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
+import { ClientRoute } from "./components/ClientRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
@@ -132,6 +133,14 @@ import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
 import RegisterHost from "./pages/host/actions/RegisterHost";
 
+// Clients
+import Clients from "./pages/client/Clients";
+import CreateClientForm from "./pages/client/CreateClientForm";
+import EditClientForm from "./pages/client/EditClientForm";
+import ClientLogin from "./pages/client/ClientLogin";
+import ClientDashboard from "./pages/client/ClientDashboard";
+import RegisterClient from "./pages/client/RegisterClient";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
 
@@ -145,7 +154,7 @@ export const router = createBrowserRouter(
       {/* Google Maps */}
         
       <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
-      <Route path="/restaurants/nearby_search" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider>} />
+      <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
@@ -266,6 +275,14 @@ export const router = createBrowserRouter(
       <Route path="/host_login" element={<HostLogin />} />
       <Route path="/host_dashboard" element={<HostDashboard />} />
       <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
+
+      {/* Clients (CRUD genérico -> solo manager; login/dashboard aparte) */}
+      <Route path="/clients" element={<ManagerRoute><Clients /></ManagerRoute>} />
+      <Route path="/create_client" element={<ManagerRoute><CreateClientForm /></ManagerRoute>} />
+      <Route path="/edit_client/:client_id" element={<ManagerRoute><EditClientForm /></ManagerRoute>} />
+      <Route path="/client_register" element={<RegisterClient />} />
+      <Route path="/client_login" element={<ClientLogin />} />
+      <Route path="/client_dashboard" element={<ClientRoute><ClientDashboard /></ClientRoute>} />
 
     </Route>
   )

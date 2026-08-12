@@ -48,6 +48,7 @@ const ManagerDashboard = () => {
                             <Link to="/cooks" className="btn btn-outline-primary">Cooks</Link>
                             <Link to="/waiters" className="btn btn-outline-secondary">Waiters</Link>
                             <Link to="/managers" className="btn btn-outline-dark">Managers</Link>
+                            <Link to="/clients" className="btn btn-outline-warning">Clients</Link>
                         </div>
                     </div>
                 </div>

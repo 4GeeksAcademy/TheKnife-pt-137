@@ -68,6 +68,30 @@ class Manager(db.Model):
         }
 
 
+# Client (cliente global de la app, no pertenece a un restaurante; se relaciona con sus reservas)
+class Client(db.Model):
+    __tablename__ = "client"
+    __table_args__ = (
+        db.UniqueConstraint("email", name="unique_client_email"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    email: Mapped[str] = mapped_column(String(30), nullable=False)
+    password: Mapped[str] = mapped_column(String(255), nullable=False)
+    phone: Mapped[str] = mapped_column(String(20), nullable=True)
+
+    # Relationships
+    reservations: Mapped[list["Reservation"]] = relationship(back_populates="client")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone": self.phone
+        }
+
 # Waiter
 class Waiter(db.Model):
     __tablename__ = "waiter"
@@ -318,6 +342,7 @@ class Reservation(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"), nullable=False)
     table_id: Mapped[int] = mapped_column(ForeignKey("table.id", ondelete="SET NULL"), nullable=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("client.id", ondelete="SET NULL"), nullable=True)
     customer_name: Mapped[str] = mapped_column(String(60), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=True)
     party_size: Mapped[int] = mapped_column(nullable=False)
@@ -328,6 +353,7 @@ class Reservation(db.Model):
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="reservations")
     table: Mapped["Table"] = relationship()
+    client: Mapped["Client"] = relationship(back_populates="reservations")
 
     def serialize(self):
         return {
@@ -336,6 +362,8 @@ class Reservation(db.Model):
             "restaurant_name": self.restaurant.name,
             "table_id": self.table_id,
             "table_number": self.table.number if self.table else None,
+            "client_id": self.client_id,
+            "client_name": self.client.name if self.client else None,
             "customer_name": self.customer_name,
             "phone": self.phone,
             "party_size": self.party_size,

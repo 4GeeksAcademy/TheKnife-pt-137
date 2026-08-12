@@ -30,6 +30,7 @@ from api.routes.managers import manager
 from api.routes.hosts import host
 from api.routes.reservations import reservation
 from api.routes.ai_recipe import ai_recipe
+from api.routes.clients import client
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -81,6 +82,7 @@ app.register_blueprint(manager)
 app.register_blueprint(host)
 app.register_blueprint(reservation)
 app.register_blueprint(ai_recipe)
+app.register_blueprint(client)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
