@@ -70,6 +70,7 @@ import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
 import WaiterTables from "./pages/table/actions/WaiterTables";
 import WaiterCreateTable from "./pages/table/actions/WaiterCreateTable";
+import WaiterInactiveTables from "./pages/table/actions/WaiterInactiveTables";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -230,6 +231,7 @@ export const router = createBrowserRouter(
       {/* Tables (CRUD genérico -> solo manager) */}
       <Route path="/restaurants/:restaurant_id/waiter_tables" element={<RoleRoute role="waiter"><WaiterTables /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<RoleRoute role="waiter"><WaiterCreateTable /></RoleRoute>} />
+      <Route path="/restaurants/:restaurant_id/waiter_tables/inactive" element={<RoleRoute role="waiter"><WaiterInactiveTables /></RoleRoute>} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />

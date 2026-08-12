@@ -30,6 +30,7 @@ export const initialStore = () => {
     singleOrderProduct: {},
     tables: [],
     singleTable: {},
+    inactiveTables: [],
     reservations: [],
     singleReservation: {},
     chefs: [],
@@ -180,6 +181,11 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         tables: action.payload,
+      };
+    case "set_inactive_tables":
+      return {
+        ...store,
+        inactiveTables: action.payload,
       };
     case "set_single_table":
       return {
