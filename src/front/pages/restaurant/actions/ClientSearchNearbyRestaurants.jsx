@@ -80,7 +80,7 @@ const ClientSearchNearbyRestaurants = () => {
             </div>
 
             <div style={{ width: "100%", height: "500px" }}>
-                <Map defaultCenter={center} defaultZoom={6} mapId="DEMO_MAP_ID" onClick={(e) => setStartPointData({ ...startPointData, latitude: e.detail.latLng.lat, longitude: e.detail.latLng.lng })}>
+                <Map defaultCenter={center} defaultZoom={7} mapId="DEMO_MAP_ID" onClick={(e) => setStartPointData({ ...startPointData, latitude: e.detail.latLng.lat, longitude: e.detail.latLng.lng })}>
                     {startPointData.latitude && startPointData.longitude ?
                         <AdvancedMarker
                             draggable={true}
