@@ -15,9 +15,6 @@ export const Navbar = () => {
 					<Link to="/manager_dashboard">
 						<button className="btn btn-primary">Manager dashboard</button>
 					</Link>
-					<Link to="/client_login">
-						<button className="btn btn-primary">Client login</button>
-					</Link>
 				</div>
 			</div>
 		</nav>
