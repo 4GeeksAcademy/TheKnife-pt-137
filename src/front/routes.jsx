@@ -133,6 +133,8 @@ import SingleHost from "./pages/host/SingleHost";
 import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
 import RegisterHost from "./pages/host/actions/RegisterHost";
+import HostReservations from "./pages/host/actions/HostReservations";
+import CreateHostReservation from "./pages/host/actions/CreateHostReservation";
 
 // Clients
 import Clients from "./pages/client/Clients";
@@ -275,6 +277,8 @@ export const router = createBrowserRouter(
       <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
       <Route path="/host_login" element={<HostLogin />} />
       <Route path="/host_dashboard" element={<HostRoute><HostDashboard /></HostRoute>} />
+      <Route path="/host_reservations" element={<HostRoute><HostReservations /></HostRoute>} />
+      <Route path="/host_create_reservation" element={<HostRoute><CreateHostReservation /></HostRoute>} />
       <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
 
       {/* Clients (CRUD genérico -> solo manager; login/dashboard aparte) */}
