@@ -86,9 +86,9 @@ export function useOrder() {
 
   /////////////////////////////////////////////////
   // Get all restaurant orders
-  async function getAllRestaurantOrders(restaurant_id) {
+  async function getAllRestaurantOrders(restaurant_id, state) {
     try {
-      const data = await getAllRestaurantOrdersService(restaurant_id);
+      const data = await getAllRestaurantOrdersService(restaurant_id, state);
       console.log(data);
       dispatch({ type: "set_orders", payload: data });
     } catch (error) {

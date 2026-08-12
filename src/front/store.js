@@ -30,6 +30,8 @@ export const initialStore = () => {
     singleOrderProduct: {},
     tables: [],
     singleTable: {},
+    reservations: [],
+    singleReservation: {},
     chefs: [],
     singleChef: {},
     recipeIngredients: [],
@@ -51,6 +53,12 @@ export const initialStore = () => {
       hostAuth: false,
       host: {},
       restaurant: "",
+    },
+    clients: [],
+    singleClient: {},
+    loggedClient: {
+      clientAuth: false,
+      client: {},
     },
   };
 };
@@ -178,6 +186,16 @@ export default function storeReducer(store, action = {}) {
         ...store,
         singleTable: action.payload,
       };
+    case "set_reservations":
+      return {
+        ...store,
+        reservations: action.payload,
+      };
+    case "set_single_reservation":
+      return {
+        ...store,
+        singleReservation: action.payload,
+      };
     case "set_chefs":
       return {
         ...store,
@@ -294,6 +312,32 @@ export default function storeReducer(store, action = {}) {
           hostAuth: false,
           host: {},
           restaurant: "",
+        },
+      };
+    case "set_clients":
+      return {
+        ...store,
+        clients: action.payload,
+      };
+    case "set_single_client":
+      return {
+        ...store,
+        singleClient: action.payload,
+      };
+    case "client_login":
+      return {
+        ...store,
+        loggedClient: {
+          clientAuth: true,
+          client: action.payload.client,
+        },
+      };
+    case "client_logout":
+      return {
+        ...store,
+        loggedClient: {
+          clientAuth: false,
+          client: {},
         },
       };
     default:

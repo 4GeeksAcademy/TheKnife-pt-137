@@ -3,8 +3,8 @@ import { Map, AdvancedMarker } from '@vis.gl/react-google-maps';
 
 const GoogleMap = ({latitude, longitude, setCoordsData}) => (
         <Map
-            style={{ width: '100vw', height: '100vh' }}
-            center={{ lat: latitude, lng: longitude }}
+            style={{ width: '100%', height: '620px' }}
+            defaultCenter={{ lat: latitude, lng: longitude }}
             defaultZoom={15}
             gestureHandling='greedy'
             disableDefaultUI

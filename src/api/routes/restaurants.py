@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
-from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table
+from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table, Client
 from haversine import haversine
 
 restaurant = Blueprint("restaurantbp", __name__)
@@ -11,7 +11,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"cook": Cook, "waiter": Waiter, "chef": Chef, "manager": Manager}
+    models = {"cook": Cook, "waiter": Waiter, "chef": Chef, "manager": Manager, "client": Client}
     user_model = models[role]
     current_user = db.session.scalar(
         select(user_model).where(user_model.email == email))
@@ -245,9 +245,14 @@ def chef_edit_restaurant_coordinates(restaurant_id):
     return jsonify({"message": "Restaurant coordinates successfully edited"}), 200
 
 # Client gets close restaurants by location
-# FALTA CERRAR ENDPOINT A CLIENTES, CUANDO LA TABLA Y EL CRUD ESTÉ HECHO
 @restaurant.route("/restaurants/nearby")
+@jwt_required()
 def get_restaurants_by_location():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "client":
+        return jsonify({"message": "Access forbidden"}), 403
     args_schema = ["latitude", "longitude", "radius"]
     for arg in args_schema:
         if arg not in request.args or request.args[arg] == "":

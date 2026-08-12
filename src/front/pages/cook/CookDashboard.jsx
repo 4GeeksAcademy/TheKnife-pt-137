@@ -37,6 +37,7 @@ const CookDashBoard = () => {
                 <div className="card-body d-flex gap-2">
                     <Link to={`/restaurants/${currentCook.restaurant_id}/cook_recipes`} className="btn btn-danger">Recipes list</Link>
                     <Link to={`/restaurants/${currentCook.restaurant_id}/cook_orders`} className="btn btn-success">Orders list</Link>
+                    <Link to="/cook_ingredients" className="btn btn-outline-primary">Ingredients</Link>
                 </div>
             </div>
 

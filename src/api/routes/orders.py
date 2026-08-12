@@ -119,7 +119,12 @@ def get_restaurant_orders(restaurant_id):
     if current_user.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
     if role == "chef":
-        restaurant_orders = db.session.scalars(select(Order).join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)).all()
+        orders_query = select(Order).join(Table, Order.table_id == Table.id).where(Table.restaurant_id == restaurant_id)
+        state_param = request.args.get("state")
+        if state_param:
+            states = [s.strip() for s in state_param.split(",") if s.strip()]
+            orders_query = orders_query.where(Order.state.in_(states))
+        restaurant_orders = db.session.scalars(orders_query).all()
         restaurant_orders_dicts = [order.serialize() for order in restaurant_orders]
         return jsonify(restaurant_orders_dicts)
     elif role in ["waiter", "cook"]:

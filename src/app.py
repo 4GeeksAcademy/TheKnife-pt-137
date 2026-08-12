@@ -12,6 +12,7 @@ from api.models import db
 # from api.routes4geeks import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from api.cloudinary_config import setup_cloudinary
 
 ### Blueprints imports
 from api.routes.products import product
@@ -27,7 +28,9 @@ from api.routes.cooks import cook
 from api.routes.order_products import order_product
 from api.routes.managers import manager
 from api.routes.hosts import host
+from api.routes.reservations import reservation
 from api.routes.ai_recipe import ai_recipe
+from api.routes.clients import client
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
 static_file_dir = os.path.join(os.path.dirname(
@@ -53,6 +56,9 @@ jwt = JWTManager(app)
 
 db.init_app(app)
 
+# configure the Cloudinary SDK (used to auto-generate ingredient images)
+setup_cloudinary()
+
 # add the admin
 setup_admin(app)
 
@@ -74,7 +80,9 @@ app.register_blueprint(cook)
 app.register_blueprint(order_product)
 app.register_blueprint(manager)
 app.register_blueprint(host)
+app.register_blueprint(reservation)
 app.register_blueprint(ai_recipe)
+app.register_blueprint(client)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

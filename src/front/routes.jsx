@@ -14,6 +14,7 @@ import { Demo } from "./pages/Demo";
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
 import { HostRoute } from "./components/HostRoute";
+import { ClientRoute } from "./components/ClientRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
@@ -38,6 +39,7 @@ import CookRecipes from "./pages/recipe/actions/CookRecipes";
 import ChefCreateRecipe from "./pages/recipe/actions/ChefCreateRecipe";
 import ChefEditRecipe from "./pages/recipe/actions/ChefEditRecipe";
 import RestaurantSingleRecipe from "./pages/recipe/actions/RestaurantSingleRecipe";
+import RecipeIngredientsGallery from "./pages/recipe/actions/RecipeIngredientsGallery";
 
 // Restaurants
 import Restaurants from "./pages/restaurant/Restaurants";
@@ -78,6 +80,13 @@ import Tables from "./pages/table/Tables";
 import CreateTableForm from "./pages/table/CreateTableForm";
 import SingleTable from "./pages/table/SingleTable";
 import EditTableForm from "./pages/table/EditTableForm";
+
+// Reservations
+import Reservations from "./pages/reservation/Reservations";
+import CreateReservationForm from "./pages/reservation/CreateReservationForm";
+import SingleReservation from "./pages/reservation/SingleReservation";
+import EditReservationForm from "./pages/reservation/EditReservationForm";
+
 import RestaurantOrders from "./pages/order/actions/RestaurantOrders";
 import CookOrders from "./pages/order/actions/CookOrders";
 import RestaurantSingleOrder from "./pages/order/actions/RestaurantSingleOrder";
@@ -101,6 +110,8 @@ import ChefIngredients from "./pages/ingredient/actions/ChefIngredients";
 import ChefInactiveIngredients from "./pages/ingredient/actions/ChefInactiveIngredients";
 import ChefCreateIngredient from "./pages/ingredient/actions/ChefCreateIngredient";
 import ChefEditIngredient from "./pages/ingredient/actions/ChefEditIngredient";
+import CookIngredients from "./pages/ingredient/actions/CookIngredients";
+import CookSingleIngredient from "./pages/ingredient/actions/CookSingleIngredient";
 
 // Cooks
 import Cooks from "./pages/cook/Cooks";
@@ -123,6 +134,14 @@ import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
 import RegisterHost from "./pages/host/actions/RegisterHost";
 
+// Clients
+import Clients from "./pages/client/Clients";
+import CreateClientForm from "./pages/client/CreateClientForm";
+import EditClientForm from "./pages/client/EditClientForm";
+import ClientLogin from "./pages/client/ClientLogin";
+import ClientDashboard from "./pages/client/ClientDashboard";
+import RegisterClient from "./pages/client/RegisterClient";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
 
@@ -136,7 +155,7 @@ export const router = createBrowserRouter(
       {/* Google Maps */}
         
       <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
-      <Route path="/restaurants/nearby_search" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider>} />
+      <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
@@ -158,6 +177,7 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
       <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
+      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id/ingredients" element={<RecipeIngredientsGallery />} />
       <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
       <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
       <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
@@ -187,6 +207,8 @@ export const router = createBrowserRouter(
       <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
       <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
       <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
+      <Route path="/cook_ingredients" element={<CookIngredients />} />
+      <Route path="/cook_ingredients/:ingredient_id" element={<CookSingleIngredient />} />
 
       {/* Waiters (CRUD genérico -> solo manager) */}
       <Route path="/waiters" element={<ManagerRoute><Waiters /></ManagerRoute>} />
@@ -219,6 +241,12 @@ export const router = createBrowserRouter(
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
       <Route path="/edit_table/:table_id" element={<ManagerRoute><EditTableForm /></ManagerRoute>} />
 
+      {/* Reservations (CRUD genérico -> solo manager) */}
+      <Route path="/reservations" element={<ManagerRoute><Reservations /></ManagerRoute>} />
+      <Route path="/create_reservation" element={<ManagerRoute><CreateReservationForm /></ManagerRoute>} />
+      <Route path="/single_reservation/:reservation_id" element={<ManagerRoute><SingleReservation /></ManagerRoute>} />
+      <Route path="/edit_reservation/:reservation_id" element={<ManagerRoute><EditReservationForm /></ManagerRoute>} />
+
       {/* Chefs (CRUD genérico -> solo manager; register/login/dashboard aparte) */}
       <Route path="/chefs" element={<ManagerRoute><Chefs /></ManagerRoute>} />
       <Route path="/create_chef" element={<ManagerRoute><CreateChefForm /></ManagerRoute>} />
@@ -248,6 +276,14 @@ export const router = createBrowserRouter(
       <Route path="/host_login" element={<HostLogin />} />
       <Route path="/host_dashboard" element={<HostRoute><HostDashboard /></HostRoute>} />
       <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
+
+      {/* Clients (CRUD genérico -> solo manager; login/dashboard aparte) */}
+      <Route path="/clients" element={<ManagerRoute><Clients /></ManagerRoute>} />
+      <Route path="/create_client" element={<ManagerRoute><CreateClientForm /></ManagerRoute>} />
+      <Route path="/edit_client/:client_id" element={<ManagerRoute><EditClientForm /></ManagerRoute>} />
+      <Route path="/client_register" element={<RegisterClient />} />
+      <Route path="/client_login" element={<ClientLogin />} />
+      <Route path="/client_dashboard" element={<ClientRoute><ClientDashboard /></ClientRoute>} />
 
     </Route>
   )

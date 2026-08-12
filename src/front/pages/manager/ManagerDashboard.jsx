@@ -42,11 +42,13 @@ const ManagerDashboard = () => {
                             <Link to="/ingredients" className="btn btn-warning">Ingredients</Link>
                             <Link to="/orders" className="btn btn-danger">Orders</Link>
                             <Link to="/tables" className="btn btn-info">Tables</Link>
+                            <Link to="/reservations" className="btn btn-outline-info">Reservations</Link>
                             <Link to="/chefs" className="btn btn-dark">Chefs</Link>
                             <Link to="/hosts" className="btn btn-outline-success">Hosts</Link>
                             <Link to="/cooks" className="btn btn-outline-primary">Cooks</Link>
                             <Link to="/waiters" className="btn btn-outline-secondary">Waiters</Link>
                             <Link to="/managers" className="btn btn-outline-dark">Managers</Link>
+                            <Link to="/clients" className="btn btn-outline-warning">Clients</Link>
                         </div>
                     </div>
                 </div>
