@@ -87,9 +87,12 @@ export async function editOrderService(orderId, orderData) {
 
 /////////////////////////////////////////////////////////////////////////
 // Get all orders
-export async function getAllRestaurantOrdersService(restaurant_id) {
+export async function getAllRestaurantOrdersService(restaurant_id, state) {
     const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken") || localStorage.getItem("cooktoken")
-    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/orders`, {
+    const url = state
+        ? `${backendURL}/restaurants/${restaurant_id}/orders?state=${state}`
+        : `${backendURL}/restaurants/${restaurant_id}/orders`
+    const response = await fetch(url, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${token}`

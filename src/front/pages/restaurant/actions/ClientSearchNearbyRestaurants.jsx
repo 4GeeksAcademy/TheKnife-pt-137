@@ -14,7 +14,7 @@ const ClientSearchNearbyRestaurants = () => {
     const [selectedRestaurant, setSelectedRestaurant] = useState(null)
 
     useEffect(() => {
-        if (!places || !locationRef.current) return
+        if (!places || !locationRef.current || !map) return
         const autoComplete = new places.Autocomplete(locationRef.current)
         autoComplete.addListener("place_changed", () => {
             const place = autoComplete.getPlace()
