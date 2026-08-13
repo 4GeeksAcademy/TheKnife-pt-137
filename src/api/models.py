@@ -6,6 +6,13 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
+# Association table: a restaurant can have many occasion tags and viceversa
+restaurant_tag = db.Table(
+    "restaurant_tag",
+    db.Column("restaurant_id", ForeignKey("restaurant.id", ondelete="CASCADE"), primary_key=True),
+    db.Column("tag_id", ForeignKey("tag.id", ondelete="CASCADE"), primary_key=True),
+)
+
 # Restaurant
 class Restaurant(db.Model):
     __tablename__ = "restaurant"
@@ -23,8 +30,10 @@ class Restaurant(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     latitude: Mapped[float] = mapped_column(nullable=True)
     longitude: Mapped[float] = mapped_column(nullable=True)
+    cuisine_type: Mapped[str] = mapped_column(String(30), nullable=True)
 
     # Relationships
+    tags: Mapped[list["Tag"]] = relationship(secondary=restaurant_tag, back_populates="restaurants")
     products: Mapped[list["Product"]] = relationship(
         back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
     chef: Mapped["Chef"] = relationship(back_populates="restaurant", cascade="all, delete-orphan", passive_deletes=True)
@@ -45,7 +54,28 @@ class Restaurant(db.Model):
             "address": self.address,
             "img_url": self.img_url,
             "latitude": self.latitude,
-            "longitude": self.longitude
+            "longitude": self.longitude,
+            "cuisine_type": self.cuisine_type,
+            "tags": [tag.serialize() for tag in self.tags]
+        }
+
+# Tag (occasion label: romantic, business, pet friendly...)
+class Tag(db.Model):
+    __tablename__ = "tag"
+    __table_args__ = (
+        db.UniqueConstraint("name", name="unique_tag_name"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
+
+    # Relationships
+    restaurants: Mapped[list["Restaurant"]] = relationship(secondary=restaurant_tag, back_populates="tags")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name
         }
 
 # Manager

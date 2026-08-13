@@ -32,6 +32,7 @@ export const initialStore = () => {
     singleTable: {},
     reservations: [],
     singleReservation: {},
+    tags: [],
     chefs: [],
     singleChef: {},
     recipeIngredients: [],
@@ -89,6 +90,11 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
         restaurants: action.payload,
+      };
+    case "set_tags":
+      return {
+        ...store,
+        tags: action.payload,
       };
     case "set_single_restaurant":
       return {

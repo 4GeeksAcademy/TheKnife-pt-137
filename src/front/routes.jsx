@@ -18,6 +18,7 @@ import { RoleRoute } from "./components/RoleRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
+import ClientSearchByOccasion from "./pages/restaurant/actions/ClientSearchByOccasion";
 
 // Products
 import Products from "./pages/product/Products";
@@ -156,6 +157,7 @@ export const router = createBrowserRouter(
         
       <Route path="/maps/:restaurant_id" element={<RoleRoute role="chef"><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider></RoleRoute>} />
       <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
+      <Route path="/restaurants/occasion_search" element={<ClientRoute><ClientSearchByOccasion /></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />

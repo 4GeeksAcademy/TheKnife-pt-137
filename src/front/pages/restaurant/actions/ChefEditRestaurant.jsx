@@ -8,13 +8,14 @@ import { useCloudinary } from "../../../hooks/useCloudinary";
 const ChefEditRestaurant = () => {
 
     const { store } = useGlobalReducer()
-    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", img_url: ""})
-    const { getSingleRestaurant, chefEditRestaurant } = useRestaurant()
+    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", img_url: "", cuisine_type: "", tag_ids: []})
+    const { getSingleRestaurant, chefEditRestaurant, getTags } = useRestaurant()
     const { uploadImage } = useCloudinary()
     const { restaurant_id } = useParams()
 
     useEffect(() => {
         getSingleRestaurant(restaurant_id)
+        getTags()
     }, [])
     useEffect(() => {
         if (store.singleRestaurant.id) {
@@ -22,11 +23,23 @@ const ChefEditRestaurant = () => {
                 name: store.singleRestaurant.name,
                 email: store.singleRestaurant.email,
                 phone: store.singleRestaurant.phone,
-                address: store.singleRestaurant.address
+                address: store.singleRestaurant.address,
+                img_url: store.singleRestaurant.img_url || "",
+                cuisine_type: store.singleRestaurant.cuisine_type || "",
+                tag_ids: (store.singleRestaurant.tags || []).map((tag) => tag.id)
             })
         }
     }, [store.singleRestaurant])
-    
+
+    const toggleTag = (tagId) => {
+        setRestaurantData((prev) => ({
+            ...prev,
+            tag_ids: prev.tag_ids.includes(tagId)
+                ? prev.tag_ids.filter((id) => id !== tagId)
+                : [...prev.tag_ids, tagId]
+        }))
+    }
+
     return (
         <div className="container py-5" style={{ maxWidth: "500px" }}>
 
@@ -52,6 +65,27 @@ const ChefEditRestaurant = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="address">Address</label>
                         <input className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="cuisine_type">Type of food</label>
+                        <input className="form-control" type="text" name="cuisine_type" id="cuisine_type" placeholder="e.g. italiana, mexicana, sushi..." onChange={(e)=>setRestaurantData({...restaurantData, cuisine_type: e.target.value})} value={restaurantData.cuisine_type} />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label d-block">Occasion tags</label>
+                        <div className="d-flex flex-wrap gap-2">
+                            {store.tags.map((tag) => {
+                                const active = restaurantData.tag_ids.includes(tag.id)
+                                return (
+                                    <button type="button" key={tag.id}
+                                        className={`btn btn-sm ${active ? "btn-primary" : "btn-outline-primary"}`}
+                                        onClick={()=>toggleTag(tag.id)}>
+                                        {tag.name}
+                                    </button>
+                                )
+                            })}
+                        </div>
                     </div>
 
                     <div className="mb-3">
