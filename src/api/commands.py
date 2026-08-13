@@ -2,7 +2,8 @@
 import random
 from decimal import Decimal
 import click
-from api.models import db, Restaurant, Chef, Waiter, Cook, Product, Recipe
+from api.models import db, Restaurant, Chef, Waiter, Cook, Product, Recipe, Tag
+from sqlalchemy import select
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -31,13 +32,45 @@ def setup_commands(app):
 
         print("All test users created")
 
+    @app.cli.command("seed-tags")
+    def seed_tags():
+        """
+        Seeds the fixed catalogue of occasion tags used by the "search by occasion"
+        feature. Idempotent: only inserts the tags that don't already exist.
+        Run with: $ flask seed-tags
+        """
+        occasion_tags = [
+            "romántico", "negocios", "amigos",
+            "despedida de soltera", "experiencia", "pet friendly",
+        ]
+        created = 0
+        for name in occasion_tags:
+            existing = db.session.scalar(select(Tag).where(Tag.name == name))
+            if not existing:
+                db.session.add(Tag(name=name))
+                created += 1
+        db.session.commit()
+        print(f"Occasion tags seeded. Created {created} new tag(s), {len(occasion_tags) - created} already existed.")
+
     @app.cli.command("insert-test-data")
     def insert_test_data():
         """
         Creates 20 chefs, each with their own restaurant (random European address),
         10 products and 10 recipes per restaurant, and 3 waiters + 3 cooks per restaurant.
+        Also seeds the fixed catalogue of occasion tags.
         Run with: $ flask insert-test-data
         """
+        # Seed the fixed occasion tags first (idempotent)
+        occasion_tags = [
+            "romántico", "negocios", "amigos",
+            "despedida de soltera", "experiencia", "pet friendly",
+        ]
+        for name in occasion_tags:
+            if not db.session.scalar(select(Tag).where(Tag.name == name)):
+                db.session.add(Tag(name=name))
+        db.session.commit()
+        print("Occasion tags ready.")
+
         # (address, city, country, latitude, longitude)
         locations = [
             ("Calle Gran Vía 12", "Madrid", "España", 40.4168, -3.7038),
