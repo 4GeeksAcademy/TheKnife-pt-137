@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 
@@ -7,7 +8,7 @@ const ClientSearchByOccasion = () => {
     const { getTags, searchRestaurantsByOccasion } = useRestaurant();
     const { store } = useGlobalReducer();
 
-    const [cuisine, setCuisine] = useState("");
+    const [foodType, setFoodType] = useState("");
     const [selectedTags, setSelectedTags] = useState([]);
     const [searched, setSearched] = useState(false);
 
@@ -23,12 +24,12 @@ const ClientSearchByOccasion = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        searchRestaurantsByOccasion({ cuisine, tags: selectedTags });
+        searchRestaurantsByOccasion({ food_type: foodType, tags: selectedTags });
         setSearched(true);
     };
 
     const handleClear = () => {
-        setCuisine("");
+        setFoodType("");
         setSelectedTags([]);
         setSearched(false);
         searchRestaurantsByOccasion({});
@@ -46,11 +47,11 @@ const ClientSearchByOccasion = () => {
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="cuisine">Type of food</label>
-                        <input className="form-control" type="text" id="cuisine"
+                        <label className="form-label" htmlFor="food_type">Type of food</label>
+                        <input className="form-control" type="text" id="food_type"
                             placeholder="e.g. italiana, mexicana, sushi..."
-                            value={cuisine}
-                            onChange={(e) => setCuisine(e.target.value)} />
+                            value={foodType}
+                            onChange={(e) => setFoodType(e.target.value)} />
                     </div>
 
                     <div className="mb-3">
@@ -94,15 +95,21 @@ const ClientSearchByOccasion = () => {
                                         )}
                                         <div className="card-body">
                                             <h3 className="h5 mb-1">{restaurant.name}</h3>
-                                            {restaurant.cuisine_type && (
-                                                <p className="text-muted mb-2">🍽️ {restaurant.cuisine_type}</p>
+                                            {restaurant.food_type && (
+                                                <p className="text-muted mb-2">🍽️ {restaurant.food_type}</p>
                                             )}
                                             <p className="text-muted mb-2"><span className="me-1">📍</span>{restaurant.address}</p>
-                                            <div className="d-flex flex-wrap gap-1">
+                                            <div className="d-flex flex-wrap gap-1 mb-3">
                                                 {(restaurant.tags || []).map((tag) => (
                                                     <span key={tag.id} className="badge bg-secondary">{tag.name}</span>
                                                 ))}
                                             </div>
+                                            <Link
+                                                to={`/restaurants/${restaurant.id}/dishes`}
+                                                className="btn btn-primary btn-sm align-self-start"
+                                            >
+                                                View dishes
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

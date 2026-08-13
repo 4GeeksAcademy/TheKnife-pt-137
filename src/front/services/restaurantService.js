@@ -35,6 +35,8 @@ export async function createRestaurantService(restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(`${backendURL}/restaurants`, {
     method: "POST",
@@ -74,6 +76,8 @@ export async function editRestaurantService(restaurantId, restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
   };
   const response = await fetch(`${backendURL}/restaurants/${restaurantId}`, {
     method: "PUT",
@@ -116,7 +120,8 @@ export async function chefCreateRestaurantService(restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
-    cuisine_type: restaurantData.cuisine_type,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
     tag_ids: restaurantData.tag_ids || [],
   };
   const response = await fetch(`${backendURL}/create_restaurant`, {
@@ -142,7 +147,8 @@ export async function chefEditRestaurantService(restaurant_id, restaurantData) {
     phone: restaurantData.phone,
     address: restaurantData.address,
     img_url: restaurantData.img_url,
-    cuisine_type: restaurantData.cuisine_type,
+    description: restaurantData.description,
+    food_type: restaurantData.food_type,
     tag_ids: restaurantData.tag_ids || [],
   };
   const response = await fetch(
@@ -234,11 +240,11 @@ export async function getTagsService() {
   return await response.json();
 }
 
-// Client searches restaurants by occasion tags and/or cuisine type
+// Client searches restaurants by occasion tags and/or food type
 export async function searchRestaurantsByOccasionService(filters = {}) {
   const clientToken = localStorage.getItem("clienttoken")
   const params = new URLSearchParams();
-  if (filters.cuisine) params.append("cuisine", filters.cuisine);
+  if (filters.food_type) params.append("food_type", filters.food_type);
   (filters.tags || []).forEach((tag) => params.append("tag", tag));
   const queryString = params.toString();
   const url = `${backendURL}/restaurants/search${queryString ? `?${queryString}` : ""}`;

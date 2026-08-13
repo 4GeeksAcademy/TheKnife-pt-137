@@ -57,16 +57,18 @@ def create_restaurant():
     if role != "manager":
         return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url is optional'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url is optional'."}), 400
     new_restaurant = Restaurant(
         name=body.get("name"),
         email=body.get("email"),
         phone=body.get("phone"),
         address=body.get("address"),
-        img_url=body.get("img_url")
+        img_url=body.get("img_url"),
+        description=body.get("description"),
+        food_type=body.get("food_type")
     )
     db.session.add(new_restaurant)
     db.session.commit()
@@ -115,10 +117,10 @@ def edit_restaurant(restaurant_id):
     if not restaurant_to_edit:
         return jsonify({"message": "Restaurant not found"}), 404
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url' is optional."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url' is optional."}), 400
     for key in body:
         setattr(restaurant_to_edit, key, body[key])
     db.session.commit()
@@ -154,17 +156,18 @@ def chef_create_restaurant():
     if chef_restaurant:
         return jsonify({"message": "Chef already owns a restaurant"}), 409
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url is optional'."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url is optional'."}), 400
     new_restaurant = Restaurant(
         name=body.get("name"),
         email=body.get("email"),
         phone=body.get("phone"),
         address=body.get("address"),
         img_url=body.get("img_url"),
-        cuisine_type=body.get("cuisine_type")
+        description=body.get("description"),
+        food_type=body.get("food_type")
     )
     db.session.add(new_restaurant)
     db.session.flush()
@@ -216,10 +219,10 @@ def edit_chef_restaurant(restaurant_id):
     if restaurant.id != current_user.restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
     body = request.get_json()
-    restaurant_mandatory_schema = ["name", "email", "phone", "address"]
+    restaurant_mandatory_schema = ["name", "email", "phone", "address", "description", "food_type"]
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
-            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone' and 'address', 'img_url' is optional."}), 400
+            return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url' is optional."}), 400
     # tag_ids is a relationship, handle it apart from the plain column setattr
     tag_ids = body.pop("tag_ids", None)
     for key in body:
@@ -291,7 +294,7 @@ def get_tags():
     tags_dicts = [tag.serialize() for tag in tags]
     return jsonify(list(tags_dicts)), 200
 
-# Client searches restaurants by occasion tags and/or cuisine type
+# Client searches restaurants by occasion tags and/or food type
 @restaurant.route("/restaurants/search")
 @jwt_required()
 def search_restaurants_by_occasion():
@@ -300,11 +303,11 @@ def search_restaurants_by_occasion():
         return jsonify({"message": "User not found"}), 404
     if role != "client":
         return jsonify({"message": "Access forbidden"}), 403
-    cuisine = request.args.get("cuisine")
+    food_type = request.args.get("food_type")
     tag_names = request.args.getlist("tag")
     query = select(Restaurant)
-    if cuisine:
-        query = query.where(Restaurant.cuisine_type.ilike(f"%{cuisine}%"))
+    if food_type:
+        query = query.where(Restaurant.food_type.ilike(f"%{food_type}%"))
     restaurants = db.session.scalars(query).all()
     # Keep only restaurants that have ALL the selected occasion tags
     if tag_names:

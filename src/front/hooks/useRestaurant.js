@@ -144,7 +144,7 @@ export function useRestaurant() {
         } catch (error) {console.log(error)}
     }
 
-    // Client searches restaurants by occasion tags and/or cuisine type
+    // Client searches restaurants by occasion tags and/or food type
     async function searchRestaurantsByOccasion(filters) {
         try {
             const data = await searchRestaurantsByOccasionService(filters)

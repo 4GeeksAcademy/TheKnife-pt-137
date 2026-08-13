@@ -100,6 +100,16 @@ export async function getAllRestaurantTablesService(restaurant_id) {
     return await response.json()
 }
 
+// Get inactive (deactivated) tables of the restaurant
+export async function getInactiveRestaurantTablesService(restaurant_id) {
+    const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables/inactive`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred")
+    return await response.json()
+}
+
 // Create a table for the restaurant
 export async function createRestaurantTableService(restaurant_id, tableData) {
     const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
@@ -126,7 +136,8 @@ export async function editRestaurantTableService(restaurant_id, table_id, tableD
     const editedTable = {
         number: tableData.number,
         status: tableData.status,
-        location: tableData.location
+        location: tableData.location,
+        active: tableData.active
     }
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables/${table_id}`, {
         method: "PUT",
@@ -140,14 +151,27 @@ export async function editRestaurantTableService(restaurant_id, table_id, tableD
     return await response.json()
 }
 
-// Delete a table of the restaurant
-export async function deleteRestaurantTableService(restaurant_id, table_id) {
+// Deactivate a table of the restaurant (soft delete)
+export async function deactivateRestaurantTableService(restaurant_id, table_id) {
     const token = localStorage.getItem("waitertoken") || localStorage.getItem("cheftoken")
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/tables/${table_id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
     })
-    if (!response.ok) throw new Error("Error deleting table")
+    if (!response.ok) throw new Error("Error deactivating table")
     const data = await response.json()
     return data.message
+}
+
+// Host gets the active tables of his own restaurant
+export async function getHostTablesService() {
+    const hostToken = localStorage.getItem("hosttoken")
+    const response = await fetch(`${backendURL}/host/tables`, {
+        headers: { "Authorization": `Bearer ${hostToken}` }
+    })
+    if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || "Error fetching tables")
+    }
+    return await response.json()
 }

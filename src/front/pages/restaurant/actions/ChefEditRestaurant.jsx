@@ -8,13 +8,13 @@ import { useCloudinary } from "../../../hooks/useCloudinary";
 const ChefEditRestaurant = () => {
 
     const { store } = useGlobalReducer()
-    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", img_url: "", cuisine_type: "", tag_ids: []})
-    const { getSingleRestaurant, chefEditRestaurant, getTags } = useRestaurant()
+    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", description: "", food_type: "", img_url: "", tag_ids: []})
+    const { chefGetRestaurant, chefEditRestaurant, getTags } = useRestaurant()
     const { uploadImage } = useCloudinary()
     const { restaurant_id } = useParams()
 
     useEffect(() => {
-        getSingleRestaurant(restaurant_id)
+        chefGetRestaurant(restaurant_id)
         getTags()
     }, [])
     useEffect(() => {
@@ -25,7 +25,8 @@ const ChefEditRestaurant = () => {
                 phone: store.singleRestaurant.phone,
                 address: store.singleRestaurant.address,
                 img_url: store.singleRestaurant.img_url || "",
-                cuisine_type: store.singleRestaurant.cuisine_type || "",
+                description: store.singleRestaurant.description || "",
+                food_type: store.singleRestaurant.food_type || "",
                 tag_ids: (store.singleRestaurant.tags || []).map((tag) => tag.id)
             })
         }
@@ -68,8 +69,13 @@ const ChefEditRestaurant = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="cuisine_type">Type of food</label>
-                        <input className="form-control" type="text" name="cuisine_type" id="cuisine_type" placeholder="e.g. italiana, mexicana, sushi..." onChange={(e)=>setRestaurantData({...restaurantData, cuisine_type: e.target.value})} value={restaurantData.cuisine_type} />
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <textarea className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, description: e.target.value})} value={restaurantData.description} name="description" id="description" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="food_type">Food type</label>
+                        <input className="form-control" type="text" placeholder="e.g. Italian, Mexican, Mediterranean..." onChange={(e)=>setRestaurantData({...restaurantData, food_type: e.target.value})} value={restaurantData.food_type} name="food_type" id="food_type" />
                     </div>
 
                     <div className="mb-3">

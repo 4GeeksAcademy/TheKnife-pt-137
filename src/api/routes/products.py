@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
-from api.models import db, Product, Recipe, Chef, Cook, Waiter, RecipeIngredient, Manager
+from api.models import db, Product, Recipe, Chef, Cook, Waiter, RecipeIngredient, Manager, Client
 
 product = Blueprint("productbp", __name__)
 
@@ -10,7 +10,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager, "client": Client}
     user_model = models[role]
     current_user = db.session.scalar(
         select(user_model).where(user_model.email == email))
@@ -116,6 +116,22 @@ def edit_product(product_id):
         setattr(product_to_edit, key, body[key])
     db.session.commit()
     return jsonify(product_to_edit.serialize()), 200
+
+#####################################################################
+# CLIENT
+# GET the active dishes of a restaurant (for a client browsing before reserving)
+@product.route("/restaurants/<int:restaurant_id>/dishes")
+@jwt_required()
+def get_restaurant_dishes(restaurant_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "client":
+        return jsonify({"message": "Access forbidden"}), 403
+    dishes = db.session.scalars(select(Product).where(
+        Product.restaurant_id == restaurant_id, Product.type == "dish", Product.active == True
+    )).all()
+    return jsonify([dish.serialize() for dish in dishes]), 200
 
 #####################################################################
 # CHEF

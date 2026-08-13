@@ -30,7 +30,8 @@ class Restaurant(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     latitude: Mapped[float] = mapped_column(nullable=True)
     longitude: Mapped[float] = mapped_column(nullable=True)
-    cuisine_type: Mapped[str] = mapped_column(String(30), nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    food_type: Mapped[str] = mapped_column(String(50), nullable=True)
 
     # Relationships
     tags: Mapped[list["Tag"]] = relationship(secondary=restaurant_tag, back_populates="restaurants")
@@ -55,7 +56,8 @@ class Restaurant(db.Model):
             "img_url": self.img_url,
             "latitude": self.latitude,
             "longitude": self.longitude,
-            "cuisine_type": self.cuisine_type,
+            "description": self.description,
+            "food_type": self.food_type,
             "tags": [tag.serialize() for tag in self.tags]
         }
 
@@ -76,6 +78,8 @@ class Tag(db.Model):
         return {
             "id": self.id,
             "name": self.name
+
+
         }
 
 # Manager

@@ -8,9 +8,11 @@ import {
   deleteTableService,
   editTableService,
   getAllRestaurantTablesService,
+  getInactiveRestaurantTablesService,
   createRestaurantTableService,
   editRestaurantTableService,
-  deleteRestaurantTableService,
+  deactivateRestaurantTableService,
+  getHostTablesService,
 } from "../services/tableService";
 
 export function useTable() {
@@ -96,12 +98,37 @@ export function useTable() {
     } catch (error) { console.log(error) }
   }
 
-  // Delete a table of the restaurant
-  async function deleteRestaurantTable(restaurant_id, table_id) {
+  // Get inactive (deactivated) tables of the restaurant
+  async function fetchInactiveRestaurantTables(restaurant_id) {
     try {
-      const message = await deleteRestaurantTableService(restaurant_id, table_id)
+      const data = await getInactiveRestaurantTablesService(restaurant_id)
+      dispatch({ type: "set_inactive_tables", payload: data })
+    } catch (error) { console.log(error) }
+  }
+
+  // Deactivate a table of the restaurant (soft delete)
+  async function deactivateRestaurantTable(restaurant_id, table_id) {
+    try {
+      const message = await deactivateRestaurantTableService(restaurant_id, table_id)
       console.log(message)
       getAllRestaurantTables(restaurant_id)
+    } catch (error) { console.log(error) }
+  }
+
+  // Reactivate a previously deactivated table of the restaurant
+  async function activateRestaurantTable(restaurant_id, table) {
+    try {
+      const data = await editRestaurantTableService(restaurant_id, table.id, { ...table, active: true })
+      console.log(data)
+      fetchInactiveRestaurantTables(restaurant_id)
+    } catch (error) { console.log(error) }
+  }
+
+  // Host gets the active tables of his restaurant
+  async function getHostTables() {
+    try {
+      const data = await getHostTablesService()
+      dispatch({ type: "set_tables", payload: data })
     } catch (error) { console.log(error) }
   }
 
@@ -114,6 +141,9 @@ export function useTable() {
     getAllRestaurantTables,
     createRestaurantTable,
     editRestaurantTable,
-    deleteRestaurantTable
+    fetchInactiveRestaurantTables,
+    deactivateRestaurantTable,
+    activateRestaurantTable,
+    getHostTables
   };
 }

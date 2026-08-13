@@ -108,6 +108,20 @@ export async function getAllRestaurantProductsService(restaurant_id) {
     }
 }
 
+// GET the active dishes of a restaurant (client)
+export async function getRestaurantDishesService(restaurant_id) {
+    const clientToken = localStorage.getItem("clienttoken")
+    const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/dishes`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${clientToken}`
+        }
+    })
+    if (!response.ok) throw new Error("Some error has ocurred");
+    const data = await response.json()
+    return data;
+}
+
 // GET one product
 export async function getOneRestaurantProductService(restaurant_id, product_id) {
     const token = localStorage.getItem("cheftoken") || localStorage.getItem("waitertoken")

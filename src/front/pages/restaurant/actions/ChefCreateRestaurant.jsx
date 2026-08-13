@@ -6,7 +6,7 @@ import {useCloudinary} from "../../../hooks/useCloudinary"
 
 const ChefCreateRestaurant = () => {
 
-    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", img_url: "", cuisine_type: "", tag_ids: []})
+    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", description: "", food_type: "", img_url: "", tag_ids: []})
     const { chefCreateRestaurant, getTags } = useRestaurant()
     const { store } = useGlobalReducer()
     const { uploadImage } = useCloudinary()
@@ -52,8 +52,13 @@ const ChefCreateRestaurant = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="cuisine_type">Type of food</label>
-                        <input className="form-control" type="text" name="cuisine_type" id="cuisine_type" placeholder="e.g. italiana, mexicana, sushi..." onChange={(e)=>setRestaurantData({...restaurantData, cuisine_type: e.target.value})} value={restaurantData.cuisine_type} />
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <textarea className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, description: e.target.value})} value={restaurantData.description} name="description" id="description" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="food_type">Food type</label>
+                        <input className="form-control" type="text" placeholder="e.g. Italian, Mexican, Mediterranean..." onChange={(e)=>setRestaurantData({...restaurantData, food_type: e.target.value})} value={restaurantData.food_type} name="food_type" id="food_type" />
                     </div>
 
                     <div className="mb-3">

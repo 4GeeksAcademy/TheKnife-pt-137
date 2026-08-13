@@ -10,7 +10,8 @@ import {
   getAllRestaurantProductsService,
   chefCreateProductService,
   chefEditProductService,
-  getOneRestaurantProductService
+  getOneRestaurantProductService,
+  getRestaurantDishesService
 } from "../services/productService";
 import useGlobalReducer from "./useGlobalReducer";
 
@@ -138,6 +139,16 @@ export function useProduct() {
     }
   }
 
+  // Client gets the active dishes of a restaurant
+  async function getRestaurantDishes(restaurant_id) {
+    try {
+      const data = await getRestaurantDishesService(restaurant_id);
+      dispatch({ type: "set_products", payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return {
     getProducts,
     deleteProduct,
@@ -148,6 +159,7 @@ export function useProduct() {
     deleteRestaurantProduct,
     chefCreateProduct,
     chefEditProduct,
-    getOneRestaurantProduct
+    getOneRestaurantProduct,
+    getRestaurantDishes
   };
 }

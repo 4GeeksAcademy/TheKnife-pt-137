@@ -13,12 +13,14 @@ import { Demo } from "./pages/Demo";
 
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
+import { HostRoute } from "./components/HostRoute";
 import { ClientRoute } from "./components/ClientRoute";
 import { RoleRoute } from "./components/RoleRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
 import ClientSearchByOccasion from "./pages/restaurant/actions/ClientSearchByOccasion";
+import ClientRestaurantDishes from "./pages/restaurant/actions/ClientRestaurantDishes";
 
 // Products
 import Products from "./pages/product/Products";
@@ -71,6 +73,7 @@ import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
 import WaiterTables from "./pages/table/actions/WaiterTables";
 import WaiterCreateTable from "./pages/table/actions/WaiterCreateTable";
+import WaiterInactiveTables from "./pages/table/actions/WaiterInactiveTables";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -134,6 +137,8 @@ import SingleHost from "./pages/host/SingleHost";
 import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
 import RegisterHost from "./pages/host/actions/RegisterHost";
+import HostReservations from "./pages/host/actions/HostReservations";
+import CreateHostReservation from "./pages/host/actions/CreateHostReservation";
 
 // Clients
 import Clients from "./pages/client/Clients";
@@ -158,6 +163,7 @@ export const router = createBrowserRouter(
       <Route path="/maps/:restaurant_id" element={<RoleRoute role="chef"><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider></RoleRoute>} />
       <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
       <Route path="/restaurants/occasion_search" element={<ClientRoute><ClientSearchByOccasion /></ClientRoute>} />
+      <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRoute><ClientRestaurantDishes /></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
@@ -232,6 +238,7 @@ export const router = createBrowserRouter(
       {/* Tables (CRUD genérico -> solo manager) */}
       <Route path="/restaurants/:restaurant_id/waiter_tables" element={<RoleRoute role="waiter"><WaiterTables /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<RoleRoute role="waiter"><WaiterCreateTable /></RoleRoute>} />
+      <Route path="/restaurants/:restaurant_id/waiter_tables/inactive" element={<RoleRoute role="waiter"><WaiterInactiveTables /></RoleRoute>} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
@@ -270,6 +277,9 @@ export const router = createBrowserRouter(
       <Route path="/edit_host/:host_id" element={<ManagerRoute><EditHostForm /></ManagerRoute>} />
       <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
       <Route path="/host_login" element={<HostLogin />} />
+      <Route path="/host_reservations" element={<HostRoute><HostReservations /></HostRoute>} />
+      <Route path="/host_reservations_history" element={<HostRoute><HostReservations history={true} /></HostRoute>} />
+      <Route path="/host_create_reservation" element={<HostRoute><CreateHostReservation /></HostRoute>} />
       <Route path="/host_dashboard" element={<RoleRoute role="host"><HostDashboard /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/register_host" element={<RoleRoute role="chef"><RegisterHost /></RoleRoute>} />
 

@@ -4,7 +4,7 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { Link, useParams } from "react-router-dom"
 
 const WaiterTables = () => {
-    const { getAllRestaurantTables, editRestaurantTable, deleteRestaurantTable } = useTable()
+    const { getAllRestaurantTables, editRestaurantTable, deactivateRestaurantTable } = useTable()
     const { store } = useGlobalReducer()
     const { restaurant_id } = useParams()
 
@@ -57,7 +57,7 @@ const WaiterTables = () => {
                         <p className="mb-3"><strong>Location:</strong> {t.location}</p>
                         <div className="d-flex gap-2 mt-auto">
                             <button className="btn btn-warning btn-sm" onClick={() => startEditing(t)}>Edit</button>
-                            <button className="btn btn-danger btn-sm" onClick={() => deleteRestaurantTable(restaurant_id, t.id)}>Delete</button>
+                            <button className="btn btn-danger btn-sm" onClick={() => deactivateRestaurantTable(restaurant_id, t.id)}>Deactivate</button>
                         </div>
                     </div>
                 </div>
@@ -67,6 +67,9 @@ const WaiterTables = () => {
 
     return (
         <div className="container py-4">
+            <Link to={`/restaurants/${restaurant_id}/waiter_tables/inactive`}>
+                <button className="btn btn-outline-secondary mb-4">View inactive tables</button>
+            </Link>
             <h1 className="h4 mb-3">Tables</h1>
 
             <div className="row g-3">
