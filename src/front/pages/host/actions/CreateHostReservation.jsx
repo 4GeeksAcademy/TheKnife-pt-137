@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { useReservation } from "../../../hooks/useReservation";
 import { useHost } from "../../../hooks/useHost";
+import { useTable } from "../../../hooks/useTable";
 
 const CreateHostReservation = () => {
 
@@ -10,12 +11,14 @@ const CreateHostReservation = () => {
     const navigate = useNavigate();
     const { createHostReservation } = useReservation();
     const { rehydrateHost } = useHost();
+    const { getHostTables } = useTable();
 
     const [reservationData, setReservationData] = useState({
         customer_name: "",
         phone: "",
         party_size: "",
         reservation_time: "",
+        table_id: "",
         status: "waiting"
     });
 
@@ -28,6 +31,7 @@ const CreateHostReservation = () => {
         if (!store.loggedHost.host.id) {
             rehydrateHost();
         }
+        getHostTables();
     }, []);
 
     return (
@@ -66,6 +70,20 @@ const CreateHostReservation = () => {
                     </div>
 
                     <div className="mb-3">
+                        <label className="form-label" htmlFor="table_id">Table (optional)</label>
+                        <select className="form-select" name="table_id" id="table_id"
+                            value={reservationData.table_id}
+                            onChange={(e) => setReservationData({ ...reservationData, table_id: e.target.value })}>
+                            <option value="">No table assigned</option>
+                            {store.tables.map((table) => (
+                                <option key={table.id} value={table.id}>
+                                    Table {table.number} — {table.location}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="mb-3">
                         <label className="form-label" htmlFor="status">Status</label>
                         <select className="form-select" name="status" id="status"
                             value={reservationData.status}
@@ -73,6 +91,7 @@ const CreateHostReservation = () => {
                             <option value="waiting">Waiting</option>
                             <option value="confirmed">Confirmed</option>
                             <option value="seated">Seated</option>
+                            <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>

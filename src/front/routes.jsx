@@ -276,6 +276,7 @@ export const router = createBrowserRouter(
       <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
       <Route path="/host_login" element={<HostLogin />} />
       <Route path="/host_reservations" element={<HostRoute><HostReservations /></HostRoute>} />
+      <Route path="/host_reservations_history" element={<HostRoute><HostReservations history={true} /></HostRoute>} />
       <Route path="/host_create_reservation" element={<HostRoute><CreateHostReservation /></HostRoute>} />
       <Route path="/host_dashboard" element={<RoleRoute role="host"><HostDashboard /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/register_host" element={<RoleRoute role="chef"><RegisterHost /></RoleRoute>} />

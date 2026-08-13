@@ -4,14 +4,19 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { useReservation } from "../../../hooks/useReservation";
 import { useHost } from "../../../hooks/useHost";
 
-const HostReservations = () => {
+const STATUS_OPTIONS = ["waiting", "confirmed", "seated", "completed", "cancelled"];
+
+const HostReservations = ({ history = false }) => {
 
     const { store } = useGlobalReducer();
     const navigate = useNavigate();
-    const { getHostReservations } = useReservation();
+    const { getHostReservations, updateHostReservationStatus } = useReservation();
     const { rehydrateHost } = useHost();
 
     const [filters, setFilters] = useState({ name: "", date: "" });
+
+    // Merge the history flag into whatever filters are active
+    const withScope = (extra = {}) => (history ? { ...extra, history: true } : extra);
 
     useEffect(() => {
         const hostLogged = !!localStorage.getItem("hosttoken");
@@ -22,17 +27,22 @@ const HostReservations = () => {
         if (!store.loggedHost.host.id) {
             rehydrateHost();
         }
-        getHostReservations();
-    }, []);
+        getHostReservations(withScope());
+    }, [history]);
 
     const handleSearch = (e) => {
         e.preventDefault();
-        getHostReservations(filters);
+        getHostReservations(withScope(filters));
     };
 
     const handleClear = () => {
         setFilters({ name: "", date: "" });
-        getHostReservations();
+        getHostReservations(withScope());
+    };
+
+    const handleStatusChange = async (reservationId, status) => {
+        const ok = await updateHostReservationStatus(reservationId, status);
+        if (ok) getHostReservations(withScope(filters));
     };
 
     const reservations = store.reservations || [];
@@ -42,11 +52,16 @@ const HostReservations = () => {
 
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h1 className="h3 mb-1">Reservations</h1>
+                    <h1 className="h3 mb-1">{history ? "Reservations history" : "Reservations"}</h1>
                     <h2 className="h6 text-muted mb-0">Restaurant: {store.loggedHost.restaurant}</h2>
                 </div>
                 <div className="d-flex gap-2">
                     <Link to="/host_dashboard" className="btn btn-outline-secondary">Back to dashboard</Link>
+                    {history ? (
+                        <Link to="/host_reservations" className="btn btn-outline-primary">Active reservations</Link>
+                    ) : (
+                        <Link to="/host_reservations_history" className="btn btn-outline-primary">View history</Link>
+                    )}
                     <Link to="/host_create_reservation" className="btn btn-primary">New reservation</Link>
                 </div>
             </div>
@@ -92,7 +107,7 @@ const HostReservations = () => {
                                 {reservations.length === 0 ? (
                                     <tr>
                                         <td colSpan="6" className="text-center text-muted py-4">
-                                            No reservations yet.
+                                            {history ? "No reservations in history." : "No active reservations."}
                                         </td>
                                     </tr>
                                 ) : (
@@ -103,7 +118,17 @@ const HostReservations = () => {
                                             <td>{r.party_size}</td>
                                             <td>{r.table_number ?? "—"}</td>
                                             <td>{r.reservation_time ? new Date(r.reservation_time).toLocaleString() : "—"}</td>
-                                            <td><span className="badge bg-info text-dark">{r.status}</span></td>
+                                            <td>
+                                                <select
+                                                    className="form-select form-select-sm"
+                                                    style={{ minWidth: "120px" }}
+                                                    value={r.status}
+                                                    onChange={(e) => handleStatusChange(r.id, e.target.value)}>
+                                                    {STATUS_OPTIONS.map((s) => (
+                                                        <option key={s} value={s}>{s}</option>
+                                                    ))}
+                                                </select>
+                                            </td>
                                         </tr>
                                     ))
                                 )}

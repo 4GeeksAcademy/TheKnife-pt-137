@@ -6,6 +6,11 @@ from api.models import db, Reservation, Manager, Host
 
 reservation = Blueprint("reservationbp", __name__)
 
+# Reservation statuses considered closed (not active): hidden from the default host view
+CLOSED_STATUSES = ["cancelled", "completed"]
+# Every valid reservation status
+ALLOWED_STATUSES = ["waiting", "confirmed", "seated", "completed", "cancelled"]
+
 
 def get_current_user():
     email = get_jwt_identity()
@@ -137,6 +142,11 @@ def get_host_reservations():
     if not current_user.restaurant_id:
         return jsonify({"message": "Host doesn't have a restaurant assigned"}), 404
     query = select(Reservation).where(Reservation.restaurant_id == current_user.restaurant_id)
+    # By default only active reservations are returned; the full history (including
+    # cancelled and completed) is returned when the "history" arg is truthy.
+    history = request.args.get("history")
+    if history not in ("true", "1"):
+        query = query.where(Reservation.status.notin_(CLOSED_STATUSES))
     # Optional filters: by customer name (partial, case-insensitive) and by reservation day
     name = request.args.get("name")
     date = request.args.get("date")
@@ -181,3 +191,28 @@ def host_create_reservation():
     db.session.add(new_reservation)
     db.session.commit()
     return jsonify(new_reservation.serialize()), 200
+
+# Host updates the status of a reservation of his own restaurant
+@reservation.route("/host/reservations/<int:reservation_id>/status", methods=["PATCH"])
+@jwt_required()
+def host_update_reservation_status(reservation_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "host":
+        return jsonify({"message": "Access forbidden"}), 403
+    reservation_to_edit = db.session.scalar(
+        select(Reservation).where(Reservation.id == reservation_id))
+    if not reservation_to_edit:
+        return jsonify({"message": "Reservation not found"}), 404
+    if reservation_to_edit.restaurant_id != current_user.restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    body = request.get_json()
+    status = body.get("status")
+    if not status:
+        return jsonify({"message": "The body must have a 'status'"}), 400
+    if status not in ALLOWED_STATUSES:
+        return jsonify({"message": f"Invalid status. Allowed: {', '.join(ALLOWED_STATUSES)}"}), 400
+    reservation_to_edit.status = status
+    db.session.commit()
+    return jsonify(reservation_to_edit.serialize()), 200

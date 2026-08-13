@@ -103,6 +103,7 @@ export async function getHostReservationsService(filters = {}) {
     const params = new URLSearchParams();
     if (filters.name) params.append("name", filters.name);
     if (filters.date) params.append("date", filters.date);
+    if (filters.history) params.append("history", "true");
     const queryString = params.toString();
     const url = `${backendURL}/host/reservations${queryString ? `?${queryString}` : ""}`;
     const response = await fetch(url, {
@@ -121,7 +122,7 @@ export async function getHostReservationsService(filters = {}) {
 export async function createHostReservationService(reservationData) {
     const hostToken = localStorage.getItem("hosttoken");
     const newReservation = {
-        table_id: reservationData.table_id || null,
+        table_id: reservationData.table_id ? Number(reservationData.table_id) : null,
         customer_name: reservationData.customer_name,
         phone: reservationData.phone,
         party_size: reservationData.party_size,
@@ -141,6 +142,24 @@ export async function createHostReservationService(reservationData) {
     if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Error creating reservation");
+    }
+    return await response.json();
+}
+
+// Host updates the status of a reservation of his restaurant
+export async function updateHostReservationStatusService(reservationId, status) {
+    const hostToken = localStorage.getItem("hosttoken");
+    const response = await fetch(`${backendURL}/host/reservations/${reservationId}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${hostToken}`
+        }
+    });
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Error updating reservation status");
     }
     return await response.json();
 }

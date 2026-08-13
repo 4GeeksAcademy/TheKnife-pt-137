@@ -9,6 +9,7 @@ import {
   editReservationService,
   getHostReservationsService,
   createHostReservationService,
+  updateHostReservationStatusService,
 } from "../services/reservationService";
 
 export function useReservation() {
@@ -89,6 +90,17 @@ export function useReservation() {
     }
   }
 
+  // HOST: update the status of one of his restaurant's reservations
+  async function updateHostReservationStatus(reservationId, status) {
+    try {
+      await updateHostReservationStatusService(reservationId, status);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
   return {
     getReservations,
     getSingleReservation,
@@ -97,5 +109,6 @@ export function useReservation() {
     editReservation,
     getHostReservations,
     createHostReservation,
+    updateHostReservationStatus,
   };
 }
