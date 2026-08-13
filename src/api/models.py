@@ -23,6 +23,8 @@ class Restaurant(db.Model):
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     latitude: Mapped[float] = mapped_column(nullable=True)
     longitude: Mapped[float] = mapped_column(nullable=True)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    food_type: Mapped[str] = mapped_column(String(50), nullable=True)
 
     # Relationships
     products: Mapped[list["Product"]] = relationship(
@@ -45,7 +47,9 @@ class Restaurant(db.Model):
             "address": self.address,
             "img_url": self.img_url,
             "latitude": self.latitude,
-            "longitude": self.longitude
+            "longitude": self.longitude,
+            "description": self.description,
+            "food_type": self.food_type
         }
 
 # Manager

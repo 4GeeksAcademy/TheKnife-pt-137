@@ -27,6 +27,8 @@ const SingleRestaurant = () => {
                         <li className="list-group-item"><strong>Email:</strong> {store.singleRestaurant.email}</li>
                         <li className="list-group-item"><strong>Phone:</strong> {store.singleRestaurant.phone}</li>
                         <li className="list-group-item"><strong>Address:</strong> {store.singleRestaurant.address}</li>
+                        <li className="list-group-item"><strong>Food type:</strong> {store.singleRestaurant.food_type}</li>
+                        <li className="list-group-item"><strong>Description:</strong> {store.singleRestaurant.description}</li>
                     </ul>
                     <Link to="/restaurants" className="btn btn-outline-secondary">Back to restaurants</Link>
                 </div>

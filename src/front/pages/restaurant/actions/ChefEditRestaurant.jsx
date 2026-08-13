@@ -8,13 +8,13 @@ import { useCloudinary } from "../../../hooks/useCloudinary";
 const ChefEditRestaurant = () => {
 
     const { store } = useGlobalReducer()
-    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", img_url: ""})
-    const { getSingleRestaurant, chefEditRestaurant } = useRestaurant()
+    const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", description: "", food_type: "", img_url: ""})
+    const { chefGetRestaurant, chefEditRestaurant } = useRestaurant()
     const { uploadImage } = useCloudinary()
     const { restaurant_id } = useParams()
 
     useEffect(() => {
-        getSingleRestaurant(restaurant_id)
+        chefGetRestaurant(restaurant_id)
     }, [])
     useEffect(() => {
         if (store.singleRestaurant.id) {
@@ -22,7 +22,9 @@ const ChefEditRestaurant = () => {
                 name: store.singleRestaurant.name,
                 email: store.singleRestaurant.email,
                 phone: store.singleRestaurant.phone,
-                address: store.singleRestaurant.address
+                address: store.singleRestaurant.address,
+                description: store.singleRestaurant.description || "",
+                food_type: store.singleRestaurant.food_type || ""
             })
         }
     }, [store.singleRestaurant])
@@ -52,6 +54,16 @@ const ChefEditRestaurant = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="address">Address</label>
                         <input className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="description">Description</label>
+                        <textarea className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, description: e.target.value})} value={restaurantData.description} name="description" id="description" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label" htmlFor="food_type">Food type</label>
+                        <input className="form-control" type="text" placeholder="e.g. Italian, Mexican, Mediterranean..." onChange={(e)=>setRestaurantData({...restaurantData, food_type: e.target.value})} value={restaurantData.food_type} name="food_type" id="food_type" />
                     </div>
 
                     <div className="mb-3">
