@@ -127,13 +127,22 @@ const ClientSearchNearbyRestaurants = () => {
                                                 {restaurant.description && (
                                                     <p className="card-text small flex-grow-1">{restaurant.description}</p>
                                                 )}
-                                                <Link
-                                                    to={`/restaurants/${restaurant.id}/dishes`}
-                                                    className="btn btn-primary btn-sm align-self-start mt-2"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                >
-                                                    View dishes
-                                                </Link>
+                                                <div className="d-flex gap-2 mt-2">
+                                                    <Link
+                                                        to={`/restaurants/${restaurant.id}/dishes`}
+                                                        className="btn btn-primary btn-sm align-self-start"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        View dishes
+                                                    </Link>
+                                                    <Link
+                                                        to={`/restaurants/${restaurant.id}/reserve`}
+                                                        className="btn btn-success btn-sm align-self-start"
+                                                        onClick={(e) => e.stopPropagation()}
+                                                    >
+                                                        Book a table
+                                                    </Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

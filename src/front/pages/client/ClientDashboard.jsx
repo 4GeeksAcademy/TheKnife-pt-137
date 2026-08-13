@@ -33,7 +33,8 @@ const ClientDashboard = () => {
             <div className="card">
                 <div className="card-header">Actions</div>
                 <div className="card-body">
-                    <Link to="/restaurants/nearby_search" className="btn btn-primary">Look nearby restaurants</Link>
+                    <Link to="/restaurants/nearby_search" className="btn btn-primary me-2">Look nearby restaurants</Link>
+                    <Link to="/client_reservations" className="btn btn-secondary">View my reservations</Link>
                 </div>
             </div>
 

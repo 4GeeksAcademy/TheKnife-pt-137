@@ -19,6 +19,7 @@ import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
 import ClientRestaurantDishes from "./pages/restaurant/actions/ClientRestaurantDishes";
+import ClientCreateReservation from "./pages/restaurant/actions/ClientCreateReservation";
 
 // Products
 import Products from "./pages/product/Products";
@@ -143,6 +144,9 @@ import EditClientForm from "./pages/client/EditClientForm";
 import ClientLogin from "./pages/client/ClientLogin";
 import ClientDashboard from "./pages/client/ClientDashboard";
 import RegisterClient from "./pages/client/RegisterClient";
+import ClientReservations from "./pages/client/ClientReservations";
+import EditMyReservation from "./pages/client/EditMyReservation";
+import BookingHistory from "./pages/client/BookingHistory";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -159,6 +163,7 @@ export const router = createBrowserRouter(
       <Route path="/maps/:restaurant_id" element={<RoleRoute role="chef"><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider></RoleRoute>} />
       <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
       <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRoute><ClientRestaurantDishes /></ClientRoute>} />
+      <Route path="/restaurants/:restaurant_id/reserve" element={<ClientRoute><ClientCreateReservation /></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
@@ -282,6 +287,9 @@ export const router = createBrowserRouter(
       <Route path="/client_register" element={<RegisterClient />} />
       <Route path="/client_login" element={<ClientLogin />} />
       <Route path="/client_dashboard" element={<ClientRoute><ClientDashboard /></ClientRoute>} />
+      <Route path="/client_reservations" element={<ClientRoute><ClientReservations /></ClientRoute>} />
+      <Route path="/edit_my_reservation/:reservation_id" element={<ClientRoute><EditMyReservation /></ClientRoute>} />
+      <Route path="/booking_history" element={<ClientRoute><BookingHistory /></ClientRoute>} />
 
     </Route>
   )
