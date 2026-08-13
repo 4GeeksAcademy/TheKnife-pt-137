@@ -227,3 +227,16 @@ export async function getNearbyRestaurantsService(startPointData) {
     const data = await response.json()
     return data;
 }
+
+// GET all restaurants available for booking (client)
+export async function getAllRestaurantsForClientService() {
+  const clientToken = localStorage.getItem("clienttoken")
+  const response = await fetch(`${backendURL}/restaurants/all`, {
+    headers: {
+      "Authorization": `Bearer ${clientToken}`
+    }
+  })
+  if (!response.ok) throw new Error("Some error has ocurred");
+  const data = await response.json()
+  return data;
+}

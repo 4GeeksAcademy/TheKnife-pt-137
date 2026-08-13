@@ -11,7 +11,8 @@ import { getRestaurantsService,
     chefGetRestaurantService,
     chefDeleteRestaurantService,
     editRestaurantCoordsService,
-    getNearbyRestaurantsService
+    getNearbyRestaurantsService,
+    getAllRestaurantsForClientService
  } from "../services/restaurantService";
 
 export function useRestaurant() {
@@ -134,7 +135,15 @@ export function useRestaurant() {
         } catch (error) {console.log(error)}
     }
 
-    
+    // Client gets all restaurants available for booking
+    async function getAllRestaurantsForClient() {
+        try {
+            const data = await getAllRestaurantsForClientService()
+            dispatch({type: "set_all_restaurants", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+
     return {
         getRestaurants,
         deleteRestaurant,
@@ -146,6 +155,7 @@ export function useRestaurant() {
         chefDeleteRestaurant,
         chefGetRestaurant,
         editRestaurantCoords,
-        getNearbyRestaurants
+        getNearbyRestaurants,
+        getAllRestaurantsForClient
     }
 }

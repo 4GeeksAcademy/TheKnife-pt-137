@@ -20,6 +20,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
 import ClientRestaurantDishes from "./pages/restaurant/actions/ClientRestaurantDishes";
 import ClientCreateReservation from "./pages/restaurant/actions/ClientCreateReservation";
+import ViewAllRestaurants from "./pages/restaurant/actions/ViewAllRestaurants";
 
 // Products
 import Products from "./pages/product/Products";
@@ -164,6 +165,7 @@ export const router = createBrowserRouter(
       <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
       <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRoute><ClientRestaurantDishes /></ClientRoute>} />
       <Route path="/restaurants/:restaurant_id/reserve" element={<ClientRoute><ClientCreateReservation /></ClientRoute>} />
+      <Route path="/restaurants/view_all" element={<ClientRoute><ViewAllRestaurants /></ClientRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />

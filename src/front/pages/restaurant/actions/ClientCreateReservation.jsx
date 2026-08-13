@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { useClientReservation } from "../../../hooks/useClientReservation"
 
@@ -7,6 +7,7 @@ const ClientCreateReservation = () => {
 
     const { restaurant_id } = useParams()
     const { store } = useGlobalReducer()
+    const navigate = useNavigate()
     const { createMyReservation } = useClientReservation()
     const currentClient = store.loggedClient.client
 
@@ -80,7 +81,7 @@ const ClientCreateReservation = () => {
                 </div>
 
                 <button type="submit" className="btn btn-primary">Confirm reservation</button>
-                <Link to="/restaurants/nearby_search" className="d-inline-block mt-3 ms-3">Cancel</Link>
+                <button type="button" onClick={() => navigate(-1)} className="btn btn-link d-inline-block mt-3 ms-2">Cancel</button>
             </form>
         </div>
     )

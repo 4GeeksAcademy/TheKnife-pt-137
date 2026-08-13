@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react"
 import { useProduct } from "../../../hooks/useProduct"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
-import { useParams, Link } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 
 const ClientRestaurantDishes = () => {
 
     const { store } = useGlobalReducer()
     const { getRestaurantDishes } = useProduct()
     const { restaurant_id } = useParams()
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -40,7 +41,7 @@ const ClientRestaurantDishes = () => {
                 <p className="text-muted">Este restaurante todavía no tiene platos publicados.</p>
             )}
 
-            <Link to="/restaurants/nearby_search" className="d-inline-block mt-3">Back to search</Link>
+            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mt-3 ps-0">Back</button>
         </div>
     )
 }

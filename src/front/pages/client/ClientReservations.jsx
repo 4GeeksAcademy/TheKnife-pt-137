@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { useClientReservation } from "../../hooks/useClientReservation"
 
 const ClientReservations = () => {
 
     const { store } = useGlobalReducer()
+    const navigate = useNavigate()
     const { fetchMyReservations, cancelMyReservation } = useClientReservation()
     const [loading, setLoading] = useState(true)
 
@@ -30,6 +31,8 @@ const ClientReservations = () => {
 
     return (
         <div className="container py-4">
+            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mb-3 ps-0">Back</button>
+
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h1 className="h4 mb-0">Mis reservas</h1>
                 <Link to="/booking_history" className="btn btn-outline-secondary btn-sm">Booking history</Link>
@@ -58,8 +61,6 @@ const ClientReservations = () => {
                     ))}
                 </div>
             )}
-
-            <Link to="/client_dashboard" className="d-inline-block mt-4">Back to dashboard</Link>
         </div>
     )
 }

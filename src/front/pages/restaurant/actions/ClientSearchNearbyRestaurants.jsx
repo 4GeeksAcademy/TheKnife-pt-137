@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useRestaurant } from "../../../hooks/useRestaurant"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { useMapsLibrary, Map, useMap, AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps"
@@ -10,6 +10,7 @@ const ClientSearchNearbyRestaurants = () => {
 
     const { getNearbyRestaurants } = useRestaurant()
     const { store } = useGlobalReducer()
+    const navigate = useNavigate()
     const [startPointData, setStartPointData] = useState({ latitude: "", longitude: "", radius: "" })
     const locationRef = useRef(null)
     const places = useMapsLibrary("places")
@@ -51,6 +52,8 @@ const ClientSearchNearbyRestaurants = () => {
 
     return (
         <div className="container-fluid py-4">
+
+            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mb-3 ps-0">Back</button>
 
             <div className="card mb-4">
                 <div className="card-header text-center">Search nearby restaurants</div>
@@ -108,12 +111,20 @@ const ClientSearchNearbyRestaurants = () => {
                                         {selectedRestaurant.food_type && (
                                             <span className="badge bg-secondary mb-2">{selectedRestaurant.food_type}</span>
                                         )}
-                                        <Link
-                                            to={`/restaurants/${selectedRestaurant.id}/dishes`}
-                                            className="btn btn-primary btn-sm d-block mt-1"
-                                        >
-                                            View dishes
-                                        </Link>
+                                        <div className="d-flex gap-2 mt-1">
+                                            <Link
+                                                to={`/restaurants/${selectedRestaurant.id}/dishes`}
+                                                className="btn btn-primary btn-sm"
+                                            >
+                                                View dishes
+                                            </Link>
+                                            <Link
+                                                to={`/restaurants/${selectedRestaurant.id}/reserve`}
+                                                className="btn btn-success btn-sm"
+                                            >
+                                                Book Table
+                                            </Link>
+                                        </div>
                                     </div>
                                 </InfoWindow>
                             )}
@@ -166,7 +177,7 @@ const ClientSearchNearbyRestaurants = () => {
                                                         className="btn btn-success btn-sm align-self-start"
                                                         onClick={(e) => e.stopPropagation()}
                                                     >
-                                                        Book a table
+                                                        Book Table
                                                     </Link>
                                                 </div>
                                             </div>
