@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { useRestaurant } from "../../../hooks/useRestaurant"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
-import { useMapsLibrary, Map, useMap, AdvancedMarker } from "@vis.gl/react-google-maps"
+import { useMapsLibrary, Map, useMap, AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps"
 
 const PANEL_HEIGHT = "600px"
 
@@ -91,6 +91,32 @@ const ClientSearchNearbyRestaurants = () => {
                                     onClick={() => setSelectedRestaurant(restaurant)}
                                 ><div style={{ fontSize: "32px" }}>🍽️</div></AdvancedMarker>
                             })}
+
+                            {selectedRestaurant && (
+                                <InfoWindow
+                                    position={{ lat: Number(selectedRestaurant.latitude), lng: Number(selectedRestaurant.longitude) }}
+                                    onCloseClick={() => setSelectedRestaurant(null)}
+                                >
+                                    <div style={{ width: "220px" }}>
+                                        {selectedRestaurant.img_url && (
+                                            <img
+                                                src={selectedRestaurant.img_url}
+                                                style={{ width: "100%", height: "120px", objectFit: "cover", borderRadius: "4px" }}
+                                            />
+                                        )}
+                                        <h6 className="mb-1 mt-2">{selectedRestaurant.name}</h6>
+                                        {selectedRestaurant.food_type && (
+                                            <span className="badge bg-secondary mb-2">{selectedRestaurant.food_type}</span>
+                                        )}
+                                        <Link
+                                            to={`/restaurants/${selectedRestaurant.id}/dishes`}
+                                            className="btn btn-primary btn-sm d-block mt-1"
+                                        >
+                                            View dishes
+                                        </Link>
+                                    </div>
+                                </InfoWindow>
+                            )}
                         </Map>
                     </div>
                 </div>
