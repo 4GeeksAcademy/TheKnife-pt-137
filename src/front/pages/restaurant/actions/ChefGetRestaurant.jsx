@@ -18,9 +18,9 @@ const ChefGetRestaurant = () => {
     if (!store.singleRestaurant.id) return <LoadingComponent />
 
     return (
-        <div className="container py-4 d-flex flex-column align-items-center">
+        <div className="d-flex flex-column align-items-center">
 
-            <div className="card" style={{ maxWidth: "500px" }}>
+            <div className="card w-100" style={{ maxWidth: "500px" }}>
                 <img src={store.singleRestaurant.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
                 <div className="card-body">
                     <h1 className="h4">{store.singleRestaurant.name}</h1>

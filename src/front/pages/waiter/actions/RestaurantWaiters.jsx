@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useWaiter } from "../../../hooks/useWaiter";
 import LoadingComponent from "../../../components/LoadingComponent";
 
@@ -35,20 +35,31 @@ const RestaurantWaiters = () => {
     })
 
     return (
-        <div className="waiter_page container py-4">
-            <h1 className="h4 mb-3">Waiters</h1>
-            <table className="table table-striped align-middle">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {waitersList}
-                </tbody>
-            </table>
+        <div className="waiter_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Camareros</h1>
+                <Link to={`/restaurants/${restaurant_id}/register_waiter`} className="btn btn-primary">Registrar camarero</Link>
+            </div>
+            <div className="card overflow-hidden">
+                <div className="card-body p-0">
+                    {store.waiters.length > 0 ? (
+                        <table className="table table-striped align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {waitersList}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p className="text-muted text-center py-4 mb-0">Todavía no hay camareros registrados.</p>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

@@ -29,12 +29,20 @@ const ChefInactiveIngredients = () => {
     })
 
     return (
-        <div className="ingredients_page container py-4">
-            <Link to="/chef_ingredients"><button className="btn btn-outline-secondary mb-4">Back to active ingredients</button></Link>
-            <h1 className="h4 mb-3">Inactive ingredients</h1>
-            <div className="ingredients row g-3">
-                {ingredientList}
+        <div className="ingredients_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Ingredientes inactivos</h1>
+                <Link to="/chef_ingredients" className="btn btn-outline-primary">Ver activos</Link>
             </div>
+            {store.inactiveIngredients.length > 0 ? (
+                <div className="ingredients row g-3">
+                    {ingredientList}
+                </div>
+            ) : (
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">No hay ingredientes inactivos.</p>
+                </div>
+            )}
         </div>
     )
 }

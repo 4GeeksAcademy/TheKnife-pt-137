@@ -77,7 +77,7 @@ const ChefEditRecipe = () => {
     }
 
     return (
-        <div className="container py-5" style={{ maxWidth: "600px" }}>
+        <div className="mx-auto" style={{ maxWidth: "600px" }}>
 
             <div className="card mb-4">
                 <div className="card-header text-center">Edit recipe</div>

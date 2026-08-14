@@ -39,17 +39,25 @@ const RestaurantOrders = () => {
     })
 
     return (
-        <div className="order_page container py-4">
-            <h1 className="h4 mb-3">Orders</h1>
-            <button
-                className="btn btn-outline-secondary btn-sm mb-3"
-                onClick={() => setShowClosed(!showClosed)}
-            >
-                {showClosed ? "Show open orders" : "Show closed orders"}
-            </button>
-            <div className="orders row g-3">
-                {ordersList}
+        <div className="order_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Pedidos</h1>
+                <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => setShowClosed(!showClosed)}
+                >
+                    {showClosed ? "Show open orders" : "Show closed orders"}
+                </button>
             </div>
+            {store.orders.length > 0 ? (
+                <div className="orders row g-3">
+                    {ordersList}
+                </div>
+            ) : (
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">No hay pedidos que mostrar.</p>
+                </div>
+            )}
         </div>
     )
 }

@@ -38,12 +38,20 @@ const RestaurantRecipes = () => {
     })
 
     return (
-        <div className="recipes_page container py-4">
-            <Link to={`/restaurants/${restaurant_id}/create_recipe`}><button className="btn btn-primary mb-4">Add recipe</button></Link>
-            <h1 className="h4 mb-3">Recipes</h1>
-            <div className="recipes row g-3">
-                {recipeList}
+        <div className="recipes_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Recetas</h1>
+                <Link to={`/restaurants/${restaurant_id}/create_recipe`} className="btn btn-primary">Añadir receta</Link>
             </div>
+            {store.recipes.length > 0 ? (
+                <div className="recipes row g-3">
+                    {recipeList}
+                </div>
+            ) : (
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">Todavía no hay recetas.</p>
+                </div>
+            )}
         </div>
     )
 }

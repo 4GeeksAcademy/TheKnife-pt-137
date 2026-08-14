@@ -147,3 +147,65 @@
   font-size: 0.8rem;
   color: #6c757d;
 }
+
+/* Shared "harmony pass" for every chef page rendered inside the shell:
+   reskins plain Bootstrap defaults (cards, buttons, tables) to match the
+   overview without having to touch every component individually. */
+.chef-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chef-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.chef-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.chef-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.chef-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.chef-main .btn-primary:hover,
+.chef-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.chef-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.chef-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.chef-main .table {
+  margin-bottom: 0;
+}
+
+.chef-main .form-control:focus,
+.chef-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
