@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Home = () => {
     return (
         <div className="container py-5">
-            <h1 className="h3 text-center mb-4">Welcome to CocinApp</h1>
+            <h1 className="h3 text-center mb-4">Welcome to The Knife</h1>
 
             <div className="row g-4 justify-content-center">
                 <div className="col-md-5">

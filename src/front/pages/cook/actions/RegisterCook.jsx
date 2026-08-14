@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCook } from "../../../hooks/useCook";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 
 
@@ -34,10 +34,6 @@ const RegisterCook = () => {
                     </div>
 
                     <button onClick={()=>cookRegister(restaurant_id, cookData)} className="btn btn-primary w-100 mb-3">Create new cook</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Go back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>

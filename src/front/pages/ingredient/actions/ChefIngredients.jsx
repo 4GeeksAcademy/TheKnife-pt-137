@@ -39,7 +39,6 @@ const ChefIngredients = () => {
             <div className="ingredients row g-3">
                 {ingredientList}
             </div>
-            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
         </div>
     )
 }

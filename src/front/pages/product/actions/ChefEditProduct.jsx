@@ -3,7 +3,6 @@ import { useProduct } from "../../../hooks/useProduct";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { useCloudinary } from "../../../hooks/useCloudinary";
-import { Link } from "react-router-dom";
 
 const ChefEditProduct = () => {
 
@@ -70,10 +69,6 @@ const ChefEditProduct = () => {
                     </div>
 
                     <button onClick={()=>chefEditProduct(restaurant_id, product_id, productData)} className="btn btn-primary w-100 mb-3">Edit product</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useCook } from "../../../hooks/useCook";
 import LoadingComponent from "../../../components/LoadingComponent";
 
@@ -49,7 +49,6 @@ const RestaurantCooks = () => {
                     {cooksList}
                 </tbody>
             </table>
-            <Link to="/chef_dashboard">Back to dashboard</Link>
         </div>
     )
 }

@@ -3,7 +3,6 @@ import { useRestaurant } from "../../../hooks/useRestaurant"
 import { useParams } from "react-router-dom"
 import storeReducer from "../../../store"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
-import { Link } from "react-router-dom"
 import LoadingComponent from "../../../components/LoadingComponent"
 
 const ChefGetRestaurant = () => {
@@ -32,7 +31,6 @@ const ChefGetRestaurant = () => {
                         <li className="list-group-item"><strong>Food type:</strong> {store.singleRestaurant.food_type}</li>
                         <li className="list-group-item"><strong>Description:</strong> {store.singleRestaurant.description}</li>
                     </ul>
-                    <Link to="/chef_dashboard" className="btn btn-outline-secondary">Back to dashboard</Link>
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useWaiter } from "../../../hooks/useWaiter";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 
 
@@ -34,10 +34,6 @@ const RegisterWaiter = () => {
                     </div>
 
                     <button onClick={()=>waiterRegister(restaurant_id, waiterData)} className="btn btn-primary w-100 mb-3">Create new waiter</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Go back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>

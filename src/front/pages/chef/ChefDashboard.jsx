@@ -1,96 +1,125 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
-import { useChef } from "../../hooks/useChef";
 import { useRestaurant } from "../../hooks/useRestaurant";
+import { useWaiter } from "../../hooks/useWaiter";
+import { useCook } from "../../hooks/useCook";
+import { useRecipe } from "../../hooks/useRecipe";
+import { useOrder } from "../../hooks/useOrder";
+import { useProduct } from "../../hooks/useProduct";
+import LoadingComponent from "../../components/LoadingComponent";
 
+const OPEN_ORDER_STATES = "pending,doing,done"
+
+// Overview shown in the central area of the chef dashboard (/chef_dashboard).
 const ChefDashboard = () => {
 
     const { store } = useGlobalReducer()
-    const { chefLogout, rehydrateChef } = useChef()
-    const { chefDeleteRestaurant } = useRestaurant()
+    const { chefGetRestaurant } = useRestaurant()
+    const { getRestaurantWaiters } = useWaiter()
+    const { getRestaurantCooks } = useCook()
+    const { getAllRestaurantRecipes } = useRecipe()
+    const { getAllRestaurantOrders } = useOrder()
+    const { getAllRestaurantProducts } = useProduct()
 
-    useEffect(() => {
-        if (!store.loggedChef.chef.id) {
-            rehydrateChef()
-        }
-    }, [])
+    const [loadingStats, setLoadingStats] = useState(true)
 
     const currentChef = store.loggedChef.chef
+    const restaurantId = currentChef.restaurant_id
 
-    async function handleDeleteRestaurant() {
-        const confirmation = window.prompt("If you delete the restaurant, all items related to it will be deleted also\n Enter 'DELETE' to delete the restaurant.")
-        if (confirmation != "DELETE") return
-        chefDeleteRestaurant(currentChef.restaurant_id)
-    }
+    useEffect(() => {
+        if (!restaurantId) {
+            setLoadingStats(false)
+            return
+        }
+        setLoadingStats(true)
+        Promise.allSettled([
+            chefGetRestaurant(restaurantId),
+            getRestaurantWaiters(restaurantId),
+            getRestaurantCooks(restaurantId),
+            getAllRestaurantRecipes(restaurantId),
+            getAllRestaurantOrders(restaurantId, OPEN_ORDER_STATES),
+            getAllRestaurantProducts(restaurantId),
+        ]).finally(() => setLoadingStats(false))
+    }, [restaurantId])
+
+    const restaurant = store.singleRestaurant
+
+    const stats = [
+        { label: "Camareros", value: store.waiters.length, icon: "fa-user-tie", to: `/restaurants/${restaurantId}/waiters` },
+        { label: "Cocineros", value: store.cooks.length, icon: "fa-kitchen-set", to: `/restaurants/${restaurantId}/cooks` },
+        { label: "Recetas", value: store.recipes.length, icon: "fa-book-open", to: `/restaurants/${restaurantId}/recipes` },
+        { label: "Pedidos abiertos", value: store.orders.length, icon: "fa-receipt", to: `/restaurants/${restaurantId}/orders` },
+        { label: "Productos", value: store.products.length, icon: "fa-utensils", to: `/restaurants/${restaurantId}/products` },
+    ]
 
     return (
-        <div className="container py-4">
+        <div className="chef-overview">
 
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h1 className="mb-1">Welcome back, {currentChef.name}</h1>
-                    <h2 className="h5 text-muted mb-0">Restaurant: {currentChef.restaurant_name}</h2>
-                </div>
-                <button onClick={chefLogout} className="btn btn-primary">Log out</button>
+            <div className="mb-4">
+                <h1 className="h3 mb-1">Bienvenido, {currentChef.name}</h1>
+                {currentChef.restaurant_name && <p className="text-muted mb-0">{currentChef.restaurant_name}</p>}
             </div>
 
-            <div className="card mb-4">
-                <div className="card-header">Restaurant</div>
-                <div className="card-body d-flex gap-2">
-                    {currentChef.restaurant_id ? (
-                        <>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}/edit_restaurant`}><button className="btn btn-outline-warning">Edit restaurant</button></Link>
-                            <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger">Delete restaurant</button>
-                            <Link to={`/restaurants/${currentChef.restaurant_id}`}><button className="btn btn-outline-dark">View restaurant details</button></Link>
-                            <Link to={`/maps/${currentChef.restaurant_id}`}><button className="btn btn-outline-success">Map</button></Link>
-                        </>
-                    ) : (
-                        <Link to="/register_restaurant" className="btn btn-outline-primary">Create restaurant</Link>
-                    )}
-                </div>
-            </div>
-
-            {currentChef.restaurant_id && (
+            {!restaurantId ? (
                 <div className="card">
-                    <div className="card-header">Actions</div>
-                    <div className="card-body">
-
-                        <div className="mb-3">
-                            <h6 className="text-muted">Waiters</h6>
-                            <div className="d-flex gap-2">
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_waiter`} className="btn btn-primary">Register a waiter</Link>
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/waiters`} className="btn btn-warning">Waiter list</Link>
-                            </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <h6 className="text-muted">Cooks</h6>
-                            <div className="d-flex gap-2">
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_cook`} className="btn btn-primary">Register a Cook</Link>
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/cooks`} className="btn btn-warning">Cook list</Link>
-                            </div>
-                        </div>
-
-                        <div className="mb-3">
-                            <h6 className="text-muted">Host</h6>
-                            <div className="d-flex gap-2">
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/register_host`} className="btn btn-primary">Register a host</Link>
-                            </div>
-                        </div>
-
-                        <div className="mb-0">
-                            <h6 className="text-muted">Management</h6>
-                            <div className="d-flex gap-2">
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/recipes`} className="btn btn-danger">Recipes list</Link>
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/orders`} className="btn btn-success">Orders list</Link>
-                                <Link to={`/restaurants/${currentChef.restaurant_id}/products`} className="btn btn-dark">Products list</Link>
-                                <Link to="/chef_ingredients" className="btn btn-info">Ingredients list</Link>
-                            </div>
-                        </div>
-
+                    <div className="card-body text-center py-5">
+                        <h2 className="h5 mb-3">Todavía no tienes un restaurante</h2>
+                        <p className="text-muted mb-4">Crea tu restaurante para empezar a gestionar camareros, cocineros, recetas y pedidos.</p>
+                        <Link to="/register_restaurant" className="btn btn-chef-brand">Crear restaurante</Link>
                     </div>
                 </div>
+            ) : loadingStats ? (
+                <LoadingComponent />
+            ) : (
+                <>
+                    <div className="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3 mb-4">
+                        {stats.map((stat) => (
+                            <div className="col" key={stat.label}>
+                                <Link to={stat.to} className="text-decoration-none">
+                                    <div className="card chef-stat-card h-100">
+                                        <div className="card-body d-flex align-items-center gap-3">
+                                            <div className="chef-stat-icon">
+                                                <i className={`fa-solid ${stat.icon}`}></i>
+                                            </div>
+                                            <div>
+                                                <div className="chef-stat-value">{stat.value}</div>
+                                                <div className="chef-stat-label">{stat.label}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="card">
+                        <div className="card-header">Restaurante</div>
+                        <div className="card-body">
+                            {restaurant.id ? (
+                                <div className="row g-4 align-items-start">
+                                    {restaurant.img_url && (
+                                        <div className="col-md-4">
+                                            <img src={restaurant.img_url} className="img-fluid rounded" style={{ objectFit: "cover", width: "100%", height: "180px" }} />
+                                        </div>
+                                    )}
+                                    <div className={restaurant.img_url ? "col-md-8" : "col-12"}>
+                                        <h2 className="h5 mb-3">{restaurant.name}</h2>
+                                        <ul className="list-group list-group-flush">
+                                            <li className="list-group-item px-0"><strong>Email:</strong> {restaurant.email}</li>
+                                            <li className="list-group-item px-0"><strong>Teléfono:</strong> {restaurant.phone}</li>
+                                            <li className="list-group-item px-0"><strong>Dirección:</strong> {restaurant.address}</li>
+                                            <li className="list-group-item px-0"><strong>Tipo de cocina:</strong> {restaurant.food_type || "—"}</li>
+                                            <li className="list-group-item px-0"><strong>Descripción:</strong> {restaurant.description || "—"}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-muted mb-0">No se han podido cargar los datos del restaurante.</p>
+                            )}
+                        </div>
+                    </div>
+                </>
             )}
 
         </div>

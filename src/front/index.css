@@ -1,0 +1,149 @@
+:root {
+  --cocinapp-brand: #00665C;
+  --cocinapp-brand-dark: #00483f;
+  --cocinapp-brand-soft: rgba(0, 102, 92, 0.12);
+  --chef-sidebar-bg: #14181b;
+  --chef-sidebar-bg-hover: rgba(0, 102, 92, 0.35);
+  --chef-sidebar-width: 260px;
+}
+
+/* Chef dashboard shell */
+.chef-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.chef-sidebar,
+.chef-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.chef-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.chef-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chef-nav-link,
+.chef-nav-group-toggle,
+.chef-nav-sublink {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+}
+
+.chef-nav-link,
+.chef-nav-group-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.chef-nav-chevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.chef-nav-group-toggle.collapsed .chef-nav-chevron {
+  transform: rotate(-90deg);
+}
+
+.chef-nav-link:hover,
+.chef-nav-group-toggle:hover,
+.chef-nav-sublink:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.chef-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.chef-nav-subitems {
+  padding-left: 1.9rem;
+}
+
+.chef-nav-sublink {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  position: relative;
+}
+
+.chef-nav-sublink.active {
+  color: #fff;
+  font-weight: 600;
+}
+
+.chef-nav-sublink.active::before {
+  content: "";
+  position: absolute;
+  left: -0.9rem;
+  top: 0.85rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand);
+}
+
+.chef-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-chef-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-chef-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.chef-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.chef-stat-card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.chef-stat-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.chef-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex: none;
+}
+
+.chef-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.chef-stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}

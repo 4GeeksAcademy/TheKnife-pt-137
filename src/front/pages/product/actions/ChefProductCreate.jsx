@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useProduct } from "../../../hooks/useProduct";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { useCloudinary } from "../../../hooks/useCloudinary";
 import { useRecipe } from "../../../hooks/useRecipe";
@@ -66,10 +66,6 @@ const ChefProductCreate = () => {
                     </div>
 
                     <button onClick={() => chefCreateProduct(restaurant_id, productData)} className="btn btn-primary w-100 mb-3">Create new product</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>

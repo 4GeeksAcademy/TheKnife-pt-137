@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHost } from "../../../hooks/useHost";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const RegisterHost = () => {
 
@@ -51,10 +51,6 @@ const RegisterHost = () => {
                     </div>
 
                     <button onClick={handleRegister} className="btn btn-primary w-100 mb-3">Register host</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Go back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>
