@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 
@@ -7,6 +7,7 @@ const ClientSearchByOccasion = () => {
 
     const { getTags, searchRestaurantsByOccasion } = useRestaurant();
     const { store } = useGlobalReducer();
+    const navigate = useNavigate();
 
     const [foodType, setFoodType] = useState("");
     const [selectedTags, setSelectedTags] = useState([]);
@@ -39,6 +40,8 @@ const ClientSearchByOccasion = () => {
 
     return (
         <div className="container py-4" style={{ maxWidth: "800px" }}>
+
+            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mb-3 ps-0">Back</button>
 
             <h1 className="h3 mb-1">Find a restaurant for your occasion</h1>
             <p className="text-muted">Pick the vibe and the kind of food you're looking for.</p>
@@ -104,12 +107,20 @@ const ClientSearchByOccasion = () => {
                                                     <span key={tag.id} className="badge bg-secondary">{tag.name}</span>
                                                 ))}
                                             </div>
-                                            <Link
-                                                to={`/restaurants/${restaurant.id}/dishes`}
-                                                className="btn btn-primary btn-sm align-self-start"
-                                            >
-                                                View dishes
-                                            </Link>
+                                            <div className="d-flex gap-2">
+                                                <Link
+                                                    to={`/restaurants/${restaurant.id}/dishes`}
+                                                    className="btn btn-primary btn-sm align-self-start"
+                                                >
+                                                    View dishes
+                                                </Link>
+                                                <Link
+                                                    to={`/restaurants/${restaurant.id}/reserve`}
+                                                    className="btn btn-success btn-sm align-self-start"
+                                                >
+                                                    Book Table
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

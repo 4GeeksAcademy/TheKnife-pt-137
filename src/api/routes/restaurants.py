@@ -287,6 +287,18 @@ def get_restaurants_by_location():
     close_restaurant_dicts = [restaurant.serialize() for restaurant in close_restaurants]
     return jsonify(close_restaurant_dicts), 200
 
+# Client gets all restaurants available for booking
+@restaurant.route("/restaurants/all")
+@jwt_required()
+def get_all_restaurants_for_client():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "client":
+        return jsonify({"message": "Access forbidden"}), 403
+    all_restaurants = db.session.scalars(select(Restaurant)).all()
+    return jsonify([restaurant.serialize() for restaurant in all_restaurants]), 200
+
 # List available occasion tags (public reference data: used by search filters and chef forms)
 @restaurant.route("/tags")
 def get_tags():
@@ -315,4 +327,3 @@ def search_restaurants_by_occasion():
         restaurants = [r for r in restaurants if wanted_tags.issubset({tag.name.lower() for tag in r.tags})]
     restaurant_dicts = [restaurant.serialize() for restaurant in restaurants]
     return jsonify(list(restaurant_dicts)), 200
-    
