@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useProduct } from "../../hooks/useProduct";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Product = () => {
 
@@ -14,7 +15,7 @@ const Product = () => {
         getProducts().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const dishes = store.products.filter((product) => product.type === "dish")
     const drinks = store.products.filter((product) => product.type === "drink")

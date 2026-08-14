@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useHost } from "../../hooks/useHost";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Hosts = () => {
 
@@ -20,7 +21,7 @@ const Hosts = () => {
         deleteHost(hostId);
     }
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>;
+    if (loading) return <LoadingComponent />;
 
     const hostsList = store.hosts.map((host) => (
         <tr key={host.id}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useChef } from "../../hooks/useChef";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Chefs = () => {
 
@@ -14,7 +15,7 @@ const Chefs = () => {
         getChefs().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const chefsList = store.chefs.map((chef) => {
         return <tr key={chef.id}>

@@ -3,6 +3,7 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useWaiter } from "../../hooks/useWaiter";
 import { useConfirmedDelete } from "../../hooks/useConfirmedDelete";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Waiters = () => {
 
@@ -16,7 +17,7 @@ const Waiters = () => {
         getWaiters().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const waitersList = store.waiters.map((waiter) => {
         return <tr key={waiter.id}>

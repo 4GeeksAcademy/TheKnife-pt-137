@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom"
 import storeReducer from "../../../store"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { Link } from "react-router-dom"
+import LoadingComponent from "../../../components/LoadingComponent"
 
 const ChefGetRestaurant = () => {
 
@@ -15,7 +16,7 @@ const ChefGetRestaurant = () => {
         chefGetRestaurant(restaurant_id)
     }, [store.singleRestaurant])
 
-    if (!store.singleRestaurant.id) return <p className="text-center mt-5">Loading...</p>
+    if (!store.singleRestaurant.id) return <LoadingComponent />
 
     return (
         <div className="container py-4 d-flex flex-column align-items-center">

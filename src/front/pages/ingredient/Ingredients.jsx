@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useIngredient } from "../../hooks/useIngredient";
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import LoadingComponent from "../../components/LoadingComponent";
 
 export default function Ingredients() {
     const { fetchIngredients, removeIngredient } = useIngredient();
@@ -13,7 +14,7 @@ export default function Ingredients() {
         fetchIngredients().finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const ingredients = store.ingredients.map((ingredient) => {
         return <tr key={ingredient.id}>

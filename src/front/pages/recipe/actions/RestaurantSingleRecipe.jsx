@@ -3,6 +3,7 @@ import { useRecipe } from "../../../hooks/useRecipe"
 import { useRecipeIngredient } from "../../../hooks/useRecipeIngredient"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
+import LoadingComponent from "../../../components/LoadingComponent"
 
 const RestaurantSingleRecipe = () => {
 
@@ -35,7 +36,7 @@ const RestaurantSingleRecipe = () => {
         }
     }
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     return (
         <div className="container py-4 d-flex flex-column align-items-center">

@@ -3,6 +3,7 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useCook } from "../../hooks/useCook";
 import { useConfirmedDelete } from "../../hooks/useConfirmedDelete"
+import LoadingComponent from "../../components/LoadingComponent"
 
 const Cooks = () => {
 
@@ -16,7 +17,7 @@ const Cooks = () => {
         getCooks().finally(() => setLoading(false));
     }, []);
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const cooksList = store.cooks.map((cook) => {
         return <tr key={cook.id}>

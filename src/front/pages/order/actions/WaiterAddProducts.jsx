@@ -3,6 +3,7 @@ import { useOrderProduct } from "../../../hooks/useOrderProduct"
 import { useProduct } from "../../../hooks/useProduct"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
+import LoadingComponent from "../../../components/LoadingComponent"
 
 const WaiterAddProducts = () => {
 
@@ -48,7 +49,7 @@ const WaiterAddProducts = () => {
         }
     }
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const dishesProductList = store.products.filter((product) => product.type === "dish")
     const drinksProductList = store.products.filter((product) => product.type === "drink")
