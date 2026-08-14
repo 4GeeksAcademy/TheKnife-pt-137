@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { useRestaurant } from "../hooks/useRestaurant";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import LoadingComponent from "../components/LoadingComponent";
 
 const Maps = () => {
 
@@ -65,7 +66,7 @@ const Maps = () => {
         })
     }, [placeAutocomplete])
 
-    if (loading) return <p className="text-center">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const latitude = store.singleRestaurant.latitude ?? 0
     const longitude = store.singleRestaurant.longitude ?? 0

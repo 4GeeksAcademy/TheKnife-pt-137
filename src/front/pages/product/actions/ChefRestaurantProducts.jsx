@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useProduct } from "../../../hooks/useProduct";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { Link, useParams } from "react-router-dom";
+import LoadingComponent from "../../../components/LoadingComponent";
 
 const ChefRestaurantProducts = () => {
 
@@ -42,7 +43,7 @@ const ChefRestaurantProducts = () => {
         </div>
     })
 
-    if (loading) return <p className="text-center">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     return (
         <div className="product_page container py-4">

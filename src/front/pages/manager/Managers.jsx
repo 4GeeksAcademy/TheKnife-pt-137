@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useManager } from "../../hooks/useManager";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Managers = () => {
 
@@ -14,7 +15,7 @@ const Managers = () => {
         getManagers().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const managersList = store.managers.map((manager) => {
         return <tr key={manager.id}>

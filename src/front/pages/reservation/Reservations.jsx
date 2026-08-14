@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useReservation } from "../../hooks/useReservation";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Reservations = () => {
 
@@ -14,7 +15,7 @@ const Reservations = () => {
         getReservations().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const reservationsList = store.reservations.map((reservation) => {
         return <tr key={reservation.id}>

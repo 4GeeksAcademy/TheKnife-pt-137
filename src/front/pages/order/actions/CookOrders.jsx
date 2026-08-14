@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { Link, useParams } from "react-router-dom";
 import { useOrder } from "../../../hooks/useOrder";
+import LoadingComponent from "../../../components/LoadingComponent";
 
 const CookOrders = () => {
 
@@ -15,7 +16,7 @@ const CookOrders = () => {
         getAllRestaurantOrders(restaurant_id).finally(()=>setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const ordersList = store.orders.map((order) => {
         return (

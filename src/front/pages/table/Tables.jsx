@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
 import { useTable } from "../../hooks/useTable";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const Tables = () => {
 
@@ -14,7 +15,7 @@ const Tables = () => {
         getTables().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const tablesList = store.tables.map((table) => {
         return <tr key={table.id}>

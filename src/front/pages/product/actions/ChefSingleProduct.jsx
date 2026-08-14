@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useProduct } from "../../../hooks/useProduct"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
+import LoadingComponent from "../../../components/LoadingComponent"
 
 const ChefSingleProduct = () => {
 
@@ -15,7 +16,7 @@ const ChefSingleProduct = () => {
         getOneRestaurantProduct(restaurant_id, product_id).finally(() => setLoading(false))
     }, [restaurant_id, product_id])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     return (
         <div className="container py-4 d-flex flex-column align-items-center">
