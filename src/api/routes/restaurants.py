@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select
 from flask_jwt_extended import get_jwt, get_jwt_identity, jwt_required
-from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table, Client
+from api.models import db, Product, Recipe, Restaurant, Chef, Cook, Waiter, Manager, Table, Client, Tag
 from haversine import haversine
 
 restaurant = Blueprint("restaurantbp", __name__)
@@ -171,6 +171,10 @@ def chef_create_restaurant():
     )
     db.session.add(new_restaurant)
     db.session.flush()
+    # Assign occasion tags if provided
+    tag_ids = body.get("tag_ids") or []
+    if tag_ids:
+        new_restaurant.tags = db.session.scalars(select(Tag).where(Tag.id.in_(tag_ids))).all()
     user.restaurant_id = new_restaurant.id
     for number in range(1, 8):
         db.session.add(Table(
@@ -219,8 +223,12 @@ def edit_chef_restaurant(restaurant_id):
     for key in restaurant_mandatory_schema:
         if key not in body or body[key] == "":
             return jsonify({"message": "Some info is missing. Ensure body has 'name', 'email', 'phone', 'address', 'description' and 'food_type', 'img_url' is optional."}), 400
+    # tag_ids is a relationship, handle it apart from the plain column setattr
+    tag_ids = body.pop("tag_ids", None)
     for key in body:
         setattr(restaurant, key, body[key])
+    if tag_ids is not None:
+        restaurant.tags = db.session.scalars(select(Tag).where(Tag.id.in_(tag_ids))).all()
     db.session.commit()
     return jsonify(restaurant.serialize()), 200
 
@@ -290,3 +298,32 @@ def get_all_restaurants_for_client():
         return jsonify({"message": "Access forbidden"}), 403
     all_restaurants = db.session.scalars(select(Restaurant)).all()
     return jsonify([restaurant.serialize() for restaurant in all_restaurants]), 200
+
+# List available occasion tags (public reference data: used by search filters and chef forms)
+@restaurant.route("/tags")
+def get_tags():
+    tags = db.session.scalars(select(Tag)).all()
+    tags_dicts = [tag.serialize() for tag in tags]
+    return jsonify(list(tags_dicts)), 200
+
+# Client searches restaurants by occasion tags and/or food type
+@restaurant.route("/restaurants/search")
+@jwt_required()
+def search_restaurants_by_occasion():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "client":
+        return jsonify({"message": "Access forbidden"}), 403
+    food_type = request.args.get("food_type")
+    tag_names = request.args.getlist("tag")
+    query = select(Restaurant)
+    if food_type:
+        query = query.where(Restaurant.food_type.ilike(f"%{food_type}%"))
+    restaurants = db.session.scalars(query).all()
+    # Keep only restaurants that have ALL the selected occasion tags
+    if tag_names:
+        wanted_tags = {name.lower() for name in tag_names}
+        restaurants = [r for r in restaurants if wanted_tags.issubset({tag.name.lower() for tag in r.tags})]
+    restaurant_dicts = [restaurant.serialize() for restaurant in restaurants]
+    return jsonify(list(restaurant_dicts)), 200

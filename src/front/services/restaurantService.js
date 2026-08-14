@@ -122,6 +122,7 @@ export async function chefCreateRestaurantService(restaurantData) {
     img_url: restaurantData.img_url,
     description: restaurantData.description,
     food_type: restaurantData.food_type,
+    tag_ids: restaurantData.tag_ids || [],
   };
   const response = await fetch(`${backendURL}/create_restaurant`, {
     method: "POST",
@@ -148,6 +149,7 @@ export async function chefEditRestaurantService(restaurant_id, restaurantData) {
     img_url: restaurantData.img_url,
     description: restaurantData.description,
     food_type: restaurantData.food_type,
+    tag_ids: restaurantData.tag_ids || [],
   };
   const response = await fetch(
     `${backendURL}/edit_restaurant/${restaurant_id}`,
@@ -239,4 +241,34 @@ export async function getAllRestaurantsForClientService() {
   if (!response.ok) throw new Error("Some error has ocurred");
   const data = await response.json()
   return data;
+}
+
+// GET available occasion tags (public reference data)
+export async function getTagsService() {
+  const response = await fetch(`${backendURL}/tags`)
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.message || "Error fetching tags")
+  }
+  return await response.json();
+}
+
+// Client searches restaurants by occasion tags and/or food type
+export async function searchRestaurantsByOccasionService(filters = {}) {
+  const clientToken = localStorage.getItem("clienttoken")
+  const params = new URLSearchParams();
+  if (filters.food_type) params.append("food_type", filters.food_type);
+  (filters.tags || []).forEach((tag) => params.append("tag", tag));
+  const queryString = params.toString();
+  const url = `${backendURL}/restaurants/search${queryString ? `?${queryString}` : ""}`;
+  const response = await fetch(url, {
+    headers: {
+      "Authorization": `Bearer ${clientToken}`
+    }
+  })
+  if (!response.ok) {
+    const data = await response.json()
+    throw new Error(data.message || "Error searching restaurants")
+  }
+  return await response.json();
 }

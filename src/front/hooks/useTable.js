@@ -12,6 +12,7 @@ import {
   createRestaurantTableService,
   editRestaurantTableService,
   deactivateRestaurantTableService,
+  getHostTablesService,
 } from "../services/tableService";
 
 export function useTable() {
@@ -123,6 +124,14 @@ export function useTable() {
     } catch (error) { console.log(error) }
   }
 
+  // Host gets the active tables of his restaurant
+  async function getHostTables() {
+    try {
+      const data = await getHostTablesService()
+      dispatch({ type: "set_tables", payload: data })
+    } catch (error) { console.log(error) }
+  }
+
   return {
     getTables,
     deleteTable,
@@ -134,6 +143,7 @@ export function useTable() {
     editRestaurantTable,
     fetchInactiveRestaurantTables,
     deactivateRestaurantTable,
-    activateRestaurantTable
+    activateRestaurantTable,
+    getHostTables
   };
 }

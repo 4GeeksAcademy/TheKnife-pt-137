@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select
-from api.models import db, Table, Chef, Cook, Waiter, Manager
+from api.models import db, Table, Chef, Cook, Waiter, Manager, Host
 
 table = Blueprint("tablebp", __name__)
 
@@ -10,7 +10,7 @@ def get_current_user():
     email = get_jwt_identity()
     claims = get_jwt()
     role = claims["role"]
-    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager}
+    models = {"chef": Chef, "cook": Cook, "waiter": Waiter, "manager": Manager, "host": Host}
     user_model = models[role]
     current_user = db.session.scalar(
         select(user_model).where(user_model.email == email))
@@ -121,6 +121,22 @@ def edit_table(table_id):
 ############################################################################
 ##### CHEF & WAITER #####
 # GET all tables of the restaurant
+# Host gets the active tables of his own restaurant (to assign them to reservations)
+@table.route("/host/tables")
+@jwt_required()
+def get_host_tables():
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "host":
+        return jsonify({"message": "Access forbidden"}), 403
+    if not current_user.restaurant_id:
+        return jsonify({"message": "Host doesn't have a restaurant assigned"}), 404
+    restaurant_tables = db.session.scalars(select(Table).where(
+        Table.restaurant_id == current_user.restaurant_id, Table.active == True
+    )).all()
+    return jsonify([t.serialize() for t in restaurant_tables]), 200
+
 @table.route("/restaurants/<int:restaurant_id>/tables")
 @jwt_required()
 def get_restaurant_tables(restaurant_id):

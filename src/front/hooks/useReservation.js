@@ -7,6 +7,9 @@ import {
   createReservationService,
   deleteReservationService,
   editReservationService,
+  getHostReservationsService,
+  createHostReservationService,
+  updateHostReservationStatusService,
 } from "../services/reservationService";
 
 export function useReservation() {
@@ -66,11 +69,46 @@ export function useReservation() {
     }
   }
 
+  // HOST: get reservations of the logged host's restaurant (optional name/date filters)
+  async function getHostReservations(filters = {}) {
+    try {
+      const data = await getHostReservationsService(filters);
+      dispatch({ type: "set_reservations", payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // HOST: create a manual reservation for a walk-in / unregistered client
+  async function createHostReservation(reservationData) {
+    try {
+      const data = await createHostReservationService(reservationData);
+      console.log(data);
+      navigate("/host_reservations");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // HOST: update the status of one of his restaurant's reservations
+  async function updateHostReservationStatus(reservationId, status) {
+    try {
+      await updateHostReservationStatusService(reservationId, status);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
   return {
     getReservations,
     getSingleReservation,
     createReservation,
     deleteReservation,
     editReservation,
+    getHostReservations,
+    createHostReservation,
+    updateHostReservationStatus,
   };
 }

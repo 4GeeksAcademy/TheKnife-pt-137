@@ -162,3 +162,16 @@ export async function deactivateRestaurantTableService(restaurant_id, table_id) 
     const data = await response.json()
     return data.message
 }
+
+// Host gets the active tables of his own restaurant
+export async function getHostTablesService() {
+    const hostToken = localStorage.getItem("hosttoken")
+    const response = await fetch(`${backendURL}/host/tables`, {
+        headers: { "Authorization": `Bearer ${hostToken}` }
+    })
+    if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.message || "Error fetching tables")
+    }
+    return await response.json()
+}

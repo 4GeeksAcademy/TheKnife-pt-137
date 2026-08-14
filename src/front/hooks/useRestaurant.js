@@ -12,7 +12,9 @@ import { getRestaurantsService,
     chefDeleteRestaurantService,
     editRestaurantCoordsService,
     getNearbyRestaurantsService,
-    getAllRestaurantsForClientService
+    getAllRestaurantsForClientService,
+    getTagsService,
+    searchRestaurantsByOccasionService
  } from "../services/restaurantService";
 
 export function useRestaurant() {
@@ -143,6 +145,22 @@ export function useRestaurant() {
         } catch (error) {console.log(error)}
     }
 
+    // Client gets available occasion tags
+    async function getTags() {
+        try {
+            const data = await getTagsService()
+            dispatch({type: "set_tags", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
+    // Client searches restaurants by occasion tags and/or food type
+    async function searchRestaurantsByOccasion(filters) {
+        try {
+            const data = await searchRestaurantsByOccasionService(filters)
+            dispatch({type: "set_restaurants", payload: data})
+        } catch (error) {console.log(error)}
+    }
+
 
     return {
         getRestaurants,
@@ -156,6 +174,8 @@ export function useRestaurant() {
         chefGetRestaurant,
         editRestaurantCoords,
         getNearbyRestaurants,
-        getAllRestaurantsForClient
+        getAllRestaurantsForClient,
+        getTags,
+        searchRestaurantsByOccasion
     }
 }
