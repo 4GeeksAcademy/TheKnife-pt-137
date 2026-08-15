@@ -10,6 +10,7 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
+import { About } from "./pages/About";
 
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
@@ -160,6 +161,7 @@ export const router = createBrowserRouter(
 
       {/* Nested Routes */}
       <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
 

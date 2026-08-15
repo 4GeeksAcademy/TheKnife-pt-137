@@ -8,7 +8,10 @@ export const Navbar = () => {
 				<Link to="/">
 					<span className="navbar-brand mb-0 h1">CocinApp</span>
 				</Link>
-				<div className="ml-auto d-flex gap-2">
+				<div className="ml-auto d-flex gap-2 align-items-center">
+					<Link to="/about" className="me-2">
+						<span>Sobre Nosotros</span>
+					</Link>
 					<Link to="/create_manager">
 						<button className="btn btn-outline-primary">Register manager</button>
 					</Link>
