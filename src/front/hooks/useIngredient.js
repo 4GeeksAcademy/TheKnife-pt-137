@@ -78,7 +78,6 @@ export const useIngredient = () => {
     async function chefCreateIngredient(ingredientData) {
         try {
             const data = await chefCreateIngredientService(ingredientData)
-            console.log(data)
             navigate("/chef_ingredients")
         } catch (error) {console.log(error)}
     }
@@ -88,7 +87,6 @@ export const useIngredient = () => {
         try {
             const response = await chefEditIngredientService(ingredient_id, ingredientData)
             const data = await response.json()
-            console.log(data)
             navigate("/chef_ingredients")
         } catch (error) {console.log(error)}
     }

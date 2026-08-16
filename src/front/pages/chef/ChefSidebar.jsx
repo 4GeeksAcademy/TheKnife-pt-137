@@ -48,6 +48,7 @@ const NAV_GROUPS = (restaurantId) => ([
             { to: `/restaurants/${restaurantId}/orders`, label: "Pedidos" },
             { to: `/restaurants/${restaurantId}/products`, label: "Productos" },
             { to: "/chef_ingredients", label: "Ingredientes" },
+            { to: `/restaurants/${restaurantId}/tables`, label: "Mesas" },
         ],
     },
 ])

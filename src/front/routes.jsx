@@ -72,11 +72,14 @@ import SingleWaiter from "./pages/waiter/SingleWaiter";
 import EditWaiterForm from "./pages/waiter/EditWaiterForm";
 import WaiterLogin from "./pages/waiter/WaiterLogin";
 import WaiterDashboard from "./pages/waiter/WaiterDashboard";
+import WaiterLayout from "./pages/waiter/WaiterLayout";
 import RegisterWaiter from "./pages/waiter/actions/RegisterWaiter";
 import RestaurantWaiters from "./pages/waiter/actions/RestaurantWaiters";
-import WaiterTables from "./pages/table/actions/WaiterTables";
 import WaiterCreateTable from "./pages/table/actions/WaiterCreateTable";
-import WaiterInactiveTables from "./pages/table/actions/WaiterInactiveTables";
+import ChefRestaurantTables from "./pages/table/actions/ChefRestaurantTables";
+import ChefInactiveTables from "./pages/table/actions/ChefInactiveTables";
+import ChefCreateTable from "./pages/table/actions/ChefCreateTable";
+import ChefEditTable from "./pages/table/actions/ChefEditTable";
 
 // Orders
 import Orders from "./pages/order/Orders";
@@ -213,7 +216,6 @@ export const router = createBrowserRouter(
       <Route path="/single_waiter/:waiter_id" element={<ManagerRoute><SingleWaiter /></ManagerRoute>} />
       <Route path="/edit_waiter/:waiter_id" element={<ManagerRoute><EditWaiterForm /></ManagerRoute>} />
       <Route path="/waiter_login" element={<WaiterLogin />} />
-      <Route path="/waiter_dashboard" element={<RoleRoute role="waiter"><WaiterDashboard /></RoleRoute>} />
 
       {/* Orders (CRUD genérico -> solo manager) */}
       <Route path="/orders" element={<ManagerRoute><Orders /></ManagerRoute>} />
@@ -221,12 +223,8 @@ export const router = createBrowserRouter(
       <Route path="/single_order/:order_id" element={<ManagerRoute><SingleOrder /></ManagerRoute>} />
       <Route path="/edit_order/:order_id" element={<ManagerRoute><EditOrderForm /></ManagerRoute>} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RoleRoute roles={["chef", "cook", "waiter"]}><RestaurantSingleOrder /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<RoleRoute role="waiter"><WaiterAddProducts /></RoleRoute>} />
 
       {/* Tables (CRUD genérico -> solo manager) */}
-      <Route path="/restaurants/:restaurant_id/waiter_tables" element={<RoleRoute role="waiter"><WaiterTables /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<RoleRoute role="waiter"><WaiterCreateTable /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/waiter_tables/inactive" element={<RoleRoute role="waiter"><WaiterInactiveTables /></RoleRoute>} />
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
       <Route path="/create_table" element={<ManagerRoute><CreateTableForm /></ManagerRoute>} />
       <Route path="/single_table/:table_id" element={<ManagerRoute><SingleTable /></ManagerRoute>} />
@@ -309,6 +307,11 @@ export const router = createBrowserRouter(
         <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
         <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
         <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
+
+        <Route path="/restaurants/:restaurant_id/tables" element={<ChefRestaurantTables />} />
+        <Route path="/restaurants/:restaurant_id/tables/inactive" element={<ChefInactiveTables />} />
+        <Route path="/restaurants/:restaurant_id/tables/create" element={<ChefCreateTable />} />
+        <Route path="/restaurants/:restaurant_id/tables/edit/:table_id" element={<ChefEditTable />} />
       </Route>
 
       {/* Cook dashboard: persistent sidebar shell wrapping every cook-only page */}
@@ -320,6 +323,15 @@ export const router = createBrowserRouter(
 
         <Route path="/cook_ingredients" element={<CookIngredients />} />
         <Route path="/cook_ingredients/:ingredient_id" element={<CookSingleIngredient />} />
+      </Route>
+
+      {/* Waiter dashboard: persistent sidebar shell wrapping every waiter-only page */}
+      <Route element={<RoleRoute role="waiter"><WaiterLayout /></RoleRoute>}>
+        <Route path="/waiter_dashboard" element={<WaiterDashboard />} />
+
+        <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<WaiterCreateTable />} />
+
+        <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<WaiterAddProducts />} />
       </Route>
 
     </Route>

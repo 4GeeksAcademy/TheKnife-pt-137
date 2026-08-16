@@ -89,7 +89,6 @@ export function useOrder() {
   async function getAllRestaurantOrders(restaurant_id, state) {
     try {
       const data = await getAllRestaurantOrdersService(restaurant_id, state);
-      console.log(data);
       dispatch({ type: "set_orders", payload: data });
     } catch (error) {
       console.log(error);
@@ -117,7 +116,6 @@ export function useOrder() {
         order_id,
         state,
       );
-      console.log(order);
       getAllRestaurantOrders(restaurant_id);
     } catch (error) {
       console.log(error);
@@ -128,7 +126,6 @@ export function useOrder() {
   async function closeOrder(restaurant_id, order_id) {
     try {
       const order = await closeOrderService(restaurant_id, order_id);
-      console.log(order);
       getSingleRestaurantOrder(restaurant_id, order_id);
     } catch (error) {
       console.log(error);

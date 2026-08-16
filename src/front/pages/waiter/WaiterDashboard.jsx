@@ -65,74 +65,83 @@ const WaiterDashboard = () => {
         })
     }
 
-    function renderTableCircle(table) {
+    function renderTableTile(table) {
         const isFree = table.status === "free"
         return (
             <button
                 key={table.id}
                 onClick={() => handleTableClick(table)}
-                className="d-flex align-items-center justify-content-center border-0"
-                style={{
-                    width: "90px",
-                    height: "90px",
-                    borderRadius: "50%",
-                    backgroundColor: isFree ? "#d4f7dc" : "#fbd5d5",
-                    border: `3px solid ${isFree ? "#28a745" : "#dc3545"}`,
-                    fontSize: "1.5rem",
-                    fontWeight: "bold",
-                    color: isFree ? "#1e7e34" : "#a71d2a",
-                    cursor: "pointer"
-                }}
+                type="button"
+                className={`waiter-table-tile ${isFree ? "waiter-table-tile-free" : "waiter-table-tile-occupied"}`}
             >
-                {table.number}
+                <span className="waiter-table-illustration">
+                    <svg viewBox="0 0 100 100" className="waiter-table-svg" aria-hidden="true">
+                        <rect x="38" y="2" width="24" height="16" rx="6" />
+                        <rect x="82" y="38" width="16" height="24" rx="6" />
+                        <rect x="38" y="82" width="24" height="16" rx="6" />
+                        <rect x="2" y="38" width="16" height="24" rx="6" />
+                        <circle cx="50" cy="50" r="26" />
+                    </svg>
+                    <span className="waiter-table-number">{table.number}</span>
+                </span>
+                <span className="waiter-table-status-pill">
+                    <span className="waiter-table-status-dot"></span>
+                    {isFree ? "Disponible" : "Ocupada"}
+                </span>
             </button>
         )
     }
 
     return (
-        <div className="container py-4">
+        <div className="waiter-dashboard">
 
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="waiter-page-header">
                 <div>
-                    <h1 className="mb-1">Welcome back, {currentWaiter.name}</h1>
-                    <h2 className="h5 text-muted mb-0">Restaurant: {store.loggedWaiter.restaurant}</h2>
+                    <h1 className="waiter-dashboard-title">Bienvenido, {currentWaiter.name}</h1>
+                    <div className="waiter-dashboard-subtitle">
+                        <i className="fa-solid fa-store"></i>
+                        Restaurante: {currentWaiter.restaurant_name}
+                    </div>
                 </div>
-                <button onClick={waiterLogout} className="btn btn-primary">Log out</button>
             </div>
 
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="h5 mb-0">Tables</h3>
+            <div className="waiter-tables-header">
+                <h2 className="waiter-section-title">
+                    <i className="fa-solid fa-chair"></i>Mesas
+                </h2>
                 <div className="d-flex gap-3 align-items-center">
-                    <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_tables`} className="small">Manage tables</Link>
                     {nextFixedNumber ? (
-                        <button onClick={handleCreateTableClick} className="btn btn-primary btn-sm">Crear Mesa</button>
+                        <button onClick={handleCreateTableClick} className="btn waiter-create-table-btn">
+                            <i className="fa-solid fa-plus me-2"></i>Crear mesa
+                        </button>
                     ) : (
-                        <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_tables/create`} className="btn btn-primary btn-sm">Crear Mesa</Link>
+                        <Link to={`/restaurants/${currentWaiter.restaurant_id}/waiter_tables/create`} className="btn waiter-create-table-btn">
+                            <i className="fa-solid fa-plus me-2"></i>Crear mesa
+                        </Link>
                     )}
                 </div>
             </div>
+            <hr className="waiter-tables-divider" />
 
-            <div className="d-flex flex-nowrap gap-4 overflow-auto pb-2">
-                {sortedTables.map(renderTableCircle)}
+            <div className="waiter-table-grid">
+                {sortedTables.map(renderTableTile)}
             </div>
 
             {selectedTable && (
-                <div className="card mt-4" style={{ maxWidth: "350px" }}>
-                    <div className="card-body">
-                        <h4 className="h6">New order — Table #{selectedTable.number}</h4>
-                        <form onSubmit={handleCreateOrder}>
-                            <div className="mb-3">
-                                <label className="form-label" htmlFor="people">People</label>
-                                <input className="form-control" type="number" min="1" required
-                                    id="people" value={people}
-                                    onChange={(e) => setPeople(e.target.value)} />
-                            </div>
-                            <div className="d-flex gap-2">
-                                <button type="submit" className="btn btn-success">Crear comanda</button>
-                                <button type="button" className="btn btn-outline-secondary" onClick={() => setSelectedTable(null)}>Cancel</button>
-                            </div>
-                        </form>
-                    </div>
+                <div className="waiter-order-form-card">
+                    <h3 className="waiter-order-form-title">Nueva comanda — Mesa #{selectedTable.number}</h3>
+                    <form onSubmit={handleCreateOrder}>
+                        <div className="auth-field mb-3">
+                            <label className="auth-label" htmlFor="people">Número de personas</label>
+                            <input className="form-control" type="number" min="1" required
+                                id="people" value={people}
+                                onChange={(e) => setPeople(e.target.value)} />
+                        </div>
+                        <div className="d-flex gap-2">
+                            <button type="submit" className="btn waiter-create-table-btn">Crear comanda</button>
+                            <button type="button" className="btn btn-outline-secondary" onClick={() => setSelectedTable(null)}>Cancelar</button>
+                        </div>
+                    </form>
                 </div>
             )}
         </div>
