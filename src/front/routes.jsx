@@ -128,6 +128,7 @@ import SingleCook from "./pages/cook/SingleCook";
 import EditCookForm from "./pages/cook/EditCookForm";
 import CookLogin from "./pages/cook/CookLogin";
 import CookDashboard from "./pages/cook/CookDashboard";
+import CookLayout from "./pages/cook/CookLayout";
 import RegisterCook from "./pages/cook/actions/RegisterCook";
 import RestaurantCooks from "./pages/cook/actions/RestaurantCooks";
 
@@ -185,7 +186,6 @@ export const router = createBrowserRouter(
       <Route path="/create_recipe" element={<ManagerRoute><CreateRecipeForm /></ManagerRoute>} />
       <Route path="/recipe/:recipe_id" element={<ManagerRoute><SingleRecipe /></ManagerRoute>} />
       <Route path="/edit_recipe/:recipe_id" element={<ManagerRoute><EditRecipeForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/cook_recipes" element={<RoleRoute role="cook"><CookRecipes /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RoleRoute roles={["chef", "cook"]}><RestaurantSingleRecipe /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id/ingredients" element={<RoleRoute roles={["chef", "cook"]}><RecipeIngredientsGallery /></RoleRoute>} />
 
@@ -206,8 +206,6 @@ export const router = createBrowserRouter(
       <Route path="/ingredients/create" element={<ManagerRoute><CreateIngredientForm /></ManagerRoute>} />
       <Route path="/ingredients/:ingredient_id" element={<ManagerRoute><SingleIngredient /></ManagerRoute>} />
       <Route path="/ingredients/edit/:ingredient_id" element={<ManagerRoute><EditIngredientForm /></ManagerRoute>} />
-      <Route path="/cook_ingredients" element={<RoleRoute role="cook"><CookIngredients /></RoleRoute>} />
-      <Route path="/cook_ingredients/:ingredient_id" element={<RoleRoute role="cook"><CookSingleIngredient /></RoleRoute>} />
 
       {/* Waiters (CRUD genérico -> solo manager) */}
       <Route path="/waiters" element={<ManagerRoute><Waiters /></ManagerRoute>} />
@@ -222,7 +220,6 @@ export const router = createBrowserRouter(
       <Route path="/create_order" element={<ManagerRoute><CreateOrderForm /></ManagerRoute>} />
       <Route path="/single_order/:order_id" element={<ManagerRoute><SingleOrder /></ManagerRoute>} />
       <Route path="/edit_order/:order_id" element={<ManagerRoute><EditOrderForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/cook_orders" element={<RoleRoute role="cook"><CookOrders /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RoleRoute roles={["chef", "cook", "waiter"]}><RestaurantSingleOrder /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<RoleRoute role="waiter"><WaiterAddProducts /></RoleRoute>} />
 
@@ -255,7 +252,6 @@ export const router = createBrowserRouter(
       <Route path="/single_cook/:cook_id" element={<ManagerRoute><SingleCook /></ManagerRoute>} />
       <Route path="/edit_cook/:cook_id" element={<ManagerRoute><EditCookForm /></ManagerRoute>} />
       <Route path="/cook_login" element={<CookLogin />} />
-      <Route path="/cook_dashboard" element={<RoleRoute role="cook"><CookDashboard /></RoleRoute>} />
 
       {/* OrderProducts */}
       <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />
@@ -313,6 +309,17 @@ export const router = createBrowserRouter(
         <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
         <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
         <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
+      </Route>
+
+      {/* Cook dashboard: persistent sidebar shell wrapping every cook-only page */}
+      <Route element={<RoleRoute role="cook"><CookLayout /></RoleRoute>}>
+        <Route path="/cook_dashboard" element={<CookDashboard />} />
+
+        <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
+        <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
+
+        <Route path="/cook_ingredients" element={<CookIngredients />} />
+        <Route path="/cook_ingredients/:ingredient_id" element={<CookSingleIngredient />} />
       </Route>
 
     </Route>

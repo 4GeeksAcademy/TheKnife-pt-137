@@ -29,12 +29,13 @@ const CookRecipes = () => {
     })
 
     return (
-        <div className="recipes_page container py-4">
-            <h1 className="h4 mb-3">Recipes</h1>
+        <div className="recipes_page">
+            <div className="cook-page-header">
+                <h1 className="cook-page-title">Recetas</h1>
+            </div>
             <div className="recipes row g-3">
                 {recipeList}
             </div>
-            <Link to="/cook_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
         </div>
     )
 }

@@ -91,6 +91,64 @@ def setup_commands(app):
         all_tags = {tag.name: tag for tag in db.session.scalars(select(Tag)).all()}
         print("Occasion tags ready.")
 
+        # Real Cloudinary photos uploaded for every ingredient Casa Pepe uses.
+        # Copied verbatim from the live database so this command reproduces them.
+        ingredient_images = {
+            "aceite de girasol": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786872155/ywiq0hxggkeuozgdalwx.jpg",
+            "aceite de oliva": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870942/xurj2lbvqhsdslmhisl4.jpg",
+            "agua": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786872177/fg9izqcel5z9eeib6v2m.jpg",
+            "ajo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870952/zhjwxnjh6dfgqa3rs7zi.jpg",
+            "alubias blancas": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871199/thsahsblz2xet5ormq4e.jpg",
+            "arroz": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786868571/o6q286t9dqglaajatgud.jpg",
+            "atún": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871477/off8cfr7z33eo3gj5p6x.jpg",
+            "azafrán": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870922/ugx4exe8aqu9z1lwtmwa.jpg",
+            "azúcar": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871044/b9282dwvlnuff1facygj.jpg",
+            "bacalao": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871287/mrgojekkpijvpmavf7x2.jpg",
+            "calabacín": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871509/urr6nyanqduqmqshk0qe.jpg",
+            "calamar": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786869089/dsok3sxbfejp3jpmydus.jpg",
+            "caldo de pescado": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870932/gft2wl5nej7lyvibn1pc.jpg",
+            "callos": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871253/uhtfogtyo40stib87iho.jpg",
+            "cebolla": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870982/kku8y5qqlczx0sjwisex.jpg",
+            "chocolate negro": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786872165/n4kwlxxfze6tedwfahpx.jpg",
+            "chorizo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871208/k6ferdg6qpbtdlppdsit.jpg",
+            "chuletillas de cordero": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871498/pmgwjxiy7vttwxpyqthf.jpg",
+            "cochinillo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871167/yvqd0punxaq0lnw8qt9v.jpg",
+            "gambas": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786869068/cimzgjkfajq3ktk6du6r.jpg",
+            "garbanzos": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871264/godrt6hfr0gwwfihqu5n.jpg",
+            "guindilla": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871295/izrb506catynkopriptq.jpg",
+            "guisantes": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871469/pvq8oi0pdkeacoyryro3.jpg",
+            "harina": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871102/gtgm1zxakh3xttd6v9l5.jpg",
+            "huevo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870971/pnoygvqpr9zne5kqdbwz.jpg",
+            "jamón ibérico": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871429/u2iu985tqmkokwwdi4vo.jpg",
+            "jamón serrano": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871082/jrcuvsfke7rbkhdd1e2j.jpg",
+            "laurel": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871245/oqk3zuschqjxqt84uchl.jpg",
+            "leche": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871092/vleabr7kuihrfjalpw8u.jpg",
+            "manteca de cerdo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871181/qddwdvq87t3upidugord.jpg",
+            "mantequilla": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871113/fiefahz4v3mksfv0g76g.jpg",
+            "mayonesa": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871489/ldub1fbuesybxer8tkda.jpg",
+            "mejillones": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786869077/sdyvim40kt8nxvvq8ass.jpg",
+            "morcilla": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871225/ftkhu0in7pbbshivvveo.jpg",
+            "pan": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871069/qqqxtbqq0gnzypd3gqmd.jpg",
+            "panceta": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871235/gqkpv0iwcdyitiked27y.jpg",
+            "pan de cristal": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871458/one5ycniutjvoopd5svs.jpg",
+            "pan rallado": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871127/wyzryv4qgydpbtzjeepr.jpg",
+            "patata": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870961/lfatht7lkxncttum1hcb.jpg",
+            "pepino": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871014/xix1a3w5ak6zwanocgos.jpg",
+            "pimentón dulce": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871146/g7capoasbuipfdklr7rl.jpg",
+            "pimentón picante": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871276/t4adenuc397d8derq202.jpg",
+            "pimiento rojo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786869113/xbvbg4bgvflhyhvpyzzc.jpg",
+            "pimiento verde": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871026/hteoimty42e6bglmhprh.jpg",
+            "pulpo": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871135/mz8nrpmjimpamfypom1x.jpg",
+            "rabo de toro": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871305/gp581obk5asj4px5jlza.jpg",
+            "romero": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871189/khrfymsudp2tcwxaggbf.jpg",
+            "sal": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786870994/awgkclptypwlpk15o4ak.jpg",
+            "sal gorda": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871157/tvqu6jwp7whm9ycam3an.jpg",
+            "tomate": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871004/yat6qceizq4udhpztlof.jpg",
+            "vinagre de jerez": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871054/sc36j2w39rttgmlopive.jpg",
+            "vino tinto": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871322/qzyo1xkncmoau2tdj0qm.jpg",
+            "zanahoria": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786871313/qpur9qlbooyvkh8jj28y.jpg",
+        }
+
         ingredient_cache = {}
 
         def get_or_create_ingredient(name):
@@ -101,7 +159,7 @@ def setup_commands(app):
                 ingredient = Ingredient(
                     name=name,
                     active=True,
-                    img_url=photo_url(name, "ingredient", 400, 300),
+                    img_url=ingredient_images.get(name) or photo_url(name, "ingredient", 400, 300),
                 )
                 db.session.add(ingredient)
                 db.session.flush()
@@ -120,18 +178,18 @@ def setup_commands(app):
             "tags": ["romántico", "amigos"],
         }
 
-        chef_info = {"name": "Lucas Pérez", "email": "chef_r1@cocinapp.com"}
-        host_info = {"name": "Adrián Soto", "email": "host_r1@cocinapp.com"}
+        chef_info = {"name": "Lucas Pérez", "email": "chef_r1@theknife.com"}
+        host_info = {"name": "Adrián Soto", "email": "host_r1@theknife.com"}
         waiter_infos = [
-            {"name": "Clara", "email": "waiter1_r1@cocinapp.com"},
-            {"name": "Bruno", "email": "waiter2_r1@cocinapp.com"},
-            {"name": "Óscar", "email": "waiter3_r1@cocinapp.com"},
+            {"name": "Clara", "email": "waiter1_r1@theknife.com"},
+            {"name": "Bruno", "email": "waiter2_r1@theknife.com"},
+            {"name": "Óscar", "email": "waiter3_r1@theknife.com"},
             {"name": "Jose", "email": "jose@mail.com"},
         ]
         cook_infos = [
-            {"name": "Clara", "email": "cook1_r1@cocinapp.com"},
-            {"name": "Alma", "email": "cook2_r1@cocinapp.com"},
-            {"name": "Ana", "email": "cook3_r1@cocinapp.com"},
+            {"name": "Clara", "email": "cook1_r1@theknife.com"},
+            {"name": "Alma", "email": "cook2_r1@theknife.com"},
+            {"name": "Ana", "email": "cook3_r1@theknife.com"},
         ]
         table_infos = [
             {"number": 1, "location": "salón principal"},
@@ -231,7 +289,7 @@ def setup_commands(app):
                 "price": "18.00",
                 "ingredients": [
                     ("callos", 2.28), ("chorizo", 3.67), ("morcilla", 4.54),
-                    ("garbanzos", 4.42), ("pimentón", 1.39),
+                    ("garbanzos", 4.42), ("pimentón picante", 1.39),
                 ],
             },
             {
@@ -333,14 +391,14 @@ def setup_commands(app):
         # products, amounts and historical unit prices attached to each one.
         order_infos = [
             {
-                "table_number": 6, "waiter_email": "waiter1_r1@cocinapp.com", "state": "done", "people": 1,
+                "table_number": 6, "waiter_email": "waiter1_r1@theknife.com", "state": "done", "people": 1,
                 "items": [
                     ("Jamón Ibérico con Pan de Cristal", 3, 11.99), ("Tortilla Española", 2, 18.23),
                     ("Vino Blanco", 1, 5.41), ("Rabo de Toro", 2, 23.00), ("Pulpo a la Gallega", 3, 14.79),
                 ],
             },
             {
-                "table_number": 5, "waiter_email": "waiter2_r1@cocinapp.com", "state": "done", "people": 2,
+                "table_number": 5, "waiter_email": "waiter2_r1@theknife.com", "state": "done", "people": 2,
                 "items": [
                     ("Agua con Gas", 1, 7.83), ("Churros con Chocolate", 1, 13.07),
                     ("Callos a la Madrileña", 2, 9.54), ("Paella de Mariscos", 3, 8.57),
@@ -348,7 +406,7 @@ def setup_commands(app):
                 ],
             },
             {
-                "table_number": 5, "waiter_email": "waiter2_r1@cocinapp.com", "state": "done", "people": 4,
+                "table_number": 5, "waiter_email": "waiter2_r1@theknife.com", "state": "done", "people": 4,
                 "items": [
                     ("Rabo de Toro", 1, 23.00), ("Churros con Chocolate", 2, 13.07),
                     ("Pisto Manchego", 3, 8.95), ("Bacalao al Pil Pil", 2, 11.46),
@@ -356,14 +414,14 @@ def setup_commands(app):
                 ],
             },
             {
-                "table_number": 3, "waiter_email": "waiter1_r1@cocinapp.com", "state": "pending", "people": 1,
+                "table_number": 3, "waiter_email": "waiter1_r1@theknife.com", "state": "pending", "people": 1,
                 "items": [
                     ("Callos a la Madrileña", 1, 9.54), ("Croquetas de Jamón", 1, 10.85),
                     ("Agua con Gas", 1, 7.83), ("Pisto Manchego", 3, 8.95), ("Paella de Mariscos", 2, 8.57),
                 ],
             },
             {
-                "table_number": 6, "waiter_email": "waiter3_r1@cocinapp.com", "state": "doing", "people": 2,
+                "table_number": 6, "waiter_email": "waiter3_r1@theknife.com", "state": "doing", "people": 2,
                 "items": [
                     ("Rabo de Toro", 1, 23.00), ("Churros con Chocolate", 2, 13.07),
                     ("Chuletillas de Cordero", 1, 20.93), ("Gazpacho Andaluz", 2, 20.26),
@@ -371,7 +429,7 @@ def setup_commands(app):
                 ],
             },
             {
-                "table_number": 6, "waiter_email": "waiter2_r1@cocinapp.com", "state": "closed", "people": 2,
+                "table_number": 6, "waiter_email": "waiter2_r1@theknife.com", "state": "closed", "people": 2,
                 "days_ago": 9,
                 "items": [
                     ("Tinto de Verano", 2, 2.04), ("Pisto Manchego", 2, 8.95),
@@ -379,7 +437,7 @@ def setup_commands(app):
                 ],
             },
             {
-                "table_number": 6, "waiter_email": "waiter2_r1@cocinapp.com", "state": "closed", "people": 3,
+                "table_number": 6, "waiter_email": "waiter2_r1@theknife.com", "state": "closed", "people": 3,
                 "days_ago": 9,
                 "items": [
                     ("Tortilla Española", 3, 18.23), ("Croquetas de Jamón", 1, 10.85),

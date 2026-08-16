@@ -4,56 +4,97 @@ import { Link, useParams } from "react-router-dom";
 import { useOrder } from "../../../hooks/useOrder";
 import LoadingComponent from "../../../components/LoadingComponent";
 
+const OPEN_STATES = "pending,doing,done"
+
+const STATE_INFO = {
+    pending: { label: "Pendiente", badgeClass: "order-badge-pending", icon: "fa-hourglass-half" },
+    doing: { label: "En preparación", badgeClass: "order-badge-doing", icon: "fa-fire-burner" },
+    done: { label: "Listo", badgeClass: "order-badge-done", icon: "fa-bell-concierge" },
+    closed: { label: "Cerrado", badgeClass: "order-badge-closed", icon: "fa-circle-check" },
+}
+
+const formatDateTime = (value) =>
+    value ? new Date(value).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" }) : "—"
+
 const CookOrders = () => {
 
     const { getAllRestaurantOrders, updateOrderStatus } = useOrder()
     const { store } = useGlobalReducer()
     const { restaurant_id } = useParams()
+    const [showClosed, setShowClosed] = useState(false)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         setLoading(true)
-        getAllRestaurantOrders(restaurant_id).finally(()=>setLoading(false))
-    }, [])
+        getAllRestaurantOrders(restaurant_id, showClosed ? "closed" : OPEN_STATES).finally(() => setLoading(false))
+    }, [showClosed])
 
     if (loading) return <LoadingComponent />
 
     const ordersList = store.orders.map((order) => {
+        const stateInfo = STATE_INFO[order.state] || STATE_INFO.pending
         return (
-            <div key={order.id} className="col-md-4">
-                <div className="card h-100">
-                    <div className="card-body d-flex flex-column">
-                        <h2 className="h5">Order #{order.id}</h2>
-                        <ul className="list-group list-group-flush mb-3">
-                            <li className="list-group-item"><strong>Table:</strong> {order.table_id}</li>
-                            <li className="list-group-item"><strong>State:</strong> {order.state}</li>
-                            <li className="list-group-item"><strong>People:</strong> {order.people}</li>
-                        </ul>
-                        <div className="d-flex gap-2 mt-auto">
-                            <Link to={`/restaurants/${restaurant_id}/orders/${order.id}`}><button className="btn btn-primary btn-sm">View order</button></Link>
-                            {order.state === "pending" &&
-                                <button className="btn btn-warning btn-sm" onClick={() => updateOrderStatus(restaurant_id, order.id, "doing")}>Start cooking</button>
-                            }
-                            {order.state === "doing" &&
-                                <button className="btn btn-success btn-sm" onClick={() => updateOrderStatus(restaurant_id, order.id, "done")}>Mark as done</button>
-                            }
-                            {order.state === "done" &&
-                                <span className="text-muted">Waiting for waiter</span>
-                            }
-                        </div>
+            <div className="product-row" key={order.id}>
+                <div className={`order-icon ${stateInfo.badgeClass}`}>
+                    <i className={`fa-solid ${stateInfo.icon}`}></i>
+                </div>
+                <div className="product-row-info">
+                    <div className="product-row-title">
+                        <span className="product-row-name">Pedido #{order.id}</span>
+                        <span className={`product-badge ${stateInfo.badgeClass}`}>{stateInfo.label}</span>
                     </div>
+                    <div className="order-row-meta">
+                        <span><i className="fa-solid fa-chair"></i>Mesa {order.table_number ?? order.table_id}</span>
+                        <span><i className="fa-solid fa-users"></i>{order.people} personas</span>
+                        <span><i className="fa-solid fa-clock"></i>{formatDateTime(order.date_time)}</span>
+                    </div>
+                </div>
+                <div className="order-row-actions">
+                    <Link className="recipe-view-link" to={`/restaurants/${restaurant_id}/orders/${order.id}`}>
+                        Ver pedido <i className="fa-solid fa-arrow-right"></i>
+                    </Link>
+                    {order.state === "pending" && (
+                        <button type="button" className="btn btn-outline-warning btn-sm" onClick={() => updateOrderStatus(restaurant_id, order.id, "doing")}>
+                            <i className="fa-solid fa-fire-burner me-1"></i>Empezar a cocinar
+                        </button>
+                    )}
+                    {order.state === "doing" && (
+                        <button type="button" className="btn btn-outline-success btn-sm" onClick={() => updateOrderStatus(restaurant_id, order.id, "done")}>
+                            <i className="fa-solid fa-circle-check me-1"></i>Marcar como listo
+                        </button>
+                    )}
+                    {order.state === "done" && (
+                        <span className="order-row-waiting"><i className="fa-solid fa-hourglass-half"></i>Esperando al camarero</span>
+                    )}
                 </div>
             </div>
         )
     })
 
     return (
-        <div className="order_page container py-4">
-            <h1 className="h4 mb-3">Orders</h1>
-            <div className="orders row g-3">
-                {ordersList}
+        <div className="order_page">
+            <div className="cook-page-header">
+                <h1 className="cook-page-title">Pedidos</h1>
             </div>
-            <Link to="/cook_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
+
+            <div className="product-toolbar">
+                <div className="product-filter-tabs">
+                    <button type="button" className={`product-filter-btn ${!showClosed ? "active" : ""}`} onClick={() => setShowClosed(false)}>Abiertos</button>
+                    <button type="button" className={`product-filter-btn ${showClosed ? "active" : ""}`} onClick={() => setShowClosed(true)}>Cerrados</button>
+                </div>
+            </div>
+
+            <div className="card">
+                <div className="card-body">
+                    {store.orders.length > 0 ? (
+                        <div className="product-list">
+                            {ordersList}
+                        </div>
+                    ) : (
+                        <p className="text-muted text-center py-3 mb-0">No hay pedidos que mostrar.</p>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

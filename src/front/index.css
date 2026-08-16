@@ -1,5 +1,4 @@
 :root {
-<<<<<<< HEAD
   --cocinapp-brand: #00665C;
   --cocinapp-brand-dark: #00483f;
   --cocinapp-brand-soft: rgba(0, 102, 92, 0.12);
@@ -207,6 +206,162 @@
 
 .chef-main .form-control:focus,
 .chef-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
+
+/* Cook dashboard shell (mirrors the chef shell above) */
+.cook-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.cook-sidebar,
+.cook-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.cook-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.cook-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cook-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.cook-nav-link:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.cook-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.cook-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-cook-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-cook-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.cook-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.cook-stat-card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.cook-stat-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.cook-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex: none;
+}
+
+.cook-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.cook-stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.cook-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.cook-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.cook-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.cook-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.cook-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.cook-main .btn-primary:hover,
+.cook-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.cook-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.cook-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.cook-main .table {
+  margin-bottom: 0;
+}
+
+.cook-main .form-control:focus,
+.cook-main .form-select:focus {
   border-color: var(--cocinapp-brand);
   box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
 }
@@ -876,6 +1031,27 @@
   margin-right: 0.35rem;
 }
 
+.order-row-actions {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.order-row-waiting {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #6c757d;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.order-row-waiting i {
+  color: var(--cocinapp-brand);
+}
+
 .order-hero {
   display: flex;
   flex-direction: row;
@@ -1096,7 +1272,6 @@
   font-size: 0.92rem;
   line-height: 1.6;
   margin-bottom: 1rem;
-=======
   --cocin-primary: #00665c;
   --cocin-dark: #0f172b;
   --cocin-light: #e6f2f0;
@@ -1255,5 +1430,4 @@
 }
 .team-social a:hover {
   background: var(--cocin-dark);
->>>>>>> develop
 }
