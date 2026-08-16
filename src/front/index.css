@@ -528,6 +528,284 @@
   box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
 }
 
+/* Host dashboard shell (mirrors the chef/cook/waiter shells above) */
+.host-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.host-sidebar,
+.host-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.host-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.host-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.host-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.host-nav-link:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.host-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.host-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-host-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-host-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.host-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.host-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.host-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.host-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.host-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.host-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.host-main .btn-primary:hover,
+.host-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.host-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.host-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.host-main .table {
+  margin-bottom: 0;
+}
+
+.host-main .form-control:focus,
+.host-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
+
+/* Client account shell (mirrors the chef/cook/waiter/host shells above) */
+.client-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.client-sidebar,
+.client-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.client-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.client-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.client-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.client-nav-link:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.client-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.client-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-client-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-client-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.client-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.client-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.client-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.client-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.client-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.client-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.client-main .btn-primary:hover,
+.client-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.client-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.client-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.client-main .table {
+  margin-bottom: 0;
+}
+
+.client-main .form-control:focus,
+.client-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
+
+.dashboard-action-card {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.dashboard-action-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-action-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-action-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-action-text {
+  color: #6c757d;
+  font-size: 0.92rem;
+}
+
 /* Restaurant staff card grid (waiters, etc.) */
 .waiter-card {
   border-radius: 0.75rem;
@@ -929,6 +1207,13 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.product-row-selected {
+  background-color: var(--cocinapp-brand-soft);
+  border-radius: 0.6rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 
 @media (max-width: 576px) {
@@ -1467,6 +1752,13 @@
   --cocin-light: #e6f2f0;
 }
 
+.restaurant-description-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 /* ===== About / Sobre Nosotros (Restoran-style) ===== */
 .about-page {
   color: #212529;
@@ -1711,14 +2003,14 @@
   margin-bottom: 1.75rem;
 }
 
-.waiter-dashboard-title {
+.dashboard-welcome-title {
   font-size: 2rem;
   font-weight: 800;
   color: #212529;
   margin-bottom: 0.5rem;
 }
 
-.waiter-dashboard-subtitle {
+.dashboard-welcome-subtitle {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1726,7 +2018,7 @@
   font-size: 1rem;
 }
 
-.waiter-dashboard-subtitle i {
+.dashboard-welcome-subtitle i {
   color: var(--cocinapp-brand);
 }
 

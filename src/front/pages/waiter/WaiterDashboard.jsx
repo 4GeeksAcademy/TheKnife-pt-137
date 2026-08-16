@@ -97,8 +97,8 @@ const WaiterDashboard = () => {
 
             <div className="waiter-page-header">
                 <div>
-                    <h1 className="waiter-dashboard-title">Bienvenido, {currentWaiter.name}</h1>
-                    <div className="waiter-dashboard-subtitle">
+                    <h1 className="dashboard-welcome-title">Bienvenido, {currentWaiter.name}</h1>
+                    <div className="dashboard-welcome-subtitle">
                         <i className="fa-solid fa-store"></i>
                         Restaurante: {currentWaiter.restaurant_name}
                     </div>

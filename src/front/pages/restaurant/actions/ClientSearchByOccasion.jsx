@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
+import LoadingComponent from "../../../components/LoadingComponent";
 
 const ClientSearchByOccasion = () => {
 
     const { getTags, searchRestaurantsByOccasion } = useRestaurant();
     const { store } = useGlobalReducer();
-    const navigate = useNavigate();
 
     const [foodType, setFoodType] = useState("");
     const [selectedTags, setSelectedTags] = useState([]);
     const [searched, setSearched] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         getTags();
@@ -25,7 +26,8 @@ const ClientSearchByOccasion = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        searchRestaurantsByOccasion({ food_type: foodType, tags: selectedTags });
+        setLoading(true);
+        searchRestaurantsByOccasion({ food_type: foodType, tags: selectedTags }).finally(() => setLoading(false));
         setSearched(true);
     };
 
@@ -39,34 +41,41 @@ const ClientSearchByOccasion = () => {
     const results = store.restaurants || [];
 
     return (
-        <div className="container py-4" style={{ maxWidth: "800px" }}>
-
-            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mb-3 ps-0">Back</button>
-
-            <h1 className="h3 mb-1">Find a restaurant for your occasion</h1>
-            <p className="text-muted">Pick the vibe and the kind of food you're looking for.</p>
+        <div className="occasion_search_page">
+            <div className="client-page-header">
+                <div>
+                    <h1 className="client-page-title">Buscar por ocasión</h1>
+                    <div className="dashboard-welcome-subtitle">
+                        <i className="fa-solid fa-champagne-glasses"></i>
+                        Elige el tipo de comida y el plan que buscas
+                    </div>
+                </div>
+            </div>
 
             <form className="card mb-4" onSubmit={handleSearch}>
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="food_type">Type of food</label>
-                        <input className="form-control" type="text" id="food_type"
-                            placeholder="e.g. italiana, mexicana, sushi..."
-                            value={foodType}
-                            onChange={(e) => setFoodType(e.target.value)} />
+                        <label className="simple-form-label" htmlFor="food_type">Tipo de comida</label>
+                        <div className="product-search" style={{ width: "100%" }}>
+                            <i className="fa-solid fa-utensils"></i>
+                            <input className="form-control" type="text" id="food_type"
+                                placeholder="italiana, mexicana, sushi..."
+                                value={foodType}
+                                onChange={(e) => setFoodType(e.target.value)} />
+                        </div>
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label d-block">Occasion</label>
-                        <div className="d-flex flex-wrap gap-2">
+                        <label className="simple-form-label d-block">Ocasión</label>
+                        <div className="product-filter-tabs flex-wrap">
                             {store.tags.map((tag) => {
                                 const active = selectedTags.includes(tag.name);
                                 return (
                                     <button
                                         type="button"
                                         key={tag.id}
-                                        className={`btn btn-sm ${active ? "btn-primary" : "btn-outline-primary"}`}
+                                        className={`product-filter-btn ${active ? "active" : ""}`}
                                         onClick={() => toggleTag(tag.name)}>
                                         {tag.name}
                                     </button>
@@ -76,60 +85,64 @@ const ClientSearchByOccasion = () => {
                     </div>
 
                     <div className="d-flex gap-2">
-                        <button type="submit" className="btn btn-primary">Search</button>
-                        <button type="button" className="btn btn-outline-secondary" onClick={handleClear}>Clear</button>
+                        <button type="submit" className="btn btn-primary">
+                            <i className="fa-solid fa-magnifying-glass me-1"></i>Buscar
+                        </button>
+                        <button type="button" className="btn btn-outline-secondary" onClick={handleClear}>Limpiar</button>
                     </div>
                 </div>
             </form>
 
             {searched && (
-                <div>
-                    <h2 className="h5 mb-3">{results.length} restaurant(s) found</h2>
-                    {results.length === 0 ? (
-                        <p className="text-muted">No restaurants match your search. Try fewer filters.</p>
-                    ) : (
-                        <div className="row g-3">
-                            {results.map((restaurant) => (
-                                <div className="col-md-6" key={restaurant.id}>
-                                    <div className="card h-100">
-                                        {restaurant.img_url && (
-                                            <img src={restaurant.img_url} className="card-img-top" alt={restaurant.name}
-                                                style={{ height: "160px", objectFit: "cover" }} />
-                                        )}
-                                        <div className="card-body">
-                                            <h3 className="h5 mb-1">{restaurant.name}</h3>
-                                            {restaurant.food_type && (
-                                                <p className="text-muted mb-2">🍽️ {restaurant.food_type}</p>
-                                            )}
-                                            <p className="text-muted mb-2"><span className="me-1">📍</span>{restaurant.address}</p>
-                                            <div className="d-flex flex-wrap gap-1 mb-3">
-                                                {(restaurant.tags || []).map((tag) => (
-                                                    <span key={tag.id} className="badge bg-secondary">{tag.name}</span>
-                                                ))}
+                loading ? <LoadingComponent /> : (
+                    <div>
+                        <h2 className="client-page-title mb-3" style={{ fontSize: "1.1rem" }}>
+                            {results.length} restaurante{results.length !== 1 ? "s" : ""} encontrado{results.length !== 1 ? "s" : ""}
+                        </h2>
+                        {results.length > 0 ? (
+                            <div className="row row-cols-1 row-cols-md-2 g-4">
+                                {results.map((restaurant) => (
+                                    <div className="col" key={restaurant.id}>
+                                        <div className="recipe-card card h-100">
+                                            <div className="recipe-card-media">
+                                                {restaurant.img_url ? (
+                                                    <img src={restaurant.img_url} className="recipe-card-img" alt={restaurant.name} />
+                                                ) : (
+                                                    <div className="recipe-card-img recipe-card-img-placeholder">
+                                                        <i className="fa-solid fa-store"></i>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="d-flex gap-2">
-                                                <Link
-                                                    to={`/restaurants/${restaurant.id}/dishes`}
-                                                    className="btn btn-primary btn-sm align-self-start"
-                                                >
-                                                    View dishes
-                                                </Link>
-                                                <Link
-                                                    to={`/restaurants/${restaurant.id}/reserve`}
-                                                    className="btn btn-success btn-sm align-self-start"
-                                                >
-                                                    Book Table
-                                                </Link>
+                                            <div className="card-body d-flex flex-column">
+                                                <h3 className="recipe-card-title">{restaurant.name}</h3>
+                                                {restaurant.food_type && <span className="food-type-badge">{restaurant.food_type}</span>}
+                                                <div className="restaurant-contact-list">
+                                                    <span><i className="fa-solid fa-location-dot"></i>{restaurant.address}</span>
+                                                </div>
+                                                {(restaurant.tags || []).length > 0 && (
+                                                    <div className="restaurant-tags">
+                                                        {restaurant.tags.map((tag) => (
+                                                            <span key={tag.id} className="tag-pill"><i className="fa-solid fa-tag"></i>{tag.name}</span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                                <div className="d-flex gap-2 mt-auto">
+                                                    <Link to={`/restaurants/${restaurant.id}/dishes`} className="btn btn-outline-primary btn-sm">Ver platos</Link>
+                                                    <Link to={`/restaurants/${restaurant.id}/reserve`} className="btn btn-primary btn-sm">Reservar mesa</Link>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="card">
+                                <p className="text-muted text-center py-4 mb-0">No hay restaurantes que coincidan. Prueba con menos filtros.</p>
+                            </div>
+                        )}
+                    </div>
+                )
             )}
-
         </div>
     );
 };

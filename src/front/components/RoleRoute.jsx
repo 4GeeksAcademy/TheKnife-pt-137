@@ -5,9 +5,10 @@ const ROLE_LOGIN_PATH = {
     cook: "/cook_login",
     waiter: "/waiter_login",
     host: "/host_login",
+    client: "/client_login",
 };
 
-// Protege en el cliente las rutas exclusivas de chef/cook/waiter/host.
+// Protege en el cliente las rutas exclusivas de chef/cook/waiter/host/client.
 // Acepta un rol único (role="chef") o varios roles válidos para páginas
 // compartidas entre roles (roles={["chef", "cook"]}).
 // Si ninguno de los tokens correspondientes está en localStorage, redirige

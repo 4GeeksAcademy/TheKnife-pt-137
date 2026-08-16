@@ -14,8 +14,6 @@ import { About } from "./pages/About";
 
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
-import { HostRoute } from "./components/HostRoute";
-import { ClientRoute } from "./components/ClientRoute";
 import { RoleRoute } from "./components/RoleRoute";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
@@ -144,6 +142,7 @@ import EditHostForm from "./pages/host/EditHostForm";
 import SingleHost from "./pages/host/SingleHost";
 import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
+import HostLayout from "./pages/host/HostLayout";
 import RegisterHost from "./pages/host/actions/RegisterHost";
 import HostReservations from "./pages/host/actions/HostReservations";
 import CreateHostReservation from "./pages/host/actions/CreateHostReservation";
@@ -154,6 +153,7 @@ import CreateClientForm from "./pages/client/CreateClientForm";
 import EditClientForm from "./pages/client/EditClientForm";
 import ClientLogin from "./pages/client/ClientLogin";
 import ClientDashboard from "./pages/client/ClientDashboard";
+import ClientLayout from "./pages/client/ClientLayout";
 import RegisterClient from "./pages/client/RegisterClient";
 import ClientReservations from "./pages/client/ClientReservations";
 import EditMyReservation from "./pages/client/EditMyReservation";
@@ -171,12 +171,9 @@ export const router = createBrowserRouter(
       <Route path="/demo" element={<Demo />} />
 
       {/* Google Maps */}
-        
-      <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
-      <Route path="/restaurants/occasion_search" element={<ClientRoute><ClientSearchByOccasion /></ClientRoute>} />
-      <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRoute><ClientRestaurantDishes /></ClientRoute>} />
-      <Route path="/restaurants/:restaurant_id/reserve" element={<ClientRoute><ClientCreateReservation /></ClientRoute>} />
-      <Route path="/restaurants/view_all" element={<ClientRoute><ViewAllRestaurants /></ClientRoute>} />
+
+      <Route path="/restaurants/:restaurant_id/dishes" element={<RoleRoute role="client"><ClientRestaurantDishes /></RoleRoute>} />
+      <Route path="/restaurants/:restaurant_id/reserve" element={<RoleRoute role="client"><ClientCreateReservation /></RoleRoute>} />
 
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
@@ -259,10 +256,6 @@ export const router = createBrowserRouter(
       <Route path="/edit_host/:host_id" element={<ManagerRoute><EditHostForm /></ManagerRoute>} />
       <Route path="/single_host/:host_id" element={<ManagerRoute><SingleHost /></ManagerRoute>} />
       <Route path="/host_login" element={<HostLogin />} />
-      <Route path="/host_reservations" element={<HostRoute><HostReservations /></HostRoute>} />
-      <Route path="/host_reservations_history" element={<HostRoute><HostReservations history={true} /></HostRoute>} />
-      <Route path="/host_create_reservation" element={<HostRoute><CreateHostReservation /></HostRoute>} />
-      <Route path="/host_dashboard" element={<RoleRoute role="host"><HostDashboard /></RoleRoute>} />
 
       {/* Clients (CRUD genérico -> solo manager; login/dashboard aparte) */}
       <Route path="/clients" element={<ManagerRoute><Clients /></ManagerRoute>} />
@@ -270,10 +263,6 @@ export const router = createBrowserRouter(
       <Route path="/edit_client/:client_id" element={<ManagerRoute><EditClientForm /></ManagerRoute>} />
       <Route path="/client_register" element={<RegisterClient />} />
       <Route path="/client_login" element={<ClientLogin />} />
-      <Route path="/client_dashboard" element={<ClientRoute><ClientDashboard /></ClientRoute>} />
-      <Route path="/client_reservations" element={<ClientRoute><ClientReservations /></ClientRoute>} />
-      <Route path="/edit_my_reservation/:reservation_id" element={<ClientRoute><EditMyReservation /></ClientRoute>} />
-      <Route path="/booking_history" element={<ClientRoute><BookingHistory /></ClientRoute>} />
 
       {/* Chef dashboard: persistent sidebar shell wrapping every chef-only page */}
       <Route element={<RoleRoute role="chef"><ChefLayout /></RoleRoute>}>
@@ -332,6 +321,25 @@ export const router = createBrowserRouter(
         <Route path="/restaurants/:restaurant_id/waiter_tables/create" element={<WaiterCreateTable />} />
 
         <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<WaiterAddProducts />} />
+      </Route>
+
+      {/* Host dashboard: persistent sidebar shell wrapping every host-only page */}
+      <Route element={<RoleRoute role="host"><HostLayout /></RoleRoute>}>
+        <Route path="/host_dashboard" element={<HostDashboard />} />
+        <Route path="/host_reservations" element={<HostReservations />} />
+        <Route path="/host_reservations_history" element={<HostReservations history={true} />} />
+        <Route path="/host_create_reservation" element={<CreateHostReservation />} />
+      </Route>
+
+      {/* Client account: persistent sidebar shell wrapping every client-account page */}
+      <Route element={<RoleRoute role="client"><ClientLayout /></RoleRoute>}>
+        <Route path="/client_dashboard" element={<ClientDashboard />} />
+        <Route path="/client_reservations" element={<ClientReservations />} />
+        <Route path="/edit_my_reservation/:reservation_id" element={<EditMyReservation />} />
+        <Route path="/booking_history" element={<BookingHistory />} />
+        <Route path="/restaurants/nearby_search" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider>} />
+        <Route path="/restaurants/occasion_search" element={<ClientSearchByOccasion />} />
+        <Route path="/restaurants/view_all" element={<ViewAllRestaurants />} />
       </Route>
 
     </Route>
