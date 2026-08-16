@@ -1,4 +1,5 @@
 :root {
+<<<<<<< HEAD
   --cocinapp-brand: #00665C;
   --cocinapp-brand-dark: #00483f;
   --cocinapp-brand-soft: rgba(0, 102, 92, 0.12);
@@ -1095,4 +1096,164 @@
   font-size: 0.92rem;
   line-height: 1.6;
   margin-bottom: 1rem;
+=======
+  --cocin-primary: #00665c;
+  --cocin-dark: #0f172b;
+  --cocin-light: #e6f2f0;
+}
+
+/* ===== About / Sobre Nosotros (Restoran-style) ===== */
+.about-page {
+  color: #212529;
+}
+
+/* Page header with breadcrumb */
+.page-header {
+  background: linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80")
+      center/cover no-repeat;
+  padding: 5rem 0;
+  color: #fff;
+}
+.page-header h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.page-header .breadcrumb {
+  background: transparent;
+  justify-content: center;
+  margin-bottom: 0;
+}
+.page-header .breadcrumb-item,
+.page-header .breadcrumb-item a {
+  color: #fff;
+  text-decoration: none;
+}
+.page-header .breadcrumb-item.active {
+  color: var(--cocin-primary);
+}
+.page-header .breadcrumb-item + .breadcrumb-item::before {
+  color: #fff;
+}
+
+/* Section title */
+.section-title {
+  color: var(--cocin-primary);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.25rem;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--cocin-primary);
+}
+.section-title.text-center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Image collage */
+.about-img img {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.about-img .img-tall {
+  height: 100%;
+}
+
+/* Stats */
+.about-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+.about-stats .stat {
+  background: var(--cocin-light);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  flex: 1;
+}
+.about-stats .stat h1 {
+  color: var(--cocin-primary);
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-cocin {
+  background: var(--cocin-primary);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.6rem 1.75rem;
+  font-weight: 600;
+  border: none;
+}
+.btn-cocin:hover {
+  background: #004a42;
+  color: #fff;
+}
+
+/* Internal management feature cards */
+.feature-card {
+  border-radius: 8px;
+  background: var(--cocin-light);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(15, 23, 43, 0.08);
+}
+.feature-card i {
+  color: var(--cocin-primary);
+}
+.feature-card h5 {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* Chef / team cards */
+.team-card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(15, 23, 43, 0.08);
+  transition: transform 0.2s ease;
+}
+.team-card:hover {
+  transform: translateY(-6px);
+}
+.team-card img {
+  height: 260px;
+  object-fit: cover;
+}
+.team-card .card-body {
+  text-align: center;
+}
+.team-card .designation {
+  color: var(--cocin-primary);
+  font-size: 0.9rem;
+}
+.team-social a {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--cocin-primary);
+  color: #fff;
+  margin: 0 0.2rem;
+}
+.team-social a:hover {
+  background: var(--cocin-dark);
+>>>>>>> develop
 }
