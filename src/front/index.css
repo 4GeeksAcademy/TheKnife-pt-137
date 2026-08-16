@@ -1,0 +1,110 @@
+/* The Kinif — landing page theme (scoped with tk- prefix, does not affect other pages) */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Pacifico&display=swap');
+
+:root {
+    --tk-primary: #FEA116;
+    --tk-primary-dark: #d6870c;
+    --tk-dark: #0F172B;
+    --tk-light: #F1F8FF;
+}
+
+/* Navbar */
+.tk-navbar {
+    background: var(--tk-dark) !important;
+}
+
+.tk-navbar .navbar-brand i {
+    color: var(--tk-primary);
+}
+
+.tk-btn-primary {
+    background: var(--tk-primary);
+    border-color: var(--tk-primary);
+    color: #fff;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.tk-btn-primary:hover {
+    background: var(--tk-primary-dark);
+    border-color: var(--tk-primary-dark);
+    color: #fff;
+}
+
+/* Hero */
+.tk-hero {
+    background: linear-gradient(rgba(15, 23, 43, .85), rgba(15, 23, 43, .85)),
+        url('https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1600&q=80');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Section titles */
+.tk-section-title {
+    position: relative;
+    display: inline-block;
+    font-family: 'Pacifico', cursive;
+    font-weight: 400;
+}
+
+.tk-section-title.text-center::before,
+.tk-section-title.text-center::after {
+    position: absolute;
+    content: "";
+    width: 40px;
+    height: 2px;
+    top: 50%;
+    margin-top: -1px;
+    background: var(--tk-primary);
+}
+
+.tk-section-title.text-center::before { left: -50px; }
+.tk-section-title.text-center::after { right: -50px; }
+
+/* Feature / role cards */
+.tk-card-item {
+    box-shadow: 0 0 30px rgba(0, 0, 0, .08);
+    border-radius: .5rem;
+    transition: .35s;
+    height: 100%;
+}
+
+.tk-card-item:hover {
+    background: var(--tk-primary);
+}
+
+.tk-card-item:hover * {
+    color: #fff !important;
+}
+
+/* About collage */
+.tk-about-img {
+    border-radius: .5rem;
+}
+
+/* Counters */
+.tk-counter {
+    border-left: 5px solid var(--tk-primary);
+}
+
+/* Footer */
+.tk-footer {
+    background: var(--tk-dark);
+}
+
+.tk-footer a {
+    color: rgba(255, 255, 255, .75);
+    text-decoration: none;
+    transition: .2s;
+}
+
+.tk-footer a:hover {
+    color: var(--tk-primary);
+}
+
+.tk-footer .tk-footer-title {
+    color: var(--tk-primary);
+    font-family: 'Pacifico', cursive;
+    font-weight: 400;
+}
