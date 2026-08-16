@@ -1,5 +1,4 @@
 
-import random
 import re
 from decimal import Decimal
 from datetime import datetime, timedelta
@@ -60,14 +59,14 @@ def setup_commands(app):
     @app.cli.command("insert-test-data")
     def insert_test_data():
         """
-        Creates 10 invented restaurants spread across Madrid (3 spanish, 3 italian,
-        2 mexican and 2 french), each with: description, photo, random occasion tags,
-        phone, name and email; 20 products on the menu (15 dishes + 5 drinks) built
-        with cuisine-appropriate logic; at least 15 recipes tied to the "dish"
-        products (with photo); 3 waiters, 3 cooks, 1 host and 1 chef; a handful of
-        tables; and 5 open orders + 2 closed orders with products attached.
-        All the ingredients required by the recipes of the whole restaurant set are
-        created once (shared/deduplicated) with their own photo.
+        Creates exactly one demo restaurant, "Casa Pepe" (Spanish cuisine), with
+        the same data it currently has live: 1 chef, 1 host, 4 waiters, 3 cooks,
+        6 tables, 15 recipes (with their real ingredients/amounts and Cloudinary
+        photos), 20 products - 15 dishes + 5 drinks - (with Cloudinary photos and
+        real prices) and 7 orders (5 open + 2 closed) with their products
+        attached. Any ingredient left unused by this restaurant's recipes is
+        deleted, so the ingredient catalogue only ever contains what Casa Pepe
+        actually cooks with.
         Run with: $ flask insert-test-data
         """
 
@@ -89,7 +88,7 @@ def setup_commands(app):
             if not db.session.scalar(select(Tag).where(Tag.name == name)):
                 db.session.add(Tag(name=name))
         db.session.commit()
-        all_tags = db.session.scalars(select(Tag)).all()
+        all_tags = {tag.name: tag for tag in db.session.scalars(select(Tag)).all()}
         print("Occasion tags ready.")
 
         ingredient_cache = {}
@@ -109,296 +108,426 @@ def setup_commands(app):
             ingredient_cache[name] = ingredient
             return ingredient
 
-        # 10 Madrid locations (address, latitude, longitude) spread across different
-        # neighbourhoods of the city
-        madrid_restaurants = [
-            {
-                "name": "Casa Pepe", "cuisine": "española", "slug": "casapepe",
-                "address": "Calle Gran Vía 28, Madrid, España", "lat": 40.4200, "lon": -3.7025,
-                "description": "Cocina española tradicional en pleno corazón de Gran Vía, con recetas de toda la vida.",
-            },
-            {
-                "name": "El Rincón Manchego", "cuisine": "española", "slug": "rinconmanchego",
-                "address": "Calle del Pez 14, Madrid, España", "lat": 40.4250, "lon": -3.7038,
-                "description": "Sabores de La Mancha en el barrio de Malasaña, con productos de proximidad.",
-            },
-            {
-                "name": "Taberna La Latina", "cuisine": "española", "slug": "tabernalalatina",
-                "address": "Plaza de la Cebada 9, Madrid, España", "lat": 40.4095, "lon": -3.7101,
-                "description": "Taberna castiza junto a la Plaza de la Cebada, especializada en tapas y raciones.",
-            },
-            {
-                "name": "Osteria Salamanca", "cuisine": "italiana", "slug": "osteriasalamanca",
-                "address": "Calle de Serrano 45, Madrid, España", "lat": 40.4300, "lon": -3.6835,
-                "description": "Auténtica trattoria italiana en el barrio de Salamanca, con pasta fresca artesanal.",
-            },
-            {
-                "name": "La Trattoria di Chamberí", "cuisine": "italiana", "slug": "trattoriachamberi",
-                "address": "Calle de Fuencarral 88, Madrid, España", "lat": 40.4350, "lon": -3.7038,
-                "description": "Trattoria familiar en Chamberí con recetas del norte y sur de Italia.",
-            },
-            {
-                "name": "Il Piccolo Forno", "cuisine": "italiana", "slug": "ilpiccoloforno",
-                "address": "Calle de Hortaleza 62, Madrid, España", "lat": 40.4220, "lon": -3.6975,
-                "description": "Pizzería y horno de leña en el corazón de Chueca.",
-            },
-            {
-                "name": "El Azteca", "cuisine": "mexicana", "slug": "elazteca",
-                "address": "Calle de Argumosa 17, Madrid, España", "lat": 40.4080, "lon": -3.7020,
-                "description": "Cocina mexicana picante y colorida en el barrio de Lavapiés.",
-            },
-            {
-                "name": "Cantina Jalisco", "cuisine": "mexicana", "slug": "cantinajalisco",
-                "address": "Calle de Alcalá 130, Madrid, España", "lat": 40.4150, "lon": -3.6825,
-                "description": "Cantina mexicana junto al Retiro, con mezcal y platos tradicionales.",
-            },
-            {
-                "name": "Le Bistrot Parisien", "cuisine": "francesa", "slug": "lebistrotparisien",
-                "address": "Calle de Alberto Aguilera 22, Madrid, España", "lat": 40.4315, "lon": -3.7195,
-                "description": "Bistrot de inspiración parisina en Argüelles, con carta de temporada.",
-            },
-            {
-                "name": "La Petite Brasserie", "cuisine": "francesa", "slug": "lapetitebrasserie",
-                "address": "Paseo de la Castellana 180, Madrid, España", "lat": 40.4650, "lon": -3.6770,
-                "description": "Brasserie francesa moderna en Chamartín, con repostería propia.",
-            },
-        ]
-
-        # 15 cuisine-appropriate dishes per cuisine, each with its own ingredients
-        cuisine_dishes = {
-            "española": [
-                ("Paella de Mariscos", ["arroz", "gambas", "mejillones", "calamar", "pimiento rojo", "azafrán", "caldo de pescado", "aceite de oliva", "ajo"]),
-                ("Tortilla Española", ["patata", "huevo", "cebolla", "aceite de oliva", "sal"]),
-                ("Gazpacho Andaluz", ["tomate", "pepino", "pimiento verde", "cebolla", "ajo", "aceite de oliva", "vinagre de jerez", "pan"]),
-                ("Croquetas de Jamón", ["jamón serrano", "leche", "harina", "mantequilla", "huevo", "pan rallado"]),
-                ("Pulpo a la Gallega", ["pulpo", "patata", "pimentón dulce", "aceite de oliva", "sal gorda"]),
-                ("Cochinillo Asado", ["cochinillo", "manteca de cerdo", "ajo", "romero", "sal"]),
-                ("Fabada Asturiana", ["alubias blancas", "chorizo", "morcilla", "panceta", "laurel"]),
-                ("Callos a la Madrileña", ["callos", "chorizo", "morcilla", "garbanzos", "pimentón"]),
-                ("Bacalao al Pil Pil", ["bacalao", "aceite de oliva", "ajo", "guindilla"]),
-                ("Rabo de Toro", ["rabo de toro", "cebolla", "zanahoria", "vino tinto", "tomate"]),
-                ("Jamón Ibérico con Pan de Cristal", ["jamón ibérico", "pan de cristal", "tomate", "aceite de oliva"]),
-                ("Ensaladilla Rusa", ["patata", "zanahoria", "guisantes", "atún", "mayonesa", "huevo"]),
-                ("Chuletillas de Cordero", ["chuletillas de cordero", "ajo", "romero", "aceite de oliva"]),
-                ("Pisto Manchego", ["calabacín", "pimiento rojo", "pimiento verde", "tomate", "cebolla", "huevo"]),
-                ("Churros con Chocolate", ["harina", "agua", "aceite de girasol", "chocolate negro", "azúcar"]),
-            ],
-            "italiana": [
-                ("Pasta Carbonara", ["espagueti", "huevo", "panceta", "queso pecorino", "pimienta negra"]),
-                ("Risotto de Setas", ["arroz arborio", "setas", "caldo de verduras", "mantequilla", "queso parmesano", "cebolla"]),
-                ("Pizza Margarita", ["masa de pizza", "tomate triturado", "mozzarella", "albahaca", "aceite de oliva"]),
-                ("Lasaña Boloñesa", ["pasta de lasaña", "carne picada", "tomate", "bechamel", "queso parmesano"]),
-                ("Osso Buco", ["jarrete de ternera", "vino blanco", "zanahoria", "apio", "tomate"]),
-                ("Tiramisú", ["queso mascarpone", "café espresso", "bizcochos de soletilla", "cacao en polvo", "huevo"]),
-                ("Bruschetta", ["pan", "tomate", "ajo", "albahaca", "aceite de oliva"]),
-                ("Gnocchi al Pesto", ["patata", "harina", "albahaca", "piñones", "queso parmesano"]),
-                ("Saltimbocca alla Romana", ["ternera", "jamón serrano", "salvia", "vino blanco", "mantequilla"]),
-                ("Vitello Tonnato", ["ternera", "atún", "alcaparras", "mayonesa"]),
-                ("Minestrone", ["alubias blancas", "pasta", "tomate", "zanahoria", "apio", "calabacín"]),
-                ("Pasta al Pomodoro", ["espagueti", "tomate", "albahaca", "ajo", "aceite de oliva"]),
-                ("Panna Cotta", ["nata", "azúcar", "vainilla", "gelatina", "frutos rojos"]),
-                ("Melanzane alla Parmigiana", ["berenjena", "tomate", "mozzarella", "queso parmesano", "albahaca"]),
-                ("Focaccia", ["harina", "aceite de oliva", "romero", "sal", "levadura"]),
-            ],
-            "mexicana": [
-                ("Tacos al Pastor", ["tortilla de maíz", "carne de cerdo", "piña", "cebolla", "cilantro", "achiote"]),
-                ("Guacamole", ["aguacate", "tomate", "cebolla", "cilantro", "lima", "chile jalapeño"]),
-                ("Enchiladas Verdes", ["tortilla de maíz", "pollo", "tomatillo", "queso fresco", "crema", "cilantro"]),
-                ("Chiles Rellenos", ["chile poblano", "queso fresco", "huevo", "harina", "tomate"]),
-                ("Mole Poblano", ["chile ancho", "chocolate negro", "pollo", "tomate", "almendra", "sésamo"]),
-                ("Pozole Rojo", ["maíz cacahuazintle", "carne de cerdo", "chile guajillo", "lechuga", "rábano"]),
-                ("Quesadillas", ["tortilla de maíz", "queso oaxaca", "epazote"]),
-                ("Ceviche de Camarón", ["camarón", "lima", "tomate", "cebolla morada", "cilantro", "chile serrano"]),
-                ("Tamales", ["masa de maíz", "manteca de cerdo", "hoja de maíz", "chile rojo", "pollo"]),
-                ("Cochinita Pibil", ["carne de cerdo", "achiote", "naranja agria", "hoja de plátano", "cebolla morada"]),
-                ("Chilaquiles", ["tortilla de maíz", "salsa verde", "queso fresco", "crema", "cebolla"]),
-                ("Sopa de Tortilla", ["tortilla de maíz", "tomate", "chile pasilla", "aguacate", "queso fresco"]),
-                ("Elote Asado", ["maíz", "mayonesa", "queso cotija", "chile en polvo", "lima"]),
-                ("Flan de Cajeta", ["leche condensada", "huevo", "cajeta", "vainilla"]),
-                ("Churros Mexicanos", ["harina", "canela", "azúcar", "aceite de girasol"]),
-            ],
-            "francesa": [
-                ("Coq au Vin", ["pollo", "vino tinto", "champiñones", "panceta", "cebolla perla"]),
-                ("Ratatouille", ["berenjena", "calabacín", "pimiento rojo", "tomate", "cebolla", "ajo"]),
-                ("Boeuf Bourguignon", ["ternera", "vino tinto", "zanahoria", "cebolla", "champiñones"]),
-                ("Sopa de Cebolla Francesa", ["cebolla", "caldo de ternera", "pan", "queso gruyère"]),
-                ("Quiche Lorraine", ["masa quebrada", "huevo", "nata", "panceta", "queso gruyère"]),
-                ("Crème Brûlée", ["nata", "yema de huevo", "vainilla", "azúcar"]),
-                ("Croissant", ["harina", "mantequilla", "levadura", "leche", "azúcar"]),
-                ("Escargots à la Bourguignonne", ["caracoles", "mantequilla", "ajo", "perejil"]),
-                ("Confit de Pato", ["muslo de pato", "grasa de pato", "ajo", "tomillo"]),
-                ("Bouillabaisse", ["pescado variado", "marisco", "hinojo", "tomate", "azafrán"]),
-                ("Tarte Tatin", ["manzana", "mantequilla", "azúcar", "masa quebrada"]),
-                ("Salade Niçoise", ["atún", "huevo", "judía verde", "patata", "aceituna negra", "tomate"]),
-                ("Soufflé de Queso", ["huevo", "queso gruyère", "mantequilla", "harina", "leche"]),
-                ("Duck à l'Orange", ["pechuga de pato", "naranja", "azúcar", "vinagre"]),
-                ("Macarons", ["harina de almendra", "azúcar glas", "clara de huevo", "colorante alimentario"]),
-            ],
+        restaurant_info = {
+            "name": "Casa Pepe",
+            "email": "info@casapepe.es",
+            "phone": "+34611000001",
+            "address": "Calle Gran Vía 28, Madrid, España",
+            "lat": 40.4200, "lon": -3.7025,
+            "description": "Cocina española tradicional en pleno corazón de Gran Vía, con recetas de toda la vida.",
+            "food_type": "española",
+            "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813797/yvssasqy8t5qoxqakig3.jpg",
+            "tags": ["romántico", "amigos"],
         }
 
-        drink_names = [
-            "Sangría", "Tinto de Verano", "Vino Tinto Reserva", "Vino Blanco", "Cava Brut",
-            "Cerveza Artesanal", "Agua Mineral", "Agua con Gas", "Café Espresso", "Té Verde",
-            "Zumo de Naranja", "Limonada Natural", "Refresco de Cola", "Mojito",
+        chef_info = {"name": "Lucas Pérez", "email": "chef_r1@cocinapp.com"}
+        host_info = {"name": "Adrián Soto", "email": "host_r1@cocinapp.com"}
+        waiter_infos = [
+            {"name": "Clara", "email": "waiter1_r1@cocinapp.com"},
+            {"name": "Bruno", "email": "waiter2_r1@cocinapp.com"},
+            {"name": "Óscar", "email": "waiter3_r1@cocinapp.com"},
+            {"name": "Jose", "email": "jose@mail.com"},
+        ]
+        cook_infos = [
+            {"name": "Clara", "email": "cook1_r1@cocinapp.com"},
+            {"name": "Alma", "email": "cook2_r1@cocinapp.com"},
+            {"name": "Ana", "email": "cook3_r1@cocinapp.com"},
+        ]
+        table_infos = [
+            {"number": 1, "location": "salón principal"},
+            {"number": 2, "location": "interior"},
+            {"number": 3, "location": "terraza"},
+            {"number": 4, "location": "salón principal"},
+            {"number": 5, "location": "barra"},
+            {"number": 6, "location": "terraza"},
         ]
 
-        chef_names = [
-            "Lucas Pérez", "Sofía Ruiz", "Mateo Díaz", "Elena Torres", "Hugo Romero",
-            "Marta Flores", "Pablo Vidal", "Laura Ortiz", "Diego Rubio", "Carla Vega",
-        ]
-        host_names = [
-            "Adrián Soto", "Nora Silva", "Iván Castro", "Alba Reyes", "Marco Ibáñez",
-            "Julia Prat", "Leo Duarte", "Vera Molina", "Bruno Cano", "Nina Peña",
-        ]
-        staff_names = [
-            "Ana", "Luis", "Eva", "Iker", "Nora", "Bruno", "Sara", "Alex", "Rita",
-            "Iván", "Tomás", "Alma", "Vera", "Marco", "Nina", "Óscar", "Clara",
-        ]
-        table_locations = ["interior", "terraza", "ventana", "barra", "salón principal"]
-
-        print("Creating 10 Madrid restaurants with menus, recipes, ingredients, staff, tables and orders...")
-
-        for i, r in enumerate(madrid_restaurants, start=1):
-            cuisine = r["cuisine"]
-
-            restaurant = Restaurant(
-                name=r["name"],
-                email=f"info@{r['slug']}.es",
-                phone=f"+346{11000000 + i}",
-                address=r["address"],
-                latitude=r["lat"],
-                longitude=r["lon"],
-                description=r["description"],
-                food_type=cuisine,
-                img_url=photo_url(cuisine, "restaurant,madrid", 800, 600),
+        def steps_for(name, ending="caliente"):
+            return (
+                f"1. Preparar y organizar los ingredientes de {name}.\n"
+                f"2. Cocinar siguiendo la técnica tradicional de la cocina española.\n"
+                f"3. Emplatar y servir {ending}."
             )
-            db.session.add(restaurant)
-            db.session.flush()  # assign restaurant.id
 
-            for tag in random.sample(all_tags, k=min(len(all_tags), random.randint(2, 3))):
-                restaurant.tags.append(tag)
+        # The 15 recipes Casa Pepe actually has, each tied to its "dish" product.
+        # Ingredient amounts, photos and prices are copied verbatim from the live
+        # database so this command reproduces the exact current menu.
+        recipe_infos = [
+            {
+                "name": "Paella de Mariscos", "calories": 562, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812567/tshq2m7w0nczwfuypfch.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786815668/mcd13on38txj4pldtlnw.jpg",
+                "price": "22.00",
+                "ingredients": [
+                    ("arroz", 3.71), ("gambas", 1.92), ("mejillones", 3.45), ("calamar", 2.79),
+                    ("pimiento rojo", 0.74), ("azafrán", 0.73), ("caldo de pescado", 0.68),
+                    ("aceite de oliva", 2.83), ("ajo", 1.06),
+                ],
+            },
+            {
+                "name": "Tortilla Española", "calories": 412, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812831/gaikhrzlntyehlypmewy.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816761/ft9h4nfafxwkte9ydhey.jpg",
+                "price": "12.00",
+                "ingredients": [
+                    ("patata", 4.21), ("huevo", 3.4), ("cebolla", 4.19),
+                    ("aceite de oliva", 0.69), ("sal", 3.87),
+                ],
+            },
+            {
+                "name": "Gazpacho Andaluz", "calories": 509, "ending": "frío",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812845/wlwwonh26eyxywdpe9t6.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816743/qnfjoic8i9c9tpgweozy.jpg",
+                "price": "6.50",
+                "ingredients": [
+                    ("tomate", 4.42), ("pepino", 2.65), ("pimiento verde", 2.45), ("cebolla", 2.0),
+                    ("ajo", 2.8), ("aceite de oliva", 2.63), ("vinagre de jerez", 3.08), ("pan", 1.15),
+                ],
+            },
+            {
+                "name": "Croquetas de Jamón", "calories": 595, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813679/ywqtihsqynz68rm0rqwk.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816828/lqyk3wprknig5acg1bua.jpg",
+                "price": "10.80",
+                "ingredients": [
+                    ("jamón serrano", 3.44), ("leche", 1.85), ("harina", 4.95),
+                    ("mantequilla", 0.76), ("huevo", 1.96), ("pan rallado", 3.32),
+                ],
+            },
+            {
+                "name": "Pulpo a la Gallega", "calories": 274, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813111/fe8vsryi3brosrxcjenl.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816786/k1zgsstucqyespgtgrki.jpg",
+                "price": "22.00",
+                "ingredients": [
+                    ("pulpo", 1.19), ("patata", 2.59), ("pimentón dulce", 2.32),
+                    ("aceite de oliva", 2.18), ("sal gorda", 1.78),
+                ],
+            },
+            {
+                "name": "Cochinillo Asado", "calories": 423, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813162/pfcdrihwsoigwru5lkpp.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816774/hfo7ihzqgp8uodgrk0i7.jpg",
+                "price": "18.00",
+                "ingredients": [
+                    ("cochinillo", 3.62), ("manteca de cerdo", 1.19), ("ajo", 3.67),
+                    ("romero", 2.47), ("sal", 0.76),
+                ],
+            },
+            {
+                "name": "Fabada Asturiana", "calories": 642, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813289/zcweye1i2wcofqjzmeb1.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816796/crkooh9kflz49ajtiei1.jpg",
+                "price": "17.00",
+                "ingredients": [
+                    ("alubias blancas", 1.17), ("chorizo", 4.78), ("morcilla", 2.03),
+                    ("panceta", 1.4), ("laurel", 0.74),
+                ],
+            },
+            {
+                "name": "Callos a la Madrileña", "calories": 261, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813305/nqln2sou6huf5s49vsux.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816808/yzp1fhotxaprf2tlziiv.jpg",
+                "price": "18.00",
+                "ingredients": [
+                    ("callos", 2.28), ("chorizo", 3.67), ("morcilla", 4.54),
+                    ("garbanzos", 4.42), ("pimentón", 1.39),
+                ],
+            },
+            {
+                "name": "Bacalao al Pil Pil", "calories": 371, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813320/ocsugzfzhzp8cvftkow8.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816838/wugidscoisrrjmro7pur.jpg",
+                "price": "20.00",
+                "ingredients": [
+                    ("bacalao", 2.6), ("aceite de oliva", 1.23), ("ajo", 4.83), ("guindilla", 3.71),
+                ],
+            },
+            {
+                "name": "Rabo de Toro", "calories": 216, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813267/vegexeocj9nvgecw09wg.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816865/di4invwgrcbhshhue1wk.jpg",
+                "price": "23.00",
+                "ingredients": [
+                    ("rabo de toro", 1.99), ("cebolla", 0.72), ("zanahoria", 2.93),
+                    ("vino tinto", 2.33), ("tomate", 3.74),
+                ],
+            },
+            {
+                "name": "Jamón Ibérico con Pan de Cristal", "calories": 249, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813340/q23kjgqnj9atjtezeqzw.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816918/anjgffdmms2ahvs1hjmn.jpg",
+                "price": "16.00",
+                "ingredients": [
+                    ("jamón ibérico", 0.53), ("pan de cristal", 1.6),
+                    ("tomate", 3.55), ("aceite de oliva", 2.19),
+                ],
+            },
+            {
+                "name": "Ensaladilla Rusa", "calories": 582, "ending": "fría",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813353/cb0wzfzue0oqi6wifgri.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816895/zyjytuq9vmyobcry8dk5.jpg",
+                "price": "7.00",
+                "ingredients": [
+                    ("patata", 4.24), ("zanahoria", 1.45), ("guisantes", 1.01),
+                    ("atún", 4.49), ("mayonesa", 1.42), ("huevo", 1.15),
+                ],
+            },
+            {
+                "name": "Chuletillas de Cordero", "calories": 499, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813704/evhjtku6wyhfocxkznux.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816852/wsyqwp7l1oolgboipugv.jpg",
+                "price": "21.50",
+                "ingredients": [
+                    ("chuletillas de cordero", 0.72), ("ajo", 4.88),
+                    ("romero", 3.98), ("aceite de oliva", 4.95),
+                ],
+            },
+            {
+                "name": "Pisto Manchego", "calories": 751, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813383/wntmor5tsvsuxmzbaufh.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816949/czcpelmmscdh5cugfqcn.jpg",
+                "price": "9.00",
+                "ingredients": [
+                    ("calabacín", 1.97), ("pimiento rojo", 3.91), ("pimiento verde", 4.83),
+                    ("tomate", 0.98), ("cebolla", 1.43), ("huevo", 1.31),
+                ],
+            },
+            {
+                "name": "Churros con Chocolate", "calories": 758, "ending": "caliente",
+                "recipe_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813093/jnurhxjao18hx0rz2cbm.jpg",
+                "product_img": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786816933/cn44cmxr71lqio10xynf.jpg",
+                "price": "4.00",
+                "ingredients": [
+                    ("harina", 0.78), ("agua", 0.76), ("aceite de girasol", 1.9),
+                    ("chocolate negro", 1.14), ("azúcar", 4.94),
+                ],
+            },
+        ]
 
-            db.session.add(Chef(
-                name=chef_names[i - 1], email=f"chef_r{i}@cocinapp.com",
+        # The 5 drinks Casa Pepe currently sells (no recipe attached)
+        drink_infos = [
+            {
+                "name": "Agua con Gas", "price": "1.50",
+                "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786817072/epnmjazfhz2m8zsqjkwj.jpg",
+            },
+            {
+                "name": "Tinto de Verano", "price": "2.50",
+                "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786817159/zwhidjk1hbviizkkspm8.jpg",
+            },
+            {
+                "name": "Agua Mineral", "price": "1.50",
+                "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786817138/w0ttww8ladykjfezt8mc.jpg",
+            },
+            {
+                "name": "Zumo de Naranja", "price": "4.00",
+                "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786817122/tz1gpn25jmvfnzzcn3eu.jpg",
+            },
+            {
+                "name": "Vino Blanco", "price": "4.00",
+                "img_url": "https://res.cloudinary.com/r2lk2eps/image/upload/v1786817091/bpujivhaadgp1iag56xx.jpg",
+            },
+        ]
+
+        # The 7 orders (5 open + 2 closed) Casa Pepe currently has, with the
+        # products, amounts and historical unit prices attached to each one.
+        order_infos = [
+            {
+                "table_number": 6, "waiter_email": "waiter1_r1@cocinapp.com", "state": "done", "people": 1,
+                "items": [
+                    ("Jamón Ibérico con Pan de Cristal", 3, 11.99), ("Tortilla Española", 2, 18.23),
+                    ("Vino Blanco", 1, 5.41), ("Rabo de Toro", 2, 23.00), ("Pulpo a la Gallega", 3, 14.79),
+                ],
+            },
+            {
+                "table_number": 5, "waiter_email": "waiter2_r1@cocinapp.com", "state": "done", "people": 2,
+                "items": [
+                    ("Agua con Gas", 1, 7.83), ("Churros con Chocolate", 1, 13.07),
+                    ("Callos a la Madrileña", 2, 9.54), ("Paella de Mariscos", 3, 8.57),
+                    ("Croquetas de Jamón", 1, 10.85),
+                ],
+            },
+            {
+                "table_number": 5, "waiter_email": "waiter2_r1@cocinapp.com", "state": "done", "people": 4,
+                "items": [
+                    ("Rabo de Toro", 1, 23.00), ("Churros con Chocolate", 2, 13.07),
+                    ("Pisto Manchego", 3, 8.95), ("Bacalao al Pil Pil", 2, 11.46),
+                    ("Paella de Mariscos", 2, 8.57),
+                ],
+            },
+            {
+                "table_number": 3, "waiter_email": "waiter1_r1@cocinapp.com", "state": "pending", "people": 1,
+                "items": [
+                    ("Callos a la Madrileña", 1, 9.54), ("Croquetas de Jamón", 1, 10.85),
+                    ("Agua con Gas", 1, 7.83), ("Pisto Manchego", 3, 8.95), ("Paella de Mariscos", 2, 8.57),
+                ],
+            },
+            {
+                "table_number": 6, "waiter_email": "waiter3_r1@cocinapp.com", "state": "doing", "people": 2,
+                "items": [
+                    ("Rabo de Toro", 1, 23.00), ("Churros con Chocolate", 2, 13.07),
+                    ("Chuletillas de Cordero", 1, 20.93), ("Gazpacho Andaluz", 2, 20.26),
+                    ("Fabada Asturiana", 3, 25.62),
+                ],
+            },
+            {
+                "table_number": 6, "waiter_email": "waiter2_r1@cocinapp.com", "state": "closed", "people": 2,
+                "days_ago": 9,
+                "items": [
+                    ("Tinto de Verano", 2, 2.04), ("Pisto Manchego", 2, 8.95),
+                    ("Paella de Mariscos", 3, 8.57), ("Vino Blanco", 3, 5.41),
+                ],
+            },
+            {
+                "table_number": 6, "waiter_email": "waiter2_r1@cocinapp.com", "state": "closed", "people": 3,
+                "days_ago": 9,
+                "items": [
+                    ("Tortilla Española", 3, 18.23), ("Croquetas de Jamón", 1, 10.85),
+                ],
+            },
+        ]
+
+        print("Creating restaurant 'Casa Pepe' with its real menu, staff, tables and orders...")
+
+        restaurant = Restaurant(
+            name=restaurant_info["name"],
+            email=restaurant_info["email"],
+            phone=restaurant_info["phone"],
+            address=restaurant_info["address"],
+            latitude=restaurant_info["lat"],
+            longitude=restaurant_info["lon"],
+            description=restaurant_info["description"],
+            food_type=restaurant_info["food_type"],
+            img_url=restaurant_info["img_url"],
+        )
+        db.session.add(restaurant)
+        db.session.flush()  # assign restaurant.id
+
+        for tag_name in restaurant_info["tags"]:
+            if tag_name in all_tags:
+                restaurant.tags.append(all_tags[tag_name])
+
+        db.session.add(Chef(
+            name=chef_info["name"], email=chef_info["email"],
+            password="123456", restaurant_id=restaurant.id,
+        ))
+        db.session.add(Host(
+            name=host_info["name"], email=host_info["email"],
+            password="123456", restaurant_id=restaurant.id,
+        ))
+
+        waiters_by_email = {}
+        for w in waiter_infos:
+            waiter = Waiter(
+                name=w["name"], email=w["email"],
+                password="123456", restaurant_id=restaurant.id,
+            )
+            db.session.add(waiter)
+            waiters_by_email[w["email"]] = waiter
+
+        for c in cook_infos:
+            db.session.add(Cook(
+                name=c["name"], email=c["email"],
                 password="123456", restaurant_id=restaurant.id,
             ))
-            db.session.add(Host(
-                name=host_names[i - 1], email=f"host_r{i}@cocinapp.com",
-                password="123456", restaurant_id=restaurant.id,
-            ))
 
-            waiters = []
-            for w in range(1, 4):
-                waiter = Waiter(
-                    name=random.choice(staff_names), email=f"waiter{w}_r{i}@cocinapp.com",
-                    password="123456", restaurant_id=restaurant.id,
-                )
-                db.session.add(waiter)
-                waiters.append(waiter)
+        tables_by_number = {}
+        for t in table_infos:
+            table = Table(
+                number=t["number"], status="available", location=t["location"],
+                active=True, restaurant_id=restaurant.id,
+            )
+            db.session.add(table)
+            tables_by_number[t["number"]] = table
 
-            for c in range(1, 4):
-                db.session.add(Cook(
-                    name=random.choice(staff_names), email=f"cook{c}_r{i}@cocinapp.com",
-                    password="123456", restaurant_id=restaurant.id,
+        db.session.flush()  # assign waiter/table ids
+
+        # 15 recipes (with their real ingredients) and their matching "dish" products
+        products_by_name = {}
+        for info in recipe_infos:
+            recipe = Recipe(
+                name=info["name"],
+                steps=steps_for(info["name"], info["ending"]),
+                img_url=info["recipe_img"],
+                calories=info["calories"],
+                restaurant_id=restaurant.id,
+            )
+            db.session.add(recipe)
+            db.session.flush()  # assign recipe.id
+
+            for ingredient_name, amount in info["ingredients"]:
+                ingredient = get_or_create_ingredient(ingredient_name)
+                db.session.add(RecipeIngredient(
+                    ingredient_id=ingredient.id, recipe_id=recipe.id, amount=amount,
                 ))
 
-            tables = []
-            for t in range(1, 7):
-                table = Table(
-                    number=t, status="available", location=random.choice(table_locations),
-                    active=True, restaurant_id=restaurant.id,
-                )
-                db.session.add(table)
-                tables.append(table)
-
-            db.session.flush()  # assign waiter/table ids
-
-            # 15 dishes -> a recipe (with ingredients) and a "dish" product for each
-            products = []
-            for dish_name, ingredient_names in cuisine_dishes[cuisine]:
-                recipe = Recipe(
-                    name=dish_name,
-                    steps=(
-                        f"1. Preparar y organizar los ingredientes de {dish_name}.\n"
-                        f"2. Cocinar siguiendo la técnica tradicional de la cocina {cuisine}.\n"
-                        f"3. Emplatar y servir caliente."
-                    ),
-                    img_url=photo_url(dish_name, "food", 640, 480),
-                    calories=random.randint(200, 900),
-                    restaurant_id=restaurant.id,
-                )
-                db.session.add(recipe)
-                db.session.flush()  # assign recipe.id
-
-                for ingredient_name in ingredient_names:
-                    ingredient = get_or_create_ingredient(ingredient_name)
-                    db.session.add(RecipeIngredient(
-                        ingredient_id=ingredient.id, recipe_id=recipe.id,
-                        amount=round(random.uniform(0.5, 5.0), 2),
-                    ))
-
-                product = Product(
-                    name=dish_name,
-                    description=f"{dish_name}, receta tradicional de la cocina {cuisine}.",
-                    sell_price=Decimal(str(round(random.uniform(8.5, 27.0), 2))),
-                    type="dish",
-                    active=True,
-                    img_url=recipe.img_url,
-                    restaurant_id=restaurant.id,
-                    recipe_id=recipe.id,
-                )
-                db.session.add(product)
-                products.append(product)
-
-            # 5 drinks -> "drink" products, no recipe
-            for drink_name in random.sample(drink_names, 5):
-                product = Product(
-                    name=drink_name,
-                    description=f"{drink_name}.",
-                    sell_price=Decimal(str(round(random.uniform(2.0, 9.0), 2))),
-                    type="drink",
-                    active=True,
-                    img_url=photo_url(drink_name, "drink", 640, 480),
-                    restaurant_id=restaurant.id,
-                )
-                db.session.add(product)
-                products.append(product)
-
-            db.session.flush()  # assign product ids
-
-            # 5 open orders + 2 closed orders, each with products attached
-            for _ in range(5):
-                order = Order(
-                    table_id=random.choice(tables).id, waiter_id=random.choice(waiters).id,
-                    state=random.choice(["pending", "doing", "done"]), people=random.randint(1, 6),
-                )
-                db.session.add(order)
-                db.session.flush()
-                for product in random.sample(products, k=random.randint(2, 5)):
-                    db.session.add(OrderProduct(
-                        order_id=order.id, product_id=product.id,
-                        amount=random.randint(1, 3), unit_price=float(product.sell_price),
-                    ))
-
-            for _ in range(2):
-                order = Order(
-                    table_id=random.choice(tables).id, waiter_id=random.choice(waiters).id,
-                    state="closed", people=random.randint(1, 6),
-                    date_time=datetime.now() - timedelta(days=random.randint(1, 10)),
-                )
-                db.session.add(order)
-                db.session.flush()
-                for product in random.sample(products, k=random.randint(2, 5)):
-                    db.session.add(OrderProduct(
-                        order_id=order.id, product_id=product.id,
-                        amount=random.randint(1, 3), unit_price=float(product.sell_price),
-                    ))
-
-            db.session.commit()
-            print(
-                f"Restaurante '{restaurant.name}' ({cuisine}) creado: 1 chef, 1 host, 3 camareros, "
-                f"3 cocineros, {len(cuisine_dishes[cuisine])} recetas, {len(products)} productos, "
-                f"{len(tables)} mesas, 7 comandas."
+            product = Product(
+                name=info["name"],
+                description=f"{info['name']}, receta tradicional de la cocina española.",
+                sell_price=Decimal(info["price"]),
+                type="dish",
+                active=True,
+                img_url=info["product_img"],
+                restaurant_id=restaurant.id,
+                recipe_id=recipe.id,
             )
+            db.session.add(product)
+            products_by_name[product.name] = product
 
-        print(f"All test data created. {len(ingredient_cache)} unique ingredients seeded.")
+        # 5 drinks -> "drink" products, no recipe
+        for info in drink_infos:
+            product = Product(
+                name=info["name"],
+                description=f"{info['name']}.",
+                sell_price=Decimal(info["price"]),
+                type="drink",
+                active=True,
+                img_url=info["img_url"],
+                restaurant_id=restaurant.id,
+            )
+            db.session.add(product)
+            products_by_name[product.name] = product
+
+        db.session.flush()  # assign product ids
+
+        # 7 orders (5 open + 2 closed), each with its real products attached
+        for info in order_infos:
+            order = Order(
+                table_id=tables_by_number[info["table_number"]].id,
+                waiter_id=waiters_by_email[info["waiter_email"]].id,
+                state=info["state"],
+                people=info["people"],
+            )
+            if "days_ago" in info:
+                order.date_time = datetime.now() - timedelta(days=info["days_ago"])
+            db.session.add(order)
+            db.session.flush()
+            for product_name, amount, unit_price in info["items"]:
+                db.session.add(OrderProduct(
+                    order_id=order.id, product_id=products_by_name[product_name].id,
+                    amount=amount, unit_price=unit_price,
+                ))
+
+        db.session.commit()
+        print(
+            f"Restaurante '{restaurant.name}' creado: 1 chef, 1 host, {len(waiter_infos)} camareros, "
+            f"{len(cook_infos)} cocineros, {len(recipe_infos)} recetas, {len(products_by_name)} productos, "
+            f"{len(table_infos)} mesas, {len(order_infos)} comandas."
+        )
+
+        # Ingredients not referenced by any recipe (i.e. not used by Casa Pepe,
+        # now that it's the only restaurant this command creates) are removed so
+        # the catalogue only contains what's actually cooked with.
+        unused_ingredients = db.session.scalars(
+            select(Ingredient).where(
+                ~Ingredient.id.in_(select(RecipeIngredient.ingredient_id))
+            )
+        ).all()
+        for ingredient in unused_ingredients:
+            db.session.delete(ingredient)
+        db.session.commit()
+
+        print(
+            f"All test data created. {len(ingredient_cache)} ingredients used by Casa Pepe kept, "
+            f"{len(unused_ingredients)} unused ingredient(s) deleted."
+        )

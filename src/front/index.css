@@ -209,3 +209,890 @@
   border-color: var(--cocinapp-brand);
   box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
 }
+
+/* Restaurant staff card grid (waiters, etc.) */
+.waiter-card {
+  border-radius: 0.75rem;
+  transition: box-shadow 0.15s ease;
+}
+
+.waiter-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.waiter-avatar {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.waiter-name {
+  font-weight: 700;
+  color: #212529;
+}
+
+.waiter-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--cocinapp-brand);
+}
+
+.waiter-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.waiter-divider-line {
+  flex: 1;
+  height: 1px;
+  max-width: 2.5rem;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.waiter-bowtie {
+  flex: none;
+  width: 10px;
+  height: 8px;
+  position: relative;
+}
+
+.waiter-bowtie::before,
+.waiter-bowtie::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.waiter-bowtie::before {
+  left: 0;
+  border-left: 5px solid var(--cocinapp-brand);
+}
+
+.waiter-bowtie::after {
+  right: 0;
+  border-right: 5px solid var(--cocinapp-brand);
+}
+
+.waiter-email {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.waiter-hr {
+  margin: 1rem 0;
+  opacity: 0.1;
+}
+
+/* Recipe card grid */
+.recipe-card {
+  border: none;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.recipe-card-media {
+  position: relative;
+}
+
+.recipe-card-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-card-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.recipe-card-img-inactive {
+  filter: grayscale(0.6);
+  opacity: 0.75;
+}
+
+.recipe-card-menu-overlay {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.recipe-menu-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #212529;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-menu-btn:hover {
+  background-color: #fff;
+}
+
+.recipe-menu-btn-inline {
+  border-radius: 0.5rem;
+  background-color: #f1f3f5;
+}
+
+.recipe-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.recipe-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.recipe-divider-line {
+  flex: 1;
+  height: 1px;
+  max-width: 3rem;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.recipe-divider-icon {
+  font-size: 0.75rem;
+  color: var(--cocinapp-brand);
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.85rem;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.recipe-meta i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.4rem;
+}
+
+.recipe-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.recipe-view-link {
+  color: var(--cocinapp-brand);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.recipe-view-link:hover {
+  color: var(--cocinapp-brand-dark);
+}
+
+.recipe-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Product list (chef & waiter) */
+.product-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.product-filter-tabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.product-filter-btn {
+  border: none;
+  background: transparent;
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.product-filter-btn:hover {
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-filter-btn.active {
+  background-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.product-search {
+  position: relative;
+  flex: none;
+  width: 280px;
+  max-width: 100%;
+}
+
+.product-search i {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  transform: translateY(-50%);
+  color: #adb5bd;
+}
+
+.product-search .form-control {
+  padding-left: 2.25rem;
+  border-radius: 2rem;
+}
+
+.product-section + .product-section {
+  margin-top: 1.75rem;
+}
+
+.product-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--cocinapp-brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.product-section-line {
+  flex: 1;
+  height: 2px;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.product-list .product-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.product-list .product-row:first-child {
+  padding-top: 0;
+}
+
+.product-row-img {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 0.6rem;
+  object-fit: cover;
+}
+
+.product-row-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.product-row-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.product-row-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.product-row-name {
+  font-weight: 700;
+  color: #212529;
+}
+
+.product-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+}
+
+.product-badge-dish {
+  color: #a3690a;
+  background-color: #fdf1de;
+  border-color: #f3d9ac;
+}
+
+.product-badge-drink {
+  color: #0d6cad;
+  background-color: #e4f1fb;
+  border-color: #b6ddf5;
+}
+
+.product-row-desc {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin: 0.2rem 0 0;
+}
+
+.product-row-ingredients {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.product-row-ingredients i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.4rem;
+}
+
+.product-row-price {
+  flex: none;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--cocinapp-brand);
+  white-space: nowrap;
+}
+
+.product-row-order-controls {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 576px) {
+  .product-row {
+    flex-wrap: wrap;
+  }
+
+  .product-row-price,
+  .product-row-order-controls {
+    margin-left: 80px;
+  }
+}
+
+/* Single recipe detail page (chef & cook) */
+.recipe-detail-page {
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.page-back-link i {
+  font-size: 0.8rem;
+}
+
+.page-back-link:hover {
+  color: var(--cocinapp-brand);
+}
+
+.recipe-hero {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.recipe-hero-img {
+  flex: 1 1 320px;
+  max-width: 420px;
+  min-height: 260px;
+  object-fit: cover;
+}
+
+.recipe-hero-img.recipe-card-img-placeholder {
+  font-size: 2.5rem;
+}
+
+.recipe-hero-body {
+  flex: 1 1 320px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.recipe-hero-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.recipe-hero-calories-btn {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.recipe-detail-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 860px) {
+  .recipe-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-detail-section {
+  border: none;
+  border-radius: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.recipe-steps-list {
+  list-style: none;
+  counter-reset: step;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.recipe-steps-list li {
+  counter-increment: step;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  color: #343a40;
+  line-height: 1.5;
+}
+
+.recipe-steps-list li::before {
+  content: counter(step);
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-ingredient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.recipe-ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.recipe-ingredient-list .recipe-ingredient-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.recipe-ingredient-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.recipe-ingredient-img.recipe-ingredient-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.recipe-ingredient-name {
+  flex: 1 1 auto;
+  font-weight: 600;
+  color: #212529;
+}
+
+.recipe-ingredient-amount {
+  flex: none;
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #f1f3f5;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+}
+
+/* Orders (list & detail) */
+.order-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.order-icon-lg {
+  width: 60px;
+  height: 60px;
+  font-size: 1.4rem;
+}
+
+.product-badge.order-badge-pending,
+.order-icon.order-badge-pending {
+  color: #6c757d;
+  background-color: #eef0f2;
+}
+
+.product-badge.order-badge-pending {
+  border-color: #dfe3e6;
+}
+
+.product-badge.order-badge-doing,
+.order-icon.order-badge-doing {
+  color: #a3690a;
+  background-color: #fdf1de;
+}
+
+.product-badge.order-badge-doing {
+  border-color: #f3d9ac;
+}
+
+.product-badge.order-badge-done,
+.order-icon.order-badge-done {
+  color: #0d6cad;
+  background-color: #e4f1fb;
+}
+
+.product-badge.order-badge-done {
+  border-color: #b6ddf5;
+}
+
+.product-badge.order-badge-closed,
+.order-icon.order-badge-closed {
+  color: var(--cocinapp-brand);
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-badge.order-badge-closed {
+  border-color: transparent;
+}
+
+.order-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  color: #6c757d;
+  font-size: 0.82rem;
+  margin-top: 0.3rem;
+}
+
+.order-row-meta i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.35rem;
+}
+
+.order-hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.order-hero-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.order-hero-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-hero-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #212529;
+  margin: 0;
+}
+
+.order-product-amount {
+  flex: none;
+  font-weight: 600;
+  color: #495057;
+  background-color: #f1f3f5;
+  padding: 0.25rem 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+}
+
+.order-total-card {
+  border: none;
+  border-radius: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-top: 1.5rem;
+}
+
+.order-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #212529;
+}
+
+.order-total-amount {
+  color: var(--cocinapp-brand);
+  font-size: 1.3rem;
+}
+
+/* Staff registration forms (waiter, cook, host) */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+}
+
+.auth-card-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-card {
+  background-color: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.auth-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 1.25rem;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #212529;
+  margin-bottom: 0.4rem;
+}
+
+.auth-subtitle {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.auth-field {
+  text-align: left;
+}
+
+.auth-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #343a40;
+  margin-bottom: 0.35rem;
+}
+
+.auth-card .form-control {
+  border-radius: 0.6rem;
+  border: 1px solid #e2e5e9;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.auth-card .form-control:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.2rem var(--cocinapp-brand-soft);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  border-radius: 2rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.auth-submit-btn:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.65;
+}
+
+/* Restaurant details card (chef) */
+.food-type-badge {
+  display: inline-block;
+  align-self: flex-start;
+  color: var(--cocinapp-brand);
+  background-color: var(--cocinapp-brand-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.restaurant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #495057;
+  background-color: #f1f3f5;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 1rem;
+}
+
+.tag-pill i {
+  color: var(--cocinapp-brand);
+  font-size: 0.7rem;
+}
+
+.restaurant-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.restaurant-contact-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.restaurant-contact-list i {
+  color: var(--cocinapp-brand);
+  width: 16px;
+  text-align: center;
+}
+
+.restaurant-description {
+  color: #495057;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}

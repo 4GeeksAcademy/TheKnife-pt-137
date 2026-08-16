@@ -91,17 +91,17 @@ const ChefSidebarContent = ({ idPrefix, onNavigate }) => {
                 {restaurantId && NAV_GROUPS(restaurantId).map((group) => (
                     <div className="chef-nav-group" key={group.key}>
                         <button
-                            className="chef-nav-group-toggle btn w-100"
+                            className="chef-nav-group-toggle btn w-100 collapsed"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target={`#${idPrefix}-${group.key}`}
-                            aria-expanded="true"
+                            aria-expanded="false"
                         >
                             <i className={`fa-solid ${group.icon} me-2`}></i>
                             <span>{group.label}</span>
                             <i className="fa-solid fa-chevron-down chef-nav-chevron"></i>
                         </button>
-                        <div className="collapse show" id={`${idPrefix}-${group.key}`}>
+                        <div className="collapse" id={`${idPrefix}-${group.key}`}>
                             <div className="chef-nav-subitems">
                                 {group.items.map((item) => (
                                     <NavLink key={item.to} to={item.to} end={item.end} onClick={onNavigate}

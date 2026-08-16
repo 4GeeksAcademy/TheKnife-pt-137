@@ -93,32 +93,61 @@ const ChefDashboard = () => {
                         ))}
                     </div>
 
-                    <div className="card">
-                        <div className="card-header">Restaurante</div>
-                        <div className="card-body">
-                            {restaurant.id ? (
-                                <div className="row g-4 align-items-start">
-                                    {restaurant.img_url && (
-                                        <div className="col-md-4">
-                                            <img src={restaurant.img_url} className="img-fluid rounded" style={{ objectFit: "cover", width: "100%", height: "180px" }} />
-                                        </div>
-                                    )}
-                                    <div className={restaurant.img_url ? "col-md-8" : "col-12"}>
-                                        <h2 className="h5 mb-3">{restaurant.name}</h2>
-                                        <ul className="list-group list-group-flush">
-                                            <li className="list-group-item px-0"><strong>Email:</strong> {restaurant.email}</li>
-                                            <li className="list-group-item px-0"><strong>Teléfono:</strong> {restaurant.phone}</li>
-                                            <li className="list-group-item px-0"><strong>Dirección:</strong> {restaurant.address}</li>
-                                            <li className="list-group-item px-0"><strong>Tipo de cocina:</strong> {restaurant.food_type || "—"}</li>
-                                            <li className="list-group-item px-0"><strong>Descripción:</strong> {restaurant.description || "—"}</li>
-                                        </ul>
-                                    </div>
-                                </div>
+                    {restaurant.id ? (
+                        <div className="recipe-hero card">
+                            {restaurant.img_url ? (
+                                <img src={restaurant.img_url} className="recipe-hero-img" alt={restaurant.name} />
                             ) : (
-                                <p className="text-muted mb-0">No se han podido cargar los datos del restaurante.</p>
+                                <div className="recipe-hero-img recipe-card-img-placeholder">
+                                    <i className="fa-solid fa-store"></i>
+                                </div>
                             )}
+                            <div className="recipe-hero-body">
+                                <h2 className="recipe-hero-title">{restaurant.name}</h2>
+                                <div className="recipe-divider">
+                                    <span className="recipe-divider-line"></span>
+                                    <i className="fa-solid fa-store recipe-divider-icon"></i>
+                                    <span className="recipe-divider-line"></span>
+                                </div>
+
+                                {restaurant.food_type && (
+                                    <span className="food-type-badge">{restaurant.food_type}</span>
+                                )}
+
+                                {restaurant.tags && restaurant.tags.length > 0 && (
+                                    <div className="restaurant-tags">
+                                        {restaurant.tags.map((tag) => (
+                                            <span key={tag.id} className="tag-pill">
+                                                <i className="fa-solid fa-tag"></i>{tag.name}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="restaurant-contact-list">
+                                    <span><i className="fa-solid fa-envelope"></i>{restaurant.email}</span>
+                                    <span><i className="fa-solid fa-phone"></i>{restaurant.phone}</span>
+                                    <span><i className="fa-solid fa-location-dot"></i>{restaurant.address}</span>
+                                </div>
+
+                                {restaurant.description && (
+                                    <p className="restaurant-description">{restaurant.description}</p>
+                                )}
+
+                                <div className="recipe-hero-actions">
+                                    <Link to={`/restaurants/${restaurantId}`} className="btn btn-outline-success btn-sm">
+                                        <i className="fa-solid fa-circle-info me-1"></i>Ver detalles completos
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="card">
+                            <div className="card-body">
+                                <p className="text-muted mb-0">No se han podido cargar los datos del restaurante.</p>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
 

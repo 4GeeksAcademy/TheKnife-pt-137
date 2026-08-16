@@ -25,13 +25,65 @@ const RestaurantWaiters = () => {
     if (loading) return <LoadingComponent />
 
     const waitersList = store.waiters.map((waiter) => {
-        return <tr key={waiter.id}>
-            <td>{waiter.name}</td>
-            <td>{waiter.email}</td>
-            <td>
-                <button onClick={() => handleDelete(restaurant_id, waiter.id)} className="btn btn-danger btn-sm">Delete waiter</button>
-            </td>
-        </tr>
+        const modalId = `waiter-info-${waiter.id}`
+        return (
+            <div className="col" key={waiter.id}>
+                <div className="waiter-card card h-100">
+                    <div className="card-body d-flex flex-column">
+                        <div className="d-flex align-items-center gap-3 mb-3">
+                            <div className="waiter-avatar">{waiter.name.charAt(0).toUpperCase()}</div>
+                            <div>
+                                <h5 className="waiter-name mb-1">{waiter.name}</h5>
+                                <span className="waiter-role">Camarero/a</span>
+                                <div className="waiter-divider">
+                                    <span className="waiter-divider-line"></span>
+                                    <span className="waiter-bowtie"></span>
+                                    <span className="waiter-divider-line"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="waiter-email">
+                            <i className="fa-regular fa-envelope"></i>
+                            <span>{waiter.email}</span>
+                        </div>
+                        <hr className="waiter-hr" />
+                        <div className="d-flex gap-2">
+                            <button
+                                type="button"
+                                className="btn btn-outline-success btn-sm flex-fill"
+                                data-bs-toggle="modal"
+                                data-bs-target={`#${modalId}`}
+                            >
+                                <i className="fa-solid fa-circle-info me-1"></i>Ver información
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => handleDelete(restaurant_id, waiter.id)}
+                                className="btn btn-outline-danger btn-sm flex-fill"
+                            >
+                                <i className="fa-regular fa-trash-can me-1"></i>Eliminar camarero
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="modal fade" id={modalId} tabIndex="-1" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{waiter.name}</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <p className="mb-2"><strong>Rol:</strong> Camarero/a</p>
+                                <p className="mb-2"><strong>Email:</strong> {waiter.email}</p>
+                                <p className="mb-0"><strong>Restaurante:</strong> {waiter.restaurant_name}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     })
 
     return (
@@ -40,26 +92,15 @@ const RestaurantWaiters = () => {
                 <h1 className="chef-page-title">Camareros</h1>
                 <Link to={`/restaurants/${restaurant_id}/register_waiter`} className="btn btn-primary">Registrar camarero</Link>
             </div>
-            <div className="card overflow-hidden">
-                <div className="card-body p-0">
-                    {store.waiters.length > 0 ? (
-                        <table className="table table-striped align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {waitersList}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p className="text-muted text-center py-4 mb-0">Todavía no hay camareros registrados.</p>
-                    )}
+            {store.waiters.length > 0 ? (
+                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {waitersList}
                 </div>
-            </div>
+            ) : (
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">Todavía no hay camareros registrados.</p>
+                </div>
+            )}
         </div>
     )
 }
