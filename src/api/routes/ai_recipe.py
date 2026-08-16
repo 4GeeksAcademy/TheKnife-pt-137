@@ -20,7 +20,7 @@ RECIPE_SCHEMA = {
         },
         "steps": {
             "type": "string",
-            "description": "Pasos de preparación resumidos en un único texto, máximo 280 caracteres"
+            "description": "Pasos de preparación separados, en orden con números, y dando un salto de línea entre cada uno de ellos, máximo 280 caracteres"
         },
         "ingredients": {
             "type": "array",
