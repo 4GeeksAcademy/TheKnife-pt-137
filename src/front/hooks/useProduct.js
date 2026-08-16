@@ -133,7 +133,7 @@ export function useProduct() {
       );
       const data = await response.json();
       console.log(data);
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/products`);
     } catch (error) {
       console.log(error);
     }

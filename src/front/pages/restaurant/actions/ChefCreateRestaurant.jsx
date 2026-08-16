@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
-import { Link } from "react-router-dom";
 import {useCloudinary} from "../../../hooks/useCloudinary"
 
 const ChefCreateRestaurant = () => {
@@ -25,7 +24,7 @@ const ChefCreateRestaurant = () => {
     }
 
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
+        <div className="mx-auto" style={{ maxWidth: "500px" }}>
 
             <div className="card">
                 <div className="card-header text-center">Create new restaurant</div>
@@ -82,10 +81,6 @@ const ChefCreateRestaurant = () => {
                     </div>
 
                     <button onClick={()=>chefCreateRestaurant(restaurantData)} className="btn btn-primary w-100 mb-3">Create new restaurant</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Back to dashboard</Link>
-                    </div>
 
                 </div>
             </div>

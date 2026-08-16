@@ -3,6 +3,7 @@ import { useIngredient } from "../../../hooks/useIngredient";
 import { useParams, Link } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { useCloudinary } from "../../../hooks/useCloudinary";
+import LoadingComponent from "../../../components/LoadingComponent";
 
 const ChefEditIngredient = () => {
 
@@ -11,9 +12,11 @@ const ChefEditIngredient = () => {
     const { fetchChefSingleIngredient, chefEditIngredient } = useIngredient()
     const { ingredient_id } = useParams()
     const { uploadImage } = useCloudinary()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchChefSingleIngredient(ingredient_id)
+        setLoading(true)
+        fetchChefSingleIngredient(ingredient_id).finally(()=> setLoading(false))
     }, [])
 
     useEffect(() => {
@@ -26,8 +29,10 @@ const ChefEditIngredient = () => {
         }
     }, [store.singleIngredient])
 
+    if (loading) return <LoadingComponent />
+
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
+        <div className="mx-auto" style={{ maxWidth: "500px" }}>
 
             <div className="card">
                 <div className="card-header text-center">Edit ingredient</div>

@@ -289,6 +289,7 @@ class Product(db.Model):
             "active": self.active,
             "restaurant_id": self.restaurant_id,
             "recipe_id": self.recipe_id,
+            "ingredients_count": len(self.recipe.recipe_ingredients) if self.recipe else None,
             "img_url": self.img_url,
             "restaurant_name": self.restaurant.name
         }
@@ -316,6 +317,7 @@ class Recipe(db.Model):
             "steps": self.steps,
             "img_url": self.img_url,
             "calories": self.calories,
+            "ingredients_count": len(self.recipe_ingredients),
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name
         }
@@ -363,7 +365,9 @@ class Order(db.Model):
         return {
             "id": self.id,
             "table_id": self.table_id,
+            "table_number": self.table.number if self.table else None,
             "waiter_id": self.waiter_id,
+            "waiter_name": self.waiter.name if self.waiter else None,
             "state": self.state,
             "date_time": self.date_time,
             "people": self.people,

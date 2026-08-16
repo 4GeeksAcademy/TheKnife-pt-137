@@ -89,7 +89,7 @@ export const useIngredient = () => {
             const response = await chefEditIngredientService(ingredient_id, ingredientData)
             const data = await response.json()
             console.log(data)
-            navigate("/chef_dashboard")
+            navigate("/chef_ingredients")
         } catch (error) {console.log(error)}
     }
 

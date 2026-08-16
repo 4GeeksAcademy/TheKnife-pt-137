@@ -4,61 +4,146 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { Link, useParams } from "react-router-dom";
 import LoadingComponent from "../../../components/LoadingComponent";
 
+const formatPrice = (price) =>
+    `${Number(price).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+
 const ChefRestaurantProducts = () => {
 
     const { getAllRestaurantProducts, deleteRestaurantProduct } = useProduct()
     const { store } = useGlobalReducer()
     const { restaurant_id } = useParams()
     const [loading, setLoading] = useState(true)
+    const [filter, setFilter] = useState("all")
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         setLoading(true)
-        getAllRestaurantProducts(restaurant_id).finally(()=>setLoading(false))
+        getAllRestaurantProducts(restaurant_id).finally(() => setLoading(false))
     }, [])
-
-    const dishes = store.products.filter((product) => product.type === "dish")
-    const drinks = store.products.filter((product) => product.type === "drink")
-
-    const dishList = dishes.map((product) => {
-        return <div key={product.id} className="product d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
-            <span>{product.name}</span>
-            <span>{product.description}</span>
-            <span>{product.sell_price}€</span>
-            <img src={product.img_url} height="80" width="80" />
-            <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
-            <Link to={`/restaurants/${restaurant_id}/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
-            <Link to={`/restaurants/${restaurant_id}/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
-        </div>
-    })
-
-    const drinkList = drinks.map((product) => {
-        return <div key={product.id} className="product d-flex align-items-center gap-3 border-bottom pb-2 mb-2">
-            <span>{product.name}</span>
-            <span>{product.description}</span>
-            <span>{product.sell_price}€</span>
-            <img src={product.img_url} height="200" width="250" />
-            <button className="btn btn-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>Delete product</button>
-            <Link to={`/restaurants/${restaurant_id}/edit_product/${product.id}`}><button className="btn btn-warning">Edit product</button></Link>
-            <Link to={`/restaurants/${restaurant_id}/single_product/${product.id}`}><button className="btn btn-primary">View product</button></Link>
-        </div>
-    })
 
     if (loading) return <LoadingComponent />
 
-    return (
-        <div className="product_page container py-4">
-            <Link to={`/restaurants/${restaurant_id}/create_product`}><button className="btn btn-primary mb-4">Add product</button></Link>
-            <div className="products row">
-                <div className="dishes col-md-6 d-flex flex-column gap-2">
-                    <h1 className="h4">Dishes</h1>
-                    {dishList}
+    const term = search.trim().toLowerCase()
+    const matchesSearch = (product) => !term || product.name.toLowerCase().includes(term)
+
+    const dishes = store.products.filter((product) => product.type === "dish" && matchesSearch(product))
+    const drinks = store.products.filter((product) => product.type === "drink" && matchesSearch(product))
+
+    const showDishes = filter !== "drink"
+    const showDrinks = filter !== "dish"
+
+    const renderProduct = (product, badgeClass, badgeLabel) => {
+        const menuId = `product-menu-${product.id}`
+        return (
+            <div className="product-row" key={product.id}>
+                {product.img_url ? (
+                    <img src={product.img_url} className="product-row-img" alt={product.name} />
+                ) : (
+                    <div className="product-row-img product-row-img-placeholder">
+                        <i className="fa-solid fa-utensils"></i>
+                    </div>
+                )}
+                <div className="product-row-info">
+                    <div className="product-row-title">
+                        <span className="product-row-name">{product.name}</span>
+                        <span className={`product-badge ${badgeClass}`}>{badgeLabel}</span>
+                    </div>
+                    {product.description && <p className="product-row-desc">{product.description}</p>}
+                    {product.ingredients_count != null && (
+                        <div className="product-row-ingredients">
+                            <i className="fa-solid fa-basket-shopping"></i>{product.ingredients_count} ingredientes
+                        </div>
+                    )}
                 </div>
-                <div className="drinks col-md-6 d-flex flex-column gap-2">
-                    <h1 className="h4">Drinks</h1>
-                    {drinkList}
+                <div className="product-row-price">{formatPrice(product.sell_price)}</div>
+                <div className="dropdown">
+                    <button id={menuId} type="button" className="recipe-menu-btn recipe-menu-btn-inline" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i className="fa-solid fa-ellipsis"></i>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby={menuId}>
+                        <li>
+                            <Link className="dropdown-item" to={`/restaurants/${restaurant_id}/edit_product/${product.id}`}>
+                                <i className="fa-solid fa-pen me-2"></i>Editar producto
+                            </Link>
+                        </li>
+                        <li>
+                            <Link className="dropdown-item" to={`/restaurants/${restaurant_id}/single_product/${product.id}`}>
+                                <i className="fa-solid fa-eye me-2"></i>Ver información
+                            </Link>
+                        </li>
+                        <li>
+                            <button type="button" className="dropdown-item text-danger" onClick={() => deleteRestaurantProduct(restaurant_id, product.id)}>
+                                <i className="fa-solid fa-trash-can me-2"></i>Eliminar producto
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
-            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
+        )
+    }
+
+    return (
+        <div className="product_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Productos</h1>
+                <Link to={`/restaurants/${restaurant_id}/create_product`} className="btn btn-primary">Añadir producto</Link>
+            </div>
+
+            <div className="product-toolbar">
+                <div className="product-filter-tabs">
+                    <button type="button" className={`product-filter-btn ${filter === "all" ? "active" : ""}`} onClick={() => setFilter("all")}>Todos</button>
+                    <button type="button" className={`product-filter-btn ${filter === "dish" ? "active" : ""}`} onClick={() => setFilter("dish")}>Platos</button>
+                    <button type="button" className={`product-filter-btn ${filter === "drink" ? "active" : ""}`} onClick={() => setFilter("drink")}>Bebidas</button>
+                </div>
+                <div className="product-search">
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Buscar producto..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <div className="card">
+                <div className="card-body">
+                    {showDishes && (
+                        <div className="product-section">
+                            <div className="product-section-header">
+                                <i className="fa-solid fa-utensils"></i>
+                                <span>PLATOS</span>
+                                <span className="product-section-line"></span>
+                            </div>
+                            {dishes.length > 0 ? (
+                                <div className="product-list">
+                                    {dishes.map((dish) => renderProduct(dish, "product-badge-dish", "Plato"))}
+                                </div>
+                            ) : (
+                                <p className="text-muted text-center py-3 mb-0">No hay platos.</p>
+                            )}
+                        </div>
+                    )}
+
+                    {showDrinks && (
+                        <div className="product-section">
+                            <div className="product-section-header">
+                                <i className="fa-solid fa-martini-glass-citrus"></i>
+                                <span>BEBIDAS</span>
+                                <span className="product-section-line"></span>
+                            </div>
+                            {drinks.length > 0 ? (
+                                <div className="product-list">
+                                    {drinks.map((drink) => renderProduct(drink, "product-badge-drink", "Bebida"))}
+                                </div>
+                            ) : (
+                                <p className="text-muted text-center py-3 mb-0">No hay bebidas.</p>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     )
 }

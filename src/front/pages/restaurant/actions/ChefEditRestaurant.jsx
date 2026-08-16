@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
-import { Link } from "react-router-dom";
 import { useCloudinary } from "../../../hooks/useCloudinary";
 
 const ChefEditRestaurant = () => {
 
     const { store } = useGlobalReducer()
     const [restaurantData, setRestaurantData] = useState({name: "", email: "", phone: "", address: "", description: "", food_type: "", img_url: "", tag_ids: []})
-    const { chefGetRestaurant, chefEditRestaurant, getTags } = useRestaurant()
+    const { chefGetRestaurant, chefEditRestaurant, chefDeleteRestaurant, getTags } = useRestaurant()
     const { uploadImage } = useCloudinary()
     const { restaurant_id } = useParams()
 
@@ -41,8 +40,14 @@ const ChefEditRestaurant = () => {
         }))
     }
 
+    async function handleDeleteRestaurant() {
+        const confirmation = window.prompt("If you delete the restaurant, all items related to it will be deleted also\n Enter 'DELETE' to delete the restaurant.")
+        if (confirmation != "DELETE") return
+        chefDeleteRestaurant(restaurant_id)
+    }
+
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
+        <div className="mx-auto" style={{ maxWidth: "500px" }}>
 
             <div className="card">
                 <div className="card-header text-center">Edit restaurant</div>
@@ -100,10 +105,14 @@ const ChefEditRestaurant = () => {
 
                     <button onClick={()=>chefEditRestaurant(restaurant_id, restaurantData)} className="btn btn-primary w-100 mb-3">Edit restaurant</button>
 
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Back to dashboard</Link>
-                    </div>
+                </div>
+            </div>
 
+            <div className="card border-danger mt-4">
+                <div className="card-header text-danger">Danger zone</div>
+                <div className="card-body">
+                    <p className="text-muted small mb-3">Deleting the restaurant also deletes every item related to it (waiters, cooks, recipes, orders, products).</p>
+                    <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger w-100">Delete restaurant</button>
                 </div>
             </div>
 
