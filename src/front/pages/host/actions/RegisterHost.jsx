@@ -27,16 +27,22 @@ const RegisterHost = () => {
     }
 
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
-
-            <div className="card">
-                <div className="card-header text-center">Register host</div>
-                <div className="card-body">
+        <div
+            className="auth-page"
+            style={{
+                backgroundImage:
+                    "url('https://images.unsplash.com/photo-1595257841889-eca2678454e2?auto=format&fit=crop&w=1600&q=80')",
+            }}
+        >
+            <div className="auth-card">
+                <div className="auth-form-panel">
+                    <p className="brand">The Knife 🔪</p>
+                    <p className="subtitle">Crear cuenta de Anfitrión</p>
 
                     {error && <div className="alert alert-danger">{error}</div>}
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="name">Name</label>
+                        <label className="form-label" htmlFor="name">Nombre</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, name: e.target.value })} value={hostData.name} type="text" name="name" id="name" />
                     </div>
 
@@ -46,19 +52,17 @@ const RegisterHost = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="password">Password</label>
+                        <label className="form-label" htmlFor="password">Contraseña</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, password: e.target.value })} value={hostData.password} type="password" name="password" id="password" />
                     </div>
 
-                    <button onClick={handleRegister} className="btn btn-primary w-100 mb-3">Register host</button>
+                    <button onClick={handleRegister} className="btn btn-cocin w-100 mb-3">Crear anfitrión</button>
 
                     <div className="text-center">
-                        <Link to="/chef_dashboard">Go back to dashboard</Link>
+                        <Link to="/chef_dashboard" className="text-muted">Volver al dashboard</Link>
                     </div>
-
                 </div>
             </div>
-
         </div>
     );
 };

@@ -158,3 +158,82 @@
 .team-social a:hover {
   background: var(--cocin-dark);
 }
+
+/* ===== Auth pages (Login - Colorlib "login-form-02" style: full-bleed photo + centered card) ===== */
+.auth-page {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(15, 23, 43, 0.65),
+    rgba(15, 23, 43, 0.65)
+  );
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(15, 23, 43, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.auth-form-panel {
+  padding: 2.75rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.auth-form-panel .brand {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--cocin-dark);
+  margin-bottom: 0.25rem;
+}
+.auth-form-panel .subtitle {
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+.auth-form-panel .form-control {
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #dfe3e8;
+}
+.auth-form-panel .form-control:focus {
+  border-color: var(--cocin-primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 102, 92, 0.15);
+}
+.auth-form-panel .form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.auth-remember-forgot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.auth-switch-link {
+  color: var(--cocin-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.auth-switch-link:hover {
+  text-decoration: underline;
+}

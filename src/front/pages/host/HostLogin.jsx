@@ -8,11 +8,17 @@ const HostLogin = () => {
     const [hostLoginData, setHostLoginData] = useState({ email: "", password: "" });
 
     return (
-        <div className="container py-5" style={{ maxWidth: "400px" }}>
-
-            <div className="card">
-                <div className="card-header text-center">Host Login</div>
-                <div className="card-body">
+        <div
+            className="auth-page"
+            style={{
+                backgroundImage:
+                    "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80')",
+            }}
+        >
+            <div className="auth-card">
+                <div className="auth-form-panel">
+                    <p className="brand">The Knife 🔪</p>
+                    <p className="subtitle">Inicia sesión como Anfitrión</p>
 
                     <div className="mb-3">
                         <label className="form-label" htmlFor="email">Email</label>
@@ -26,8 +32,8 @@ const HostLogin = () => {
                         />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="password">Password</label>
+                    <div className="mb-2">
+                        <label className="form-label" htmlFor="password">Contraseña</label>
                         <input
                             className="form-control"
                             onChange={(e) => setHostLoginData({ ...hostLoginData, password: e.target.value })}
@@ -38,15 +44,20 @@ const HostLogin = () => {
                         />
                     </div>
 
-                    <button className="btn btn-success w-100 mb-3" onClick={() => hostLogin(hostLoginData)}>Login</button>
-
-                    <div className="text-center">
-                        <Link to="/">Back to home</Link>
+                    <div className="auth-remember-forgot">
+                        <div className="form-check">
+                            <input className="form-check-input" type="checkbox" id="remember" />
+                            <label className="form-check-label" htmlFor="remember">Recuérdame</label>
+                        </div>
                     </div>
 
+                    <button className="btn btn-cocin w-100 mb-3" onClick={() => hostLogin(hostLoginData)}>Iniciar sesión</button>
+
+                    <div className="text-center">
+                        <Link to="/" className="text-muted">Volver al inicio</Link>
+                    </div>
                 </div>
             </div>
-
         </div>
     );
 };
