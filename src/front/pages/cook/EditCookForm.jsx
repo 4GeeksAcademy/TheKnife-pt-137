@@ -3,13 +3,15 @@ import { useCook } from "../../hooks/useCook";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const EditCookForm = () => {
 
     const { store } = useGlobalReducer();
-    const [cookData, setCookData] = useState({ name: "", email: "", password: "" });
+    const [cookData, setCookData] = useState({ name: "", email: "", password: "", img_url: "" });
     const { getSingleCook, editCook } = useCook();
     const { cook_id } = useParams();
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getSingleCook(cook_id);
@@ -19,7 +21,8 @@ const EditCookForm = () => {
             setCookData({
                 name: store.singleCook.name,
                 email: store.singleCook.email,
-                password: ""
+                password: "",
+                img_url: store.singleCook.img_url || ""
             });
         }
     }, [store.singleCook]);
@@ -44,6 +47,10 @@ const EditCookForm = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input className="form-control" onChange={(e) => setCookData({ ...cookData, password: e.target.value })} value={cookData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e) => uploadImage(e, "cocinapp_images", setCookData, cookData)} />
                     </div>
 
                     <button onClick={() => editCook(cook_id, cookData)} className="btn btn-primary w-100 mb-3">Edit cook</button>

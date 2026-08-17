@@ -145,6 +145,7 @@ import HostLogin from "./pages/host/HostLogin";
 import HostDashboard from "./pages/host/HostDashboard";
 import HostLayout from "./pages/host/HostLayout";
 import RegisterHost from "./pages/host/actions/RegisterHost";
+import RestaurantHost from "./pages/host/actions/RestaurantHost";
 import HostReservations from "./pages/host/actions/HostReservations";
 import CreateHostReservation from "./pages/host/actions/CreateHostReservation";
 
@@ -273,6 +274,7 @@ export const router = createBrowserRouter(
         <Route path="/restaurants/:restaurant_id/cooks" element={<RestaurantCooks />} />
 
         <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
+        <Route path="/restaurants/:restaurant_id/host" element={<RestaurantHost />} />
 
         <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
         <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />

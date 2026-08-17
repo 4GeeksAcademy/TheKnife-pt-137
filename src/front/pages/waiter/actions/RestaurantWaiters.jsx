@@ -31,7 +31,11 @@ const RestaurantWaiters = () => {
                 <div className="waiter-card card h-100">
                     <div className="card-body d-flex flex-column">
                         <div className="d-flex align-items-center gap-3 mb-3">
-                            <div className="waiter-avatar">{waiter.name.charAt(0).toUpperCase()}</div>
+                            {waiter.img_url ? (
+                                <img src={waiter.img_url} className="waiter-avatar" alt={waiter.name} />
+                            ) : (
+                                <div className="waiter-avatar">{waiter.name.charAt(0).toUpperCase()}</div>
+                            )}
                             <div>
                                 <h5 className="waiter-name mb-1">{waiter.name}</h5>
                                 <span className="waiter-role">Camarero/a</span>
@@ -75,6 +79,11 @@ const RestaurantWaiters = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
+                                {waiter.img_url ? (
+                                    <img src={waiter.img_url} className="profile-modal-photo" alt={waiter.name} />
+                                ) : (
+                                    <div className="profile-modal-photo-placeholder">{waiter.name.charAt(0).toUpperCase()}</div>
+                                )}
                                 <p className="mb-2"><strong>Rol:</strong> Camarero/a</p>
                                 <p className="mb-2"><strong>Email:</strong> {waiter.email}</p>
                                 <p className="mb-0"><strong>Restaurante:</strong> {waiter.restaurant_name}</p>

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useHost } from "../../hooks/useHost";
 import { useParams, Link } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const EditHostForm = () => {
 
     const { store } = useGlobalReducer();
-    const [hostData, setHostData] = useState({ name: "", email: "", password: "" });
+    const [hostData, setHostData] = useState({ name: "", email: "", password: "", img_url: "" });
     const { getSingleHost, editHost } = useHost();
     const { host_id } = useParams();
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getSingleHost(host_id);
@@ -20,6 +22,7 @@ const EditHostForm = () => {
                 name: store.singleHost.name,
                 email: store.singleHost.email,
                 password: "",
+                img_url: store.singleHost.img_url || "",
             });
         }
     }, [store.singleHost]);
@@ -44,6 +47,10 @@ const EditHostForm = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, password: e.target.value })} value={hostData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e) => uploadImage(e, "cocinapp_images", setHostData, hostData)} />
                     </div>
 
                     <button onClick={() => editHost(host_id, hostData)} className="btn btn-primary w-100 mb-3">Edit host</button>

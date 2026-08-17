@@ -3,14 +3,16 @@ import { useWaiter } from "../../hooks/useWaiter";
 import { Link } from "react-router-dom";
 import { useRestaurant } from "../../hooks/useRestaurant";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 
 const CreateWaiterForm = () => {
 
     const { store } = useGlobalReducer()
-    const [waiterData, setWaiterData] = useState({name: "", email: "", password: "", restaurant_id: ""})
+    const [waiterData, setWaiterData] = useState({name: "", email: "", password: "", img_url: "", restaurant_id: ""})
     const { createWaiter } = useWaiter()
     const { getRestaurants } = useRestaurant()
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getRestaurants()
@@ -40,6 +42,10 @@ const CreateWaiterForm = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input className="form-control" onChange={(e)=>setWaiterData({...waiterData, password: e.target.value})} value={waiterData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e)=>uploadImage(e,"cocinapp_images",setWaiterData,waiterData)} />
                     </div>
 
                     <div className="mb-3">

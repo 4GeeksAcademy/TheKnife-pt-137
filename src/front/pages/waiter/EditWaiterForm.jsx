@@ -3,13 +3,15 @@ import { useWaiter } from "../../hooks/useWaiter";
 import { useParams } from "react-router-dom";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const EditWaiterForm = () => {
 
     const { store } = useGlobalReducer()
-    const [waiterData, setWaiterData] = useState({name: "", email: "", password: ""})
+    const [waiterData, setWaiterData] = useState({name: "", email: "", password: "", img_url: ""})
     const { getSingleWaiter, editWaiter } = useWaiter()
     const { waiter_id } = useParams()
+    const { uploadImage } = useCloudinary()
 
     useEffect(() => {
         getSingleWaiter(waiter_id)
@@ -19,7 +21,8 @@ const EditWaiterForm = () => {
             setWaiterData({
                 name: store.singleWaiter.name,
                 email: store.singleWaiter.email,
-                password: ""
+                password: "",
+                img_url: store.singleWaiter.img_url || ""
             })
         }
     }, [store.singleWaiter])
@@ -44,6 +47,10 @@ const EditWaiterForm = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input className="form-control" onChange={(e)=>setWaiterData({...waiterData, password: e.target.value})} value={waiterData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e)=>uploadImage(e,"cocinapp_images",setWaiterData,waiterData)} />
                     </div>
 
                     <button onClick={()=>editWaiter(waiter_id, waiterData)} className="btn btn-primary w-100 mb-3">Edit waiter</button>

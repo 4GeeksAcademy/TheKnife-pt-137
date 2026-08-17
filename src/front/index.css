@@ -179,25 +179,14 @@
   border: 8px solid #1a1a19;
 }
 
-.tk-plate-flip-front {
+.tk-plate-flip-front,
+.tk-plate-flip-back {
   background-size: cover;
   background-position: center;
 }
 
 .tk-plate-flip-back {
   transform: rotateY(180deg);
-  background: var(--tk-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  text-align: center;
-}
-
-.tk-plate-flip-back span {
-  font-family: "Times New Roman", Times, serif;
-  color: #ffffff;
-  font-size: 1.15rem;
 }
 
 .tk-plates-arrow {
@@ -1088,6 +1077,7 @@
   justify-content: center;
   font-size: 1.5rem;
   font-weight: 700;
+  object-fit: cover;
 }
 
 .waiter-name {
@@ -1155,6 +1145,31 @@
 .waiter-hr {
   margin: 1rem 0;
   opacity: 0.1;
+}
+
+/* Enlarged photo shown inside the "Ver información" modal */
+.profile-modal-photo {
+  display: block;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.profile-modal-photo-placeholder {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  font-weight: 700;
 }
 
 /* Recipe card grid */

@@ -31,7 +31,11 @@ const RestaurantCooks = () => {
                 <div className="waiter-card card h-100">
                     <div className="card-body d-flex flex-column">
                         <div className="d-flex align-items-center gap-3 mb-3">
-                            <div className="waiter-avatar">{cook.name.charAt(0).toUpperCase()}</div>
+                            {cook.img_url ? (
+                                <img src={cook.img_url} className="waiter-avatar" alt={cook.name} />
+                            ) : (
+                                <div className="waiter-avatar">{cook.name.charAt(0).toUpperCase()}</div>
+                            )}
                             <div>
                                 <h5 className="waiter-name mb-1">{cook.name}</h5>
                                 <span className="waiter-role">Cocinero/a</span>
@@ -75,6 +79,11 @@ const RestaurantCooks = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
+                                {cook.img_url ? (
+                                    <img src={cook.img_url} className="profile-modal-photo" alt={cook.name} />
+                                ) : (
+                                    <div className="profile-modal-photo-placeholder">{cook.name.charAt(0).toUpperCase()}</div>
+                                )}
                                 <p className="mb-2"><strong>Rol:</strong> Cocinero/a</p>
                                 <p className="mb-2"><strong>Email:</strong> {cook.email}</p>
                                 <p className="mb-0"><strong>Restaurante:</strong> {cook.restaurant_name}</p>
