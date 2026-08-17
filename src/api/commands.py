@@ -489,10 +489,20 @@ def setup_commands(app):
                 password="123456", restaurant_id=restaurant.id,
             ))
 
+        # A table is "occupied" if it has a non-closed order attached (matching
+        # the same rule the app enforces when a waiter opens a new order), so
+        # clicking it on the waiter dashboard opens that order instead of
+        # trying to start a new one.
+        occupied_table_numbers = {
+            info["table_number"] for info in order_infos if info["state"] != "closed"
+        }
+
         tables_by_number = {}
         for t in table_infos:
             table = Table(
-                number=t["number"], status="available", location=t["location"],
+                number=t["number"],
+                status="occupied" if t["number"] in occupied_table_numbers else "free",
+                location=t["location"],
                 active=True, restaurant_id=restaurant.id,
             )
             db.session.add(table)

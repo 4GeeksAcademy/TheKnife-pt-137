@@ -3,11 +3,34 @@ import useGlobalReducer from "../../hooks/useGlobalReducer";
 import { useNavigate, Link } from "react-router-dom";
 import { useClient } from "../../hooks/useClient";
 
+const ACTIONS = [
+    {
+        to: "/client_reservations", icon: "fa-calendar-check", title: "Mis reservas",
+        text: "Consulta, edita o cancela tus próximas reservas.",
+        label: "Ver reservas", variant: "outline",
+    },
+    {
+        to: "/restaurants/nearby_search", icon: "fa-map-location-dot", title: "Restaurantes cercanos",
+        text: "Descubre restaurantes cerca de tu ubicación.",
+        label: "Buscar cerca", variant: "outline",
+    },
+    {
+        to: "/restaurants/occasion_search", icon: "fa-champagne-glasses", title: "Buscar por ocasión",
+        text: "Encuentra el restaurante perfecto para cada plan.",
+        label: "Explorar", variant: "outline",
+    },
+    {
+        to: "/restaurants/view_all", icon: "fa-store", title: "Todos los restaurantes",
+        text: "Explora el catálogo completo de restaurantes.",
+        label: "Ver todos", variant: "primary",
+    },
+]
+
 const ClientDashboard = () => {
 
     const { store } = useGlobalReducer()
     const navigate = useNavigate()
-    const { clientLogout, rehydrateClient } = useClient()
+    const { rehydrateClient } = useClient()
 
     useEffect(() => {
         const clientLogged = !!localStorage.getItem("clienttoken")
@@ -21,23 +44,35 @@ const ClientDashboard = () => {
     const currentClient = store.loggedClient.client
 
     return (
-        <div className="container py-4">
+        <div className="client-dashboard">
 
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="client-page-header">
                 <div>
-                    <h1 className="mb-1">Welcome back, {currentClient.name}</h1>
+                    <h1 className="dashboard-welcome-title">Bienvenido, {currentClient.name}</h1>
+                    <div className="dashboard-welcome-subtitle">
+                        <i className="fa-solid fa-utensils"></i>
+                        Encuentra tu próxima mesa
+                    </div>
                 </div>
-                <button onClick={clientLogout} className="btn btn-primary">Log out</button>
             </div>
 
-            <div className="card">
-                <div className="card-header">Actions</div>
-                <div className="card-body d-flex flex-wrap gap-2">
-                    <Link to="/restaurants/nearby_search" className="btn btn-primary">Look nearby restaurants</Link>
-                    <Link to="/restaurants/occasion_search" className="btn btn-outline-primary">Search by occasion</Link>
-                    <Link to="/client_reservations" className="btn btn-secondary">View my reservations</Link>
-                    <Link to="/restaurants/view_all" className="btn btn-outline-primary">VIEW ALL RESTAURANTS</Link>
-                </div>
+            <div className="row row-cols-1 row-cols-md-2 g-4">
+                {ACTIONS.map((action) => (
+                    <div className="col" key={action.to}>
+                        <div className="card dashboard-action-card h-100">
+                            <div className="card-body d-flex flex-column">
+                                <div className="dashboard-action-icon">
+                                    <i className={`fa-solid ${action.icon}`}></i>
+                                </div>
+                                <h2 className="dashboard-action-title">{action.title}</h2>
+                                <p className="dashboard-action-text flex-grow-1">{action.text}</p>
+                                <Link to={action.to} className={`btn btn-${action.variant === "primary" ? "primary" : "outline-primary"}`}>
+                                    {action.label} <i className="fa-solid fa-arrow-right ms-1"></i>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
 
         </div>

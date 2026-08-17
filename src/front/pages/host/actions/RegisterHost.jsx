@@ -27,36 +27,36 @@ const RegisterHost = () => {
     }
 
     return (
-        <div className="auth-page">
-            <div className="auth-card-wrap">
+        <div className="simple-form-page">
+            <div className="simple-form-wrap">
                 <Link to="/chef_dashboard" className="page-back-link">
                     <i className="fa-solid fa-arrow-left"></i>Volver al panel
                 </Link>
-                <div className="auth-card">
-                    <div className="auth-icon">
+                <div className="simple-form-card">
+                    <div className="simple-form-icon">
                         <i className="fa-solid fa-door-open"></i>
                     </div>
-                    <h1 className="auth-title">Registrar host</h1>
-                    <p className="auth-subtitle">Da de alta al host del restaurante.</p>
+                    <h1 className="simple-form-title">Registrar host</h1>
+                    <p className="simple-form-subtitle">Da de alta al host del restaurante.</p>
 
                     {error && <div className="alert alert-danger text-start">{error}</div>}
 
-                    <div className="auth-field mb-3">
-                        <label className="auth-label" htmlFor="name">Nombre</label>
+                    <div className="simple-form-field mb-3">
+                        <label className="simple-form-label" htmlFor="name">Nombre</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, name: e.target.value })} value={hostData.name} type="text" name="name" id="name" placeholder="Nombre del host" />
                     </div>
 
-                    <div className="auth-field mb-3">
-                        <label className="auth-label" htmlFor="email">Email</label>
+                    <div className="simple-form-field mb-3">
+                        <label className="simple-form-label" htmlFor="email">Email</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, email: e.target.value })} value={hostData.email} type="text" name="email" id="email" placeholder="host@restaurante.com" />
                     </div>
 
-                    <div className="auth-field mb-4">
-                        <label className="auth-label" htmlFor="password">Contraseña</label>
+                    <div className="simple-form-field mb-4">
+                        <label className="simple-form-label" htmlFor="password">Contraseña</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, password: e.target.value })} value={hostData.password} type="password" name="password" id="password" placeholder="Contraseña" />
                     </div>
 
-                    <button onClick={handleRegister} className="btn auth-submit-btn">
+                    <button onClick={handleRegister} className="btn simple-form-submit-btn">
                         <i className="fa-solid fa-user-plus me-2"></i>Registrar host
                     </button>
                 </div>

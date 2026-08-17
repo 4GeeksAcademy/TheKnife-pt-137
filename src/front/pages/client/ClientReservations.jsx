@@ -1,12 +1,23 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import useGlobalReducer from "../../hooks/useGlobalReducer"
 import { useClientReservation } from "../../hooks/useClientReservation"
+import LoadingComponent from "../../components/LoadingComponent"
+
+const STATUS_INFO = {
+    waiting: { label: "En espera", badgeClass: "order-badge-pending", icon: "fa-hourglass-half" },
+    confirmed: { label: "Confirmada", badgeClass: "order-badge-done", icon: "fa-circle-check" },
+    seated: { label: "En mesa", badgeClass: "order-badge-doing", icon: "fa-chair" },
+    completed: { label: "Completada", badgeClass: "order-badge-closed", icon: "fa-flag-checkered" },
+    cancelled: { label: "Cancelada", badgeClass: "table-badge-occupied", icon: "fa-xmark" },
+}
+
+const formatDateTime = (value) =>
+    value ? new Date(value).toLocaleString("es-ES", { dateStyle: "medium", timeStyle: "short" }) : "Sin hora"
 
 const ClientReservations = () => {
 
     const { store } = useGlobalReducer()
-    const navigate = useNavigate()
     const { fetchMyReservations, cancelMyReservation } = useClientReservation()
     const [loading, setLoading] = useState(true)
 
@@ -15,7 +26,7 @@ const ClientReservations = () => {
         fetchMyReservations().finally(() => setLoading(false))
     }, [])
 
-    if (loading) return <p className="text-center mt-5">Loading...</p>
+    if (loading) return <LoadingComponent />
 
     const now = new Date()
     const upcoming = store.myReservations.filter((reservation) =>
@@ -30,37 +41,50 @@ const ClientReservations = () => {
     }
 
     return (
-        <div className="container py-4">
-            <button onClick={() => navigate(-1)} className="btn btn-link d-inline-block mb-3 ps-0">Back</button>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <h1 className="h4 mb-0">Mis reservas</h1>
-                <Link to="/booking_history" className="btn btn-outline-secondary btn-sm">Booking history</Link>
+        <div className="reservations_page">
+            <div className="client-page-header">
+                <h1 className="client-page-title">Mis reservas</h1>
             </div>
 
-            {upcoming.length === 0 ? (
-                <p className="text-muted">No tienes reservas próximas.</p>
-            ) : (
-                <div className="row g-3">
-                    {upcoming.map((reservation) => (
-                        <div key={reservation.id} className="col-md-4">
-                            <div className="card h-100">
-                                <div className="card-body">
-                                    <h3 className="h6">{reservation.restaurant_name}</h3>
-                                    <p className="card-text mb-1">{reservation.customer_name} · {reservation.phone}</p>
-                                    <p className="card-text mb-1">{reservation.party_size} personas</p>
-                                    <p className="card-text mb-2">{reservation.reservation_time ? new Date(reservation.reservation_time).toLocaleString() : ""}</p>
-                                    <span className="badge bg-secondary mb-2">{reservation.status}</span>
-                                    <div className="d-flex gap-2">
-                                        <Link to={`/edit_my_reservation/${reservation.id}`} className="btn btn-outline-primary btn-sm">Edit</Link>
-                                        <button onClick={() => handleCancel(reservation.id)} className="btn btn-outline-danger btn-sm">Cancel</button>
+            <div className="card">
+                <div className="card-body">
+                    {upcoming.length > 0 ? (
+                        <div className="product-list">
+                            {upcoming.map((reservation) => {
+                                const info = STATUS_INFO[reservation.status] || STATUS_INFO.waiting
+                                return (
+                                    <div className="product-row" key={reservation.id}>
+                                        <div className={`order-icon ${info.badgeClass}`}>
+                                            <i className={`fa-solid ${info.icon}`}></i>
+                                        </div>
+                                        <div className="product-row-info">
+                                            <div className="product-row-title">
+                                                <span className="product-row-name">{reservation.restaurant_name}</span>
+                                                <span className={`product-badge ${info.badgeClass}`}>{info.label}</span>
+                                            </div>
+                                            <div className="order-row-meta">
+                                                <span><i className="fa-solid fa-users"></i>{reservation.party_size} personas</span>
+                                                <span><i className="fa-solid fa-phone"></i>{reservation.phone || "Sin teléfono"}</span>
+                                                <span><i className="fa-solid fa-clock"></i>{formatDateTime(reservation.reservation_time)}</span>
+                                            </div>
+                                        </div>
+                                        <div className="order-row-actions">
+                                            <Link to={`/edit_my_reservation/${reservation.id}`} className="recipe-view-link">
+                                                Editar <i className="fa-solid fa-pen"></i>
+                                            </Link>
+                                            <button type="button" className="btn btn-outline-danger btn-sm" onClick={() => handleCancel(reservation.id)}>
+                                                <i className="fa-solid fa-xmark me-1"></i>Cancelar
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                )
+                            })}
                         </div>
-                    ))}
+                    ) : (
+                        <p className="text-muted text-center py-4 mb-0">No tienes reservas próximas.</p>
+                    )}
                 </div>
-            )}
+            </div>
         </div>
     )
 }

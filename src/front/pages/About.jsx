@@ -1,23 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import grazzielImg from "../assets/img/217185558graziel.jpeg"
+import juanImg from "../assets/img/249479154juan.jpeg"
+import emmanuelImg from "../assets/img/emmanel.jpg"
 
 const chefs = [
   {
     name: "Grazziel Gomes",
-    designation: "Sous Chef",
-    img: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80",
+    designation: "Desarrolladora",
+    img: grazzielImg,
     github: "https://github.com/Grazziel",
   },
   {
     name: "Juan Donday Rodríguez",
-    designation: "Chef de Pastelería",
-    img: "https://images.unsplash.com/photo-1595257841889-eca2678454e2?auto=format&fit=crop&w=600&q=80",
+    designation: "Desarrollador",
+    img: juanImg,
     github: "https://github.com/jdondayr",
   },
   {
     name: "Emmanuel Rodríguez",
-    designation: "Chef de Partie",
-    img: "https://images.unsplash.com/photo-1622021142947-da7dedc7c39a?auto=format&fit=crop&w=600&q=80",
+    designation: "Desarrollador",
+    img: emmanuelImg,
     github: "https://github.com/Ejrodriguez3636",
   },
 ];
@@ -41,7 +44,6 @@ export const About = () => {
               <li className="breadcrumb-item">
                 <Link to="/">Inicio</Link>
               </li>
-              <li className="breadcrumb-item">Páginas</li>
               <li className="breadcrumb-item active" aria-current="page">
                 Sobre Nosotros
               </li>
@@ -77,21 +79,6 @@ export const About = () => {
               hasta una celebración con amigos, te ayudamos a encontrar el lugar
               perfecto y a gestionar todo, desde la reserva hasta el último plato.
             </p>
-
-            <div className="about-stats">
-              <div className="stat">
-                <h1 className="display-5">15</h1>
-                <span>Años de Experiencia</span>
-              </div>
-              <div className="stat">
-                <h1 className="display-5">50</h1>
-                <span>Chefs Reconocidos</span>
-              </div>
-            </div>
-
-            <Link to="/restaurants/occasion_search" className="btn btn-cocin mt-3">
-              Buscar Restaurante
-            </Link>
           </div>
         </div>
       </div>
@@ -156,7 +143,7 @@ export const About = () => {
       <div className="container py-5">
         <div className="text-center mb-5">
           <p className="section-title text-center">Nuestro Equipo</p>
-          <h1 className="display-6">Nuestros Chefs</h1>
+          <h1 className="display-6">Nuestros Desarrolladores</h1>
         </div>
 
         <div className="row g-4 justify-content-center">

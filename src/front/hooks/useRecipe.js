@@ -99,7 +99,7 @@ export function useRecipe() {
     try {
       const data = await chefCreateRecipeService(restaurant_id, recipeData);
       console.log(data);
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/recipes`);
     } catch (error) {
       console.log(error);
     }
