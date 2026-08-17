@@ -10,6 +10,7 @@ import {
   getHostReservationsService,
   createHostReservationService,
   updateHostReservationStatusService,
+  assignHostReservationTableService,
 } from "../services/reservationService";
 
 export function useReservation() {
@@ -90,10 +91,21 @@ export function useReservation() {
     }
   }
 
-  // HOST: update the status of one of his restaurant's reservations
-  async function updateHostReservationStatus(reservationId, status) {
+  // HOST: update the status of one of his restaurant's reservations (optionally assigning a table too)
+  async function updateHostReservationStatus(reservationId, status, tableId = null) {
     try {
-      await updateHostReservationStatusService(reservationId, status);
+      await updateHostReservationStatusService(reservationId, status, tableId);
+      return true;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  // HOST: assign/reassign a table to a reservation, independently of its status
+  async function assignReservationTable(reservationId, tableId) {
+    try {
+      await assignHostReservationTableService(reservationId, tableId);
       return true;
     } catch (error) {
       console.log(error);
@@ -110,5 +122,6 @@ export function useReservation() {
     getHostReservations,
     createHostReservation,
     updateHostReservationStatus,
+    assignReservationTable,
   };
 }

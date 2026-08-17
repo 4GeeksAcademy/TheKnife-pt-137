@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
 
 db = SQLAlchemy()
 
@@ -246,8 +246,33 @@ class Table(db.Model):
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="tables")
     orders: Mapped[list["Order"]] = relationship(back_populates="table")
+    reservations: Mapped[list["Reservation"]] = relationship(back_populates="table")
+
+    # How far ahead of its reservation_time a table starts showing as "reserved" to the waiter.
+    # A reservation made days in advance shouldn't sit a table out of walk-in use until then.
+    RESERVATION_HEADS_UP = timedelta(hours=1)
 
     def serialize(self):
+        # Soonest reservation for this table that's due within the heads-up window (not yet seated,
+        # not overdue), so the waiter board can flag a "free" table that's about to be claimed
+        # without blocking walk-ins on tables reserved days out. A reservation whose time has
+        # already passed no longer counts as "upcoming" — it's on the host to seat it or mark it
+        # cancelled/completed.
+        now = datetime.now()
+        upcoming_reservations = sorted(
+            (r for r in self.reservations
+             if r.status in ("waiting", "confirmed") and r.reservation_time
+             and now <= r.reservation_time <= now + self.RESERVATION_HEADS_UP),
+            key=lambda r: r.reservation_time
+        )
+        next_reservation = upcoming_reservations[0] if upcoming_reservations else None
+        # The reservation that got this table seated (host already knows the party size from
+        # booking time), so the waiter doesn't have to ask the guests again when opening the order.
+        seated_reservations = sorted(
+            (r for r in self.reservations if r.status == "seated"),
+            key=lambda r: r.created_at, reverse=True
+        )
+        seated_reservation = seated_reservations[0] if seated_reservations else None
         return {
             "id": self.id,
             "number": self.number,
@@ -256,7 +281,19 @@ class Table(db.Model):
             "active": self.active,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name,
-            "current_order_id": next((o.id for o in self.orders if o.state != "closed"), None)
+            "current_order_id": next((o.id for o in self.orders if o.state != "closed"), None),
+            "next_reservation": {
+                "id": next_reservation.id,
+                "customer_name": next_reservation.customer_name,
+                "party_size": next_reservation.party_size,
+                "reservation_time": next_reservation.reservation_time,
+                "status": next_reservation.status
+            } if next_reservation else None,
+            "seated_reservation": {
+                "id": seated_reservation.id,
+                "customer_name": seated_reservation.customer_name,
+                "party_size": seated_reservation.party_size
+            } if seated_reservation else None
         }
 
 # Product
@@ -390,7 +427,7 @@ class Reservation(db.Model):
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="reservations")
-    table: Mapped["Table"] = relationship()
+    table: Mapped["Table"] = relationship(back_populates="reservations")
     client: Mapped["Client"] = relationship(back_populates="reservations")
 
     def serialize(self):

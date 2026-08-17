@@ -26,6 +26,22 @@ const WaiterDashboard = () => {
         }
     }, [])
 
+    // Show/hide the order modal in sync with selectedTable, and clear it back to null
+    // whenever the modal closes via the backdrop, Esc or the close/cancel buttons.
+    useEffect(() => {
+        const el = document.getElementById("waiterOrderModal")
+        if (!el || !window.bootstrap) return
+        const modal = window.bootstrap.Modal.getOrCreateInstance(el)
+        if (selectedTable) {
+            modal.show()
+        } else {
+            modal.hide()
+        }
+        const handleHidden = () => setSelectedTable(null)
+        el.addEventListener("hidden.bs.modal", handleHidden)
+        return () => el.removeEventListener("hidden.bs.modal", handleHidden)
+    }, [selectedTable])
+
     const currentWaiter = store.loggedWaiter.waiter
 
     useEffect(() => {
@@ -42,11 +58,13 @@ const WaiterDashboard = () => {
     }, POLL_INTERVAL_MS)
 
     function handleTableClick(table) {
-        if (table.status === "free") {
-            setSelectedTable(table)
-            setPeople("")
-        } else if (table.status === "occupied" && table.current_order_id) {
+        if (table.status === "occupied" && table.current_order_id) {
             navigate(`/restaurants/${currentWaiter.restaurant_id}/orders/${table.current_order_id}`)
+        } else if (table.status === "free" || table.status === "occupied") {
+            // "free" (walk-in) or "occupied" with no order yet (host already sat a reservation here,
+            // in which case the party size is already known from the reservation)
+            setSelectedTable(table)
+            setPeople(table.seated_reservation ? String(table.seated_reservation.party_size) : "")
         }
     }
 
@@ -76,12 +94,26 @@ const WaiterDashboard = () => {
 
     function renderTableTile(table) {
         const isFree = table.status === "free"
+        const isSeatedWithoutOrder = table.status === "occupied" && !table.current_order_id
+        const isReserved = isFree && !!table.next_reservation
+
+        let tileModifier = "free"
+        let statusLabel = "Disponible"
+        if (!isFree) {
+            tileModifier = "occupied"
+            statusLabel = isSeatedWithoutOrder ? "Sentados — tomar comanda" : "Ocupada"
+        } else if (isReserved) {
+            tileModifier = "reserved"
+            const reservedAt = new Date(table.next_reservation.reservation_time)
+            statusLabel = `Reservada ${reservedAt.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
+        }
+
         return (
             <button
                 key={table.id}
                 onClick={() => handleTableClick(table)}
                 type="button"
-                className={`waiter-table-tile ${isFree ? "waiter-table-tile-free" : "waiter-table-tile-occupied"}`}
+                className={`waiter-table-tile waiter-table-tile-${tileModifier}`}
             >
                 <span className="waiter-table-illustration">
                     <svg viewBox="0 0 100 100" className="waiter-table-svg" aria-hidden="true">
@@ -95,7 +127,7 @@ const WaiterDashboard = () => {
                 </span>
                 <span className="waiter-table-status-pill">
                     <span className="waiter-table-status-dot"></span>
-                    {isFree ? "Disponible" : "Ocupada"}
+                    {statusLabel}
                 </span>
             </button>
         )
@@ -136,23 +168,37 @@ const WaiterDashboard = () => {
                 {sortedTables.map(renderTableTile)}
             </div>
 
-            {selectedTable && (
-                <div className="waiter-order-form-card">
-                    <h3 className="waiter-order-form-title">Nueva comanda — Mesa #{selectedTable.number}</h3>
-                    <form onSubmit={handleCreateOrder}>
-                        <div className="auth-field mb-3">
-                            <label className="auth-label" htmlFor="people">Número de personas</label>
-                            <input className="form-control" type="number" min="1" required
-                                id="people" value={people}
-                                onChange={(e) => setPeople(e.target.value)} />
+            <div className="modal fade" id="waiterOrderModal" tabIndex="-1" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">
+                                {selectedTable ? `Nueva comanda — Mesa #${selectedTable.number}` : "Nueva comanda"}
+                            </h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
-                        <div className="d-flex gap-2">
-                            <button type="submit" className="btn waiter-create-table-btn">Crear comanda</button>
-                            <button type="button" className="btn btn-outline-secondary" onClick={() => setSelectedTable(null)}>Cancelar</button>
-                        </div>
-                    </form>
+                        <form onSubmit={handleCreateOrder}>
+                            <div className="modal-body">
+                                <div className="auth-field mb-0">
+                                    <label className="auth-label" htmlFor="people">Número de personas</label>
+                                    <input className="form-control" type="number" min="1" required
+                                        id="people" value={people}
+                                        onChange={(e) => setPeople(e.target.value)} />
+                                    {selectedTable?.seated_reservation && (
+                                        <div className="form-text">
+                                            Según la reserva de {selectedTable.seated_reservation.customer_name}. Ajusta el número si hace falta.
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" className="btn waiter-create-table-btn">Crear comanda</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
 
     )
