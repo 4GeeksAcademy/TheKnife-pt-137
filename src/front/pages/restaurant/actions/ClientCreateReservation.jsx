@@ -14,13 +14,17 @@ const ClientCreateReservation = () => {
     const [reservationData, setReservationData] = useState({
         customer_name: currentClient.name || "",
         phone: currentClient.phone || "",
-        party_size: "",
-        reservation_time: ""
+        party_size: ""
     })
+    const [reservationDate, setReservationDate] = useState("")
+    const [reservationTime, setReservationTime] = useState("")
 
     function handleSubmit(e) {
         e.preventDefault()
-        createMyReservation(restaurant_id, reservationData)
+        createMyReservation(restaurant_id, {
+            ...reservationData,
+            reservation_time: `${reservationDate}T${reservationTime}`
+        })
     }
 
     return (
@@ -83,17 +87,31 @@ const ClientCreateReservation = () => {
                             />
                         </div>
 
-                        <div className="simple-form-field mb-4">
-                            <label className="simple-form-label" htmlFor="reservation_time">Fecha y hora</label>
-                            <input
-                                className="form-control"
-                                type="datetime-local"
-                                id="reservation_time"
-                                name="reservation_time"
-                                value={reservationData.reservation_time}
-                                onChange={(e) => setReservationData({ ...reservationData, reservation_time: e.target.value })}
-                                required
-                            />
+                        <div className="row mb-4">
+                            <div className="col simple-form-field">
+                                <label className="simple-form-label" htmlFor="reservation_date">Fecha</label>
+                                <input
+                                    className="form-control"
+                                    type="date"
+                                    id="reservation_date"
+                                    name="reservation_date"
+                                    value={reservationDate}
+                                    onChange={(e) => setReservationDate(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="col simple-form-field">
+                                <label className="simple-form-label" htmlFor="reservation_time">Hora</label>
+                                <input
+                                    className="form-control"
+                                    type="time"
+                                    id="reservation_time"
+                                    name="reservation_time"
+                                    value={reservationTime}
+                                    onChange={(e) => setReservationTime(e.target.value)}
+                                    required
+                                />
+                            </div>
                         </div>
 
                         <button type="submit" className="btn simple-form-submit-btn">

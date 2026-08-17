@@ -17,10 +17,18 @@ const CreateHostReservation = () => {
         customer_name: "",
         phone: "",
         party_size: "",
-        reservation_time: "",
         table_id: "",
         status: "waiting"
     });
+    const [reservationDate, setReservationDate] = useState("");
+    const [reservationTime, setReservationTime] = useState("");
+
+    function handleCreate() {
+        createHostReservation({
+            ...reservationData,
+            reservation_time: reservationDate && reservationTime ? `${reservationDate}T${reservationTime}` : ""
+        });
+    }
 
     useEffect(() => {
         const hostLogged = !!localStorage.getItem("hosttoken");
@@ -62,11 +70,19 @@ const CreateHostReservation = () => {
                             onChange={(e) => setReservationData({ ...reservationData, party_size: e.target.value })} />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="reservation_time">Date & time (optional)</label>
-                        <input className="form-control" type="datetime-local" name="reservation_time" id="reservation_time"
-                            value={reservationData.reservation_time}
-                            onChange={(e) => setReservationData({ ...reservationData, reservation_time: e.target.value })} />
+                    <div className="row mb-3">
+                        <div className="col">
+                            <label className="form-label" htmlFor="reservation_date">Date (optional)</label>
+                            <input className="form-control" type="date" name="reservation_date" id="reservation_date"
+                                value={reservationDate}
+                                onChange={(e) => setReservationDate(e.target.value)} />
+                        </div>
+                        <div className="col">
+                            <label className="form-label" htmlFor="reservation_time">Time (optional)</label>
+                            <input className="form-control" type="time" name="reservation_time" id="reservation_time"
+                                value={reservationTime}
+                                onChange={(e) => setReservationTime(e.target.value)} />
+                        </div>
                     </div>
 
                     <div className="mb-3">
@@ -96,7 +112,7 @@ const CreateHostReservation = () => {
                         </select>
                     </div>
 
-                    <button onClick={() => createHostReservation(reservationData)} className="btn btn-primary w-100 mb-3">
+                    <button onClick={handleCreate} className="btn btn-primary w-100 mb-3">
                         Create reservation
                     </button>
 
