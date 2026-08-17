@@ -1,42 +1,64 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRecipeIngredient } from "../../../hooks/useRecipeIngredient"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
+import LoadingComponent from "../../../components/LoadingComponent"
 
 const RecipeIngredientsGallery = () => {
 
     const { store } = useGlobalReducer()
     const { fetchRestaurantRecipeIngredients } = useRecipeIngredient()
     const { restaurant_id, recipe_id } = useParams()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchRestaurantRecipeIngredients(restaurant_id, recipe_id)
+        setLoading(true)
+        fetchRestaurantRecipeIngredients(restaurant_id, recipe_id).finally(() => setLoading(false))
     }, [restaurant_id, recipe_id])
 
-    return (
-        <div className="container py-4">
-            <h1 className="h4 mb-3">Ingredients</h1>
+    if (loading) return <LoadingComponent />
 
-            {store.recipeIngredients && store.recipeIngredients.length > 0 ? (
-                <div className="row g-3">
-                    {store.recipeIngredients.map((ri) => (
-                        <div key={ri.id} className="col-md-4">
-                            <div className="card h-100">
-                                <img src={ri.ingredient_img_url} className="card-img-top" height="180" style={{ objectFit: "cover" }} />
-                                <div className="card-body">
-                                    <h2 className="h5 mb-0">{ri.ingredient_name}</h2>
+    const ingredients = store.recipeIngredients || []
+
+    return (
+        <div className="recipe-detail-page">
+            <Link to={`/restaurants/${restaurant_id}/recipe/${recipe_id}`} className="page-back-link">
+                <i className="fa-solid fa-arrow-left"></i>Volver a la receta
+            </Link>
+
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Galería de ingredientes</h1>
+            </div>
+
+            {ingredients.length > 0 ? (
+                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {ingredients.map((ri) => (
+                        <div className="col" key={ri.id}>
+                            <div className="recipe-card card h-100">
+                                <div className="recipe-card-media">
+                                    {ri.ingredient_img_url ? (
+                                        <img src={ri.ingredient_img_url} className="recipe-card-img" alt={ri.ingredient_name} />
+                                    ) : (
+                                        <div className="recipe-card-img recipe-card-img-placeholder">
+                                            <i className="fa-solid fa-carrot"></i>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="card-body d-flex align-items-center justify-content-between gap-2">
+                                    <h2 className="recipe-card-title mb-0">{ri.ingredient_name}</h2>
+                                    <span className="recipe-ingredient-amount">{ri.amount}</span>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <p className="text-muted">Esta receta todavía no tiene ingredientes.</p>
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">Esta receta todavía no tiene ingredientes.</p>
+                </div>
             )}
-
-            <Link to={`/restaurants/${restaurant_id}/recipe/${recipe_id}`} className="btn btn-outline-secondary mt-4">Back</Link>
         </div>
     )
 }
 
-export default RecipeIngredientsGallery;
+export default RecipeIngredientsGallery

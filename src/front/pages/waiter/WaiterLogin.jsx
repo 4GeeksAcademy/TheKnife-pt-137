@@ -16,11 +16,17 @@ const WaiterLogin = () => {
     }
 
     return (
-        <div className="container py-5" style={{ maxWidth: "400px" }}>
-
-            <div className="card">
-                <div className="card-header text-center">Waiter Login</div>
-                <div className="card-body">
+        <div
+            className="auth-page"
+            style={{
+                backgroundImage:
+                    "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80')",
+            }}
+        >
+            <div className="auth-card">
+                <div className="auth-form-panel">
+                    <p className="brand">The Knife 🔪</p>
+                    <p className="subtitle">Inicia sesión como Mesero</p>
 
                     <form onSubmit={handleLogin}>
 
@@ -29,22 +35,27 @@ const WaiterLogin = () => {
                             <input className="form-control" type="text" name="email" id="email" />
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label" htmlFor="password">Password</label>
+                        <div className="mb-2">
+                            <label className="form-label" htmlFor="password">Contraseña</label>
                             <input className="form-control" type="password" name="password" id="password" />
                         </div>
 
-                        <button className="btn btn-success w-100 mb-3" type="submit">Login</button>
+                        <div className="auth-remember-forgot">
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" id="remember" />
+                                <label className="form-check-label" htmlFor="remember">Recuérdame</label>
+                            </div>
+                        </div>
+
+                        <button className="btn btn-cocin w-100 mb-3" type="submit">Iniciar sesión</button>
 
                         <div className="text-center">
-                            <Link to="/">Back to Home</Link>
+                            <Link to="/" className="text-muted">Volver al inicio</Link>
                         </div>
 
                     </form>
-
                 </div>
             </div>
-
         </div>
     )
 }

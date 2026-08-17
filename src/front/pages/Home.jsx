@@ -1,64 +1,76 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
+const getVisiblePlateCount = () => {
+    const width = window.innerWidth;
+    if (width < 576) return 1;
+    if (width < 768) return 2;
+    if (width < 992) return 3;
+    return 4;
+};
+
+const RESTAURANT_NAME = "Casa Pepe";
+
+const plates = [
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812567/tshq2m7w0nczwfuypfch.jpg", alt: "Paella de Mariscos" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812831/gaikhrzlntyehlypmewy.jpg", alt: "Tortilla Española" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812845/wlwwonh26eyxywdpe9t6.jpg", alt: "Gazpacho Andaluz" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813111/fe8vsryi3brosrxcjenl.jpg", alt: "Pulpo a la Gallega" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813340/q23kjgqnj9atjtezeqzw.jpg", alt: "Jamón Ibérico con Pan de Cristal" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813353/cb0wzfzue0oqi6wifgri.jpg", alt: "Ensaladilla Rusa" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813704/evhjtku6wyhfocxkznux.jpg", alt: "Chuletillas de Cordero" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786954337/jk8jbpxwmbvb5ksou5da.avif", alt: "Ensalada con aguacate" },
+];
 
 const features = [
     {
         icon: "fa-store",
-        title: "Multi-Restaurant Management",
-        text: "Chefs can register and manage several restaurants, recipes and menus from a single account.",
+        title: "Gestión Multi-Restaurante",
+        text: "Los chefs pueden registrar y gestionar sus restaurantes.",
     },
     {
         icon: "fa-utensils",
-        title: "Real-Time Kitchen Orders",
-        text: "Cooks and waiters stay in sync, from the moment an order is placed until it reaches the table.",
+        title: "Pedidos de Cocina en Tiempo Real",
+        text: "Cocineros y camareros se mantienen sincronizados, desde que se hace un pedido hasta que llega a la mesa.",
     },
     {
         icon: "fa-calendar-check",
-        title: "Online Reservations",
-        text: "Clients book a table in seconds and hosts confirm reservations in real time.",
+        title: "Reservas Online",
+        text: "Los clientes reservan una mesa en segundos y los hosts confirman las reservas en tiempo real.",
     },
     {
         icon: "fa-user-shield",
-        title: "Role-Based Access",
-        text: "Every team member — chef, cook, waiter, host or client — gets exactly the tools they need.",
+        title: "Acceso Basado en Roles",
+        text: "Cada miembro del equipo —chef, cocinero, camarero, host o cliente— obtiene exactamente las herramientas que necesita.",
     },
 ];
 
 const roles = [
-    {
-        icon: "fa-user-tie",
-        title: "Chef",
-        text: "Manage your restaurant, recipes, products and staff from one dashboard.",
-        register: "/chef_register",
-        login: "/chef_login",
-    },
-    {
-        icon: "fa-kitchen-set",
-        title: "Cook",
-        text: "Access your assigned recipes and keep track of kitchen orders.",
-        login: "/cook_login",
-    },
-    {
-        icon: "fa-bell-concierge",
-        title: "Waiter",
-        text: "Manage tables and add products to active orders on the floor.",
-        login: "/waiter_login",
-    },
-    {
-        icon: "fa-door-open",
-        title: "Host",
-        text: "Handle walk-in and online reservations with ease.",
-        login: "/host_login",
-    },
-    {
-        icon: "fa-user",
-        title: "Client",
-        text: "Discover restaurants nearby and book your table online.",
-        register: "/client_register",
-        login: "/client_login",
-    },
+    { title: "Chef", register: "/chef_register", login: "/chef_login" },
+    { title: "Cocinero", login: "/cook_login" },
+    { title: "Camarero", login: "/waiter_login" },
+    { title: "Host", login: "/host_login" },
+    { title: "Cliente", register: "/client_register", login: "/client_login" },
 ];
 
 export const Home = () => {
+    const [plateIndex, setPlateIndex] = useState(0);
+    const [visiblePlateCount, setVisiblePlateCount] = useState(getVisiblePlateCount);
+    const maxPlateIndex = Math.max(0, plates.length - visiblePlateCount);
+
+    useEffect(() => {
+        const handleResize = () => setVisiblePlateCount(getVisiblePlateCount());
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    useEffect(() => {
+        setPlateIndex((i) => Math.min(i, maxPlateIndex));
+    }, [maxPlateIndex]);
+
+    const showPrevPlate = () => setPlateIndex((i) => Math.max(0, i - 1));
+    const showNextPlate = () => setPlateIndex((i) => Math.min(maxPlateIndex, i + 1));
+
     return (
         <div className="tk-home">
             {/* Hero */}
@@ -67,21 +79,28 @@ export const Home = () => {
                     <div className="row align-items-center g-5">
                         <div className="col-lg-6 text-center text-lg-start">
                             <h1 className="display-4 text-white mb-3">
-                                Enjoy Great Food,<br />Managed Simply
+                                Disfruta de Buena Comida,<br />Gestionada de Forma Simple
                             </h1>
                             <p className="text-white-50 mb-4 pb-2">
-                                The Kinif brings chefs, cooks, waiters, hosts and clients together
-                                on one platform, so every restaurant runs smoothly from the kitchen to the table.
+                                The Knife reúne a chefs, cocineros, camareros, hosts y clientes
+                                en una sola plataforma, para que cada restaurante funcione sin problemas desde la cocina hasta la mesa.
                             </p>
-                            <a href="#roles" className="btn tk-btn-primary btn-lg px-4 me-3">Get Started</a>
-                            <Link to="/client_register" className="btn btn-outline-light btn-lg px-4">Join as Client</Link>
+                            <a href="#platos" className="btn tk-btn-primary btn-lg px-4 me-3">Comenzar</a>
+                            <Link to="/client_register" className="btn btn-outline-light btn-lg px-4">Unirme como Cliente</Link>
                         </div>
                         <div className="col-lg-6 text-center">
-                            <img
-                                className="img-fluid rounded-4 shadow"
-                                src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=900&q=80"
-                                alt="Delicious food ready to serve"
-                            />
+                            <div className="tk-flip-card">
+                                <div className="tk-flip-card-inner">
+                                    <div
+                                        className="tk-flip-card-front"
+                                        style={{ backgroundImage: "url(https://i.pinimg.com/736x/2c/6d/2e/2c6d2ed23501ef1324609d563b36810f.jpg)" }}
+                                    ></div>
+                                    <div
+                                        className="tk-flip-card-back"
+                                        style={{ backgroundImage: "url(https://i.pinimg.com/736x/14/37/cc/1437cc97509a1665f0aba65bb2ac5304.jpg)" }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,81 +121,72 @@ export const Home = () => {
                 </div>
             </div>
 
-            {/* About */}
-            <div className="container py-5">
-                <div className="row g-5 align-items-center">
-                    <div className="col-lg-6">
-                        <div className="row g-3">
-                            <div className="col-6 text-start">
-                                <img className="img-fluid tk-about-img w-100" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=500&q=80" alt="Restaurant interior" />
-                            </div>
-                            <div className="col-6 text-start">
-                                <img className="img-fluid tk-about-img w-75" style={{ marginTop: "25%" }} src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80" alt="Pizza" />
-                            </div>
-                            <div className="col-6 text-end">
-                                <img className="img-fluid tk-about-img w-75" src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80" alt="Burger" />
-                            </div>
-                            <div className="col-6 text-end">
-                                <img className="img-fluid tk-about-img w-100" src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=500&q=80" alt="Pan with food" />
+            {/* Plates carousel */}
+            <section id="platos" className="tk-plates-section">
+                <h2 className="tk-plates-title text-center">¿Qué te apetece hoy?</h2>
+                <div className="container">
+                    <div className="tk-plates-viewport">
+                        <button
+                            type="button"
+                            className="tk-plates-arrow"
+                            onClick={showPrevPlate}
+                            disabled={plateIndex === 0}
+                            aria-label="Plato anterior"
+                        >
+                            <i className="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div className="tk-plates-clip">
+                            <div
+                                className="tk-plates-track"
+                                style={{ transform: `translateX(calc(var(--tk-carousel-step) * ${-plateIndex}))` }}
+                            >
+                                {plates.map((plate) => (
+                                    <div className="tk-plates-item" key={plate.src}>
+                                        <div className="tk-plate-flip">
+                                            <div className="tk-plate-flip-inner">
+                                                <div
+                                                    className="tk-plate-flip-front"
+                                                    role="img"
+                                                    aria-label={plate.alt}
+                                                    style={{ backgroundImage: `url(${plate.src})` }}
+                                                ></div>
+                                                <div className="tk-plate-flip-back">
+                                                    <span>{RESTAURANT_NAME}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    </div>
-                    <div className="col-lg-6">
-                        <h5 className="tk-section-title text-start" style={{ color: "var(--tk-primary)" }}>About Us</h5>
-                        <h1 className="mb-4">
-                            Welcome to <i className="fa-solid fa-utensils me-2" style={{ color: "var(--tk-primary)" }}></i>The Kinif
-                        </h1>
-                        <p className="mb-4">
-                            The Kinif is a restaurant management platform built to connect every part of a
-                            restaurant's daily operations, from the kitchen to the front of house.
-                        </p>
-                        <p className="mb-4">
-                            Chefs organize recipes and staff, cooks and waiters coordinate every order,
-                            hosts manage the floor, and clients discover restaurants and book a table in a few clicks.
-                        </p>
-                        <div className="row g-4 mb-4">
-                            <div className="col-sm-6">
-                                <div className="d-flex align-items-center tk-counter px-3">
-                                    <h1 className="flex-shrink-0 display-5 mb-0" style={{ color: "var(--tk-primary)" }}>5</h1>
-                                    <div className="ps-4">
-                                        <p className="mb-0">User</p>
-                                        <h6 className="text-uppercase mb-0">Roles Supported</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-sm-6">
-                                <div className="d-flex align-items-center tk-counter px-3">
-                                    <h1 className="flex-shrink-0 display-5 mb-0" style={{ color: "var(--tk-primary)" }}>&#8734;</h1>
-                                    <div className="ps-4">
-                                        <p className="mb-0">Restaurants &</p>
-                                        <h6 className="text-uppercase mb-0">Reservations</h6>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#roles" className="btn tk-btn-primary btn-lg px-4">Explore Roles</a>
+                        <button
+                            type="button"
+                            className="tk-plates-arrow"
+                            onClick={showNextPlate}
+                            disabled={plateIndex === maxPlateIndex}
+                            aria-label="Siguiente plato"
+                        >
+                            <i className="fa-solid fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
+            </section>
 
             {/* Roles / Access */}
             <div id="roles" className="container py-5">
                 <div className="text-center mb-5">
-                    <h5 className="tk-section-title text-center" style={{ color: "var(--tk-primary)" }}>Join The Kinif</h5>
-                    <h1>Choose Your Role</h1>
+                    <h2 className="tk-roles-title mb-0">Elige Tu Rol</h2>
                 </div>
                 <div className="row g-4 justify-content-center">
                     {roles.map((role) => (
-                        <div className="col-lg-4 col-md-6" key={role.title}>
-                            <div className="tk-card-item text-center p-4">
-                                <i className={`fa-solid ${role.icon} fa-3x mb-3`} style={{ color: "var(--tk-primary)" }}></i>
-                                <h5>{role.title}</h5>
-                                <p className="mb-3">{role.text}</p>
-                                <div className="d-flex justify-content-center gap-2">
+                        <div className="col-6 col-md-4 col-lg-2" key={role.title}>
+                            <div className="tk-role-card text-center p-4">
+                                <h5 className="mb-4">{role.title}</h5>
+                                <div className="d-flex flex-column gap-2">
                                     {role.register && (
-                                        <Link to={role.register} className="btn tk-btn-primary btn-sm">Register</Link>
+                                        <Link to={role.register} className="btn btn-light btn-sm">Regístrate</Link>
                                     )}
-                                    <Link to={role.login} className="btn btn-outline-dark btn-sm">Login</Link>
+                                    <Link to={role.login} className="btn btn-outline-light btn-sm">Entrar</Link>
                                 </div>
                             </div>
                         </div>
@@ -189,35 +199,34 @@ export const Home = () => {
                 <div className="container py-5">
                     <div className="row g-5">
                         <div className="col-lg-4 col-md-6">
-                            <h4 className="tk-footer-title mb-3">The Kinif</h4>
+                            <h4 className="tk-footer-title mb-3">The Knife</h4>
                             <p className="text-white-50">
-                                A restaurant management platform connecting chefs, cooks, waiters,
-                                hosts and clients — built as a 4Geeks Academy student project.
+                                Una plataforma de gestión de restaurantes que conecta a chefs, cocineros, camareros,
+                                hosts y clientes — creada como proyecto de estudiante de 4Geeks Academy.
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6">
-                            <h4 className="tk-footer-title mb-3">Quick Links</h4>
+                            <h4 className="tk-footer-title mb-3">Enlaces Rápidos</h4>
                             <div className="d-flex flex-column">
-                                <a href="#roles">Choose Your Role</a>
-                                <Link to="/client_register">Client Register</Link>
-                                <Link to="/chef_register">Chef Register</Link>
+                                <Link to="/client_register">Registro de Cliente</Link>
+                                <Link to="/chef_register">Registro de Chef</Link>
                             </div>
                         </div>
                         <div className="col-lg-4 col-md-6">
-                            <h4 className="tk-footer-title mb-3">Access</h4>
+                            <h4 className="tk-footer-title mb-3">Acceso</h4>
                             <div className="d-flex flex-column">
-                                <Link to="/chef_login">Chef Login</Link>
-                                <Link to="/cook_login">Cook Login</Link>
-                                <Link to="/waiter_login">Waiter Login</Link>
-                                <Link to="/host_login">Host Login</Link>
-                                <Link to="/client_login">Client Login</Link>
+                                <Link to="/chef_login">Inicio de Sesión de Chef</Link>
+                                <Link to="/cook_login">Inicio de Sesión de Cocinero</Link>
+                                <Link to="/waiter_login">Inicio de Sesión de Camarero</Link>
+                                <Link to="/host_login">Inicio de Sesión de Host</Link>
+                                <Link to="/client_login">Inicio de Sesión de Cliente</Link>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="container">
                     <div className="border-top py-4 text-center text-white-50" style={{ borderColor: "rgba(255,255,255,.1)" }}>
-                        &copy; {new Date().getFullYear()} The Kinif. Built as a 4Geeks Academy student project.
+                        &copy; {new Date().getFullYear()} The Knife. Creado como proyecto de estudiante de 4Geeks Academy.
                     </div>
                 </div>
             </footer>

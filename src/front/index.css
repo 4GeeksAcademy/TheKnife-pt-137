@@ -1,110 +1,1775 @@
-/* The Kinif — landing page theme (scoped with tk- prefix, does not affect other pages) */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Pacifico&display=swap');
+/* The Knife — landing page theme (scoped with tk- prefix, does not affect other pages) */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Pacifico&display=swap");
 
 :root {
-    --tk-primary: #FEA116;
-    --tk-primary-dark: #d6870c;
-    --tk-dark: #0F172B;
-    --tk-light: #F1F8FF;
+  --tk-primary: #00665c;
+  --tk-primary-dark: #00483f;
+  --tk-dark: #0f172b;
+  --tk-light: #f1f8ff;
 }
 
 /* Navbar */
 .tk-navbar {
-    background: var(--tk-dark) !important;
+  background: var(--tk-primary-dark) !important;
 }
 
 .tk-navbar .navbar-brand i {
-    color: var(--tk-primary);
+  color: var(--tk-primary);
 }
 
 .tk-btn-primary {
-    background: var(--tk-primary);
-    border-color: var(--tk-primary);
-    color: #fff;
-    font-weight: 600;
-    transition: .3s;
+  background: var(--tk-primary);
+  border-color: var(--tk-primary);
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 .tk-btn-primary:hover {
-    background: var(--tk-primary-dark);
-    border-color: var(--tk-primary-dark);
-    color: #fff;
+  background: var(--tk-primary-dark);
+  border-color: var(--tk-primary-dark);
+  color: #fff;
 }
 
 /* Hero */
 .tk-hero {
-    background: linear-gradient(rgba(15, 23, 43, .85), rgba(15, 23, 43, .85)),
-        url('https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1600&q=80');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background:
+    linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
+    url("https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1600&q=80");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-/* Section titles */
-.tk-section-title {
-    position: relative;
-    display: inline-block;
-    font-family: 'Pacifico', cursive;
-    font-weight: 400;
+.tk-flip-card {
+  display: inline-block;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 5;
+  perspective: 1000px;
 }
 
-.tk-section-title.text-center::before,
-.tk-section-title.text-center::after {
-    position: absolute;
-    content: "";
-    width: 40px;
-    height: 2px;
-    top: 50%;
-    margin-top: -1px;
-    background: var(--tk-primary);
+.tk-flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
 }
 
-.tk-section-title.text-center::before { left: -50px; }
-.tk-section-title.text-center::after { right: -50px; }
+.tk-flip-card:hover .tk-flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.tk-flip-card-front,
+.tk-flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 0;
+  border: 2px solid #000000;
+  background-size: cover;
+  background-position: center;
+}
+
+.tk-flip-card-back {
+  transform: rotateY(180deg);
+}
 
 /* Feature / role cards */
 .tk-card-item {
-    box-shadow: 0 0 30px rgba(0, 0, 0, .08);
-    border-radius: .5rem;
-    transition: .35s;
-    height: 100%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+  border-radius: 0.5rem;
+  transition: 0.35s;
+  height: 100%;
 }
 
 .tk-card-item:hover {
-    background: var(--tk-primary);
+  background: var(--tk-primary);
 }
 
 .tk-card-item:hover * {
-    color: #fff !important;
+  color: #fff !important;
 }
 
-/* About collage */
-.tk-about-img {
-    border-radius: .5rem;
+/* Role cards */
+.tk-roles-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2.5rem;
 }
 
-/* Counters */
-.tk-counter {
-    border-left: 5px solid var(--tk-primary);
+.tk-role-card {
+  background: var(--tk-primary);
+  border-radius: 0.75rem;
+  color: #fff;
+  height: 100%;
+  transition: 0.3s;
+}
+
+.tk-role-card:hover {
+  background: var(--tk-primary-dark);
+  transform: translateY(-4px);
+}
+
+/* Plates carousel */
+.tk-plates-section {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 0 90px;
+  background: #ffffff;
+}
+
+.tk-plates-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.tk-plates-viewport {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tk-plates-clip {
+  --tk-carousel-step: 25%;
+  overflow: hidden;
+  flex: 1 1 auto;
+}
+
+.tk-plates-track {
+  display: flex;
+  transition: transform 0.45s ease;
+}
+
+.tk-plates-item {
+  flex: 0 0 var(--tk-carousel-step);
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.tk-plate-flip {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  perspective: 1000px;
+}
+
+.tk-plate-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.tk-plate-flip:hover .tk-plate-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.tk-plate-flip-front,
+.tk-plate-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 50%;
+  border: 8px solid #1a1a19;
+}
+
+.tk-plate-flip-front {
+  background-size: cover;
+  background-position: center;
+}
+
+.tk-plate-flip-back {
+  transform: rotateY(180deg);
+  background: var(--tk-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+.tk-plate-flip-back span {
+  font-family: "Times New Roman", Times, serif;
+  color: #ffffff;
+  font-size: 1.15rem;
+}
+
+.tk-plates-arrow {
+  flex: 0 0 auto;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.tk-plates-arrow:hover:not(:disabled) {
+  background: var(--tk-primary);
+}
+
+.tk-plates-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (max-width: 991.98px) {
+  .tk-plates-clip { --tk-carousel-step: 33.3333%; }
+}
+
+@media (max-width: 767.98px) {
+  .tk-plates-clip { --tk-carousel-step: 50%; }
+  .tk-plate-flip-front,
+  .tk-plate-flip-back { border-width: 6px; }
+}
+
+@media (max-width: 575.98px) {
+  .tk-plates-clip { --tk-carousel-step: 100%; }
 }
 
 /* Footer */
 .tk-footer {
-    background: var(--tk-dark);
+  background: var(--tk-dark);
 }
 
 .tk-footer a {
-    color: rgba(255, 255, 255, .75);
-    text-decoration: none;
-    transition: .2s;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: 0.2s;
 }
 
 .tk-footer a:hover {
-    color: var(--tk-primary);
+  color: var(--tk-primary);
 }
 
 .tk-footer .tk-footer-title {
-    color: var(--tk-primary);
-    font-family: 'Pacifico', cursive;
-    font-weight: 400;
+  color: var(--tk-primary);
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+}
+
+:root {
+  --cocinapp-brand: #00665c;
+  --cocinapp-brand-dark: #00483f;
+  --cocinapp-brand-soft: rgba(0, 102, 92, 0.12);
+  --chef-sidebar-bg: #14181b;
+  --chef-sidebar-bg-hover: rgba(0, 102, 92, 0.35);
+  --chef-sidebar-width: 260px;
+}
+
+/* Chef dashboard shell */
+.chef-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.chef-sidebar,
+.chef-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.chef-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.chef-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chef-nav-link,
+.chef-nav-group-toggle,
+.chef-nav-sublink {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+}
+
+.chef-nav-link,
+.chef-nav-group-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.chef-nav-chevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+}
+
+.chef-nav-group-toggle.collapsed .chef-nav-chevron {
+  transform: rotate(-90deg);
+}
+
+.chef-nav-link:hover,
+.chef-nav-group-toggle:hover,
+.chef-nav-sublink:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.chef-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.chef-nav-subitems {
+  padding-left: 1.9rem;
+}
+
+.chef-nav-sublink {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  position: relative;
+}
+
+.chef-nav-sublink.active {
+  color: #fff;
+  font-weight: 600;
+}
+
+.chef-nav-sublink.active::before {
+  content: "";
+  position: absolute;
+  left: -0.9rem;
+  top: 0.85rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand);
+}
+
+.chef-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-chef-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-chef-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.chef-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.chef-stat-card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.chef-stat-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.chef-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex: none;
+}
+
+.chef-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.chef-stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+/* Shared "harmony pass" for every chef page rendered inside the shell:
+   reskins plain Bootstrap defaults (cards, buttons, tables) to match the
+   overview without having to touch every component individually. */
+.chef-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chef-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.chef-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.chef-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.chef-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.chef-main .btn-primary:hover,
+.chef-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.chef-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.chef-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.chef-main .table {
+  margin-bottom: 0;
+}
+
+.chef-main .form-control:focus,
+.chef-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
+
+/* Cook dashboard shell (mirrors the chef shell above) */
+.cook-shell {
+  min-height: calc(100vh - 70px);
+  align-items: stretch;
+}
+
+.cook-sidebar,
+.cook-sidebar-offcanvas {
+  width: var(--chef-sidebar-width);
+  background-color: var(--chef-sidebar-bg);
+}
+
+.cook-sidebar-offcanvas {
+  max-width: 85vw;
+  color: #fff;
+}
+
+.cook-sidebar-brand {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cook-nav-link {
+  color: rgba(255, 255, 255, 0.65);
+  border-radius: 0.375rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.cook-nav-link:hover {
+  color: #fff;
+  background-color: var(--chef-sidebar-bg-hover);
+}
+
+.cook-nav-link.active {
+  color: #fff;
+  background-color: var(--cocinapp-brand);
+}
+
+.cook-mobile-topbar {
+  background-color: var(--chef-sidebar-bg);
+}
+
+.btn-cook-brand {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.btn-cook-brand:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.cook-main {
+  padding: 1.5rem;
+  background-color: #f5f7f8;
+}
+
+.cook-stat-card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.cook-stat-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.cook-stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.5rem;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex: none;
+}
+
+.cook-stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+}
+
+.cook-stat-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.cook-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.cook-page-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+  margin: 0;
+}
+
+.cook-main .card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.cook-main .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-weight: 600;
+}
+
+.cook-main .btn-primary {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.cook-main .btn-primary:hover,
+.cook-main .btn-primary:focus {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+}
+
+.cook-main .btn-outline-primary {
+  color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+}
+
+.cook-main .btn-outline-primary:hover {
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.cook-main .table {
+  margin-bottom: 0;
+}
+
+.cook-main .form-control:focus,
+.cook-main .form-select:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.25rem var(--cocinapp-brand-soft);
+}
+
+/* Restaurant staff card grid (waiters, etc.) */
+.waiter-card {
+  border-radius: 0.75rem;
+  transition: box-shadow 0.15s ease;
+}
+
+.waiter-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.waiter-avatar {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.waiter-name {
+  font-weight: 700;
+  color: #212529;
+}
+
+.waiter-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--cocinapp-brand);
+}
+
+.waiter-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+}
+
+.waiter-divider-line {
+  flex: 1;
+  height: 1px;
+  max-width: 2.5rem;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.waiter-bowtie {
+  flex: none;
+  width: 10px;
+  height: 8px;
+  position: relative;
+}
+
+.waiter-bowtie::before,
+.waiter-bowtie::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.waiter-bowtie::before {
+  left: 0;
+  border-left: 5px solid var(--cocinapp-brand);
+}
+
+.waiter-bowtie::after {
+  right: 0;
+  border-right: 5px solid var(--cocinapp-brand);
+}
+
+.waiter-email {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.waiter-hr {
+  margin: 1rem 0;
+  opacity: 0.1;
+}
+
+/* Recipe card grid */
+.recipe-card {
+  border: none;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease;
+}
+
+.recipe-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.recipe-card-media {
+  position: relative;
+}
+
+.recipe-card-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-card-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.recipe-card-img-inactive {
+  filter: grayscale(0.6);
+  opacity: 0.75;
+}
+
+.recipe-card-menu-overlay {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.recipe-menu-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #212529;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.recipe-menu-btn:hover {
+  background-color: #fff;
+}
+
+.recipe-menu-btn-inline {
+  border-radius: 0.5rem;
+  background-color: #f1f3f5;
+}
+
+.recipe-card-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.recipe-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.recipe-divider-line {
+  flex: 1;
+  height: 1px;
+  max-width: 3rem;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.recipe-divider-icon {
+  font-size: 0.75rem;
+  color: var(--cocinapp-brand);
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.85rem;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.recipe-meta i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.4rem;
+}
+
+.recipe-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.recipe-view-link {
+  color: var(--cocinapp-brand);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.recipe-view-link:hover {
+  color: var(--cocinapp-brand-dark);
+}
+
+.recipe-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Product list (chef & waiter) */
+.product-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.product-filter-tabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.product-filter-btn {
+  border: none;
+  background: transparent;
+  color: #495057;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.product-filter-btn:hover {
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-filter-btn.active {
+  background-color: var(--cocinapp-brand);
+  color: #fff;
+}
+
+.product-search {
+  position: relative;
+  flex: none;
+  width: 280px;
+  max-width: 100%;
+}
+
+.product-search i {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  transform: translateY(-50%);
+  color: #adb5bd;
+}
+
+.product-search .form-control {
+  padding-left: 2.25rem;
+  border-radius: 2rem;
+}
+
+.product-section + .product-section {
+  margin-top: 1.75rem;
+}
+
+.product-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--cocinapp-brand);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+}
+
+.product-section-line {
+  flex: 1;
+  height: 2px;
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.product-list .product-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.product-list .product-row:first-child {
+  padding-top: 0;
+}
+
+.product-row-img {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 0.6rem;
+  object-fit: cover;
+}
+
+.product-row-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+
+.product-row-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.product-row-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.product-row-name {
+  font-weight: 700;
+  color: #212529;
+}
+
+.product-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.6rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+}
+
+.product-badge-dish {
+  color: #a3690a;
+  background-color: #fdf1de;
+  border-color: #f3d9ac;
+}
+
+.product-badge-drink {
+  color: #0d6cad;
+  background-color: #e4f1fb;
+  border-color: #b6ddf5;
+}
+
+.product-row-desc {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin: 0.2rem 0 0;
+}
+
+.product-row-ingredients {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+.product-row-ingredients i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.4rem;
+}
+
+.product-row-price {
+  flex: none;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--cocinapp-brand);
+  white-space: nowrap;
+}
+
+.product-row-order-controls {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 576px) {
+  .product-row {
+    flex-wrap: wrap;
+  }
+
+  .product-row-price,
+  .product-row-order-controls {
+    margin-left: 80px;
+  }
+}
+
+/* Single recipe detail page (chef & cook) */
+.recipe-detail-page {
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.page-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #495057;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.page-back-link i {
+  font-size: 0.8rem;
+}
+
+.page-back-link:hover {
+  color: var(--cocinapp-brand);
+}
+
+.recipe-hero {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: none;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.recipe-hero-img {
+  flex: 1 1 320px;
+  max-width: 420px;
+  min-height: 260px;
+  object-fit: cover;
+}
+
+.recipe-hero-img.recipe-card-img-placeholder {
+  font-size: 2.5rem;
+}
+
+.recipe-hero-body {
+  flex: 1 1 320px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.recipe-hero-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.recipe-hero-calories-btn {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.recipe-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.recipe-detail-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 860px) {
+  .recipe-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-detail-section {
+  border: none;
+  border-radius: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.recipe-steps-list {
+  list-style: none;
+  counter-reset: step;
+  padding-left: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.recipe-steps-list li {
+  counter-increment: step;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  color: #343a40;
+  line-height: 1.5;
+}
+
+.recipe-steps-list li::before {
+  content: counter(step);
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recipe-ingredient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.recipe-ingredient-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.recipe-ingredient-list .recipe-ingredient-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.recipe-ingredient-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: none;
+}
+
+.recipe-ingredient-img.recipe-ingredient-img-placeholder {
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.recipe-ingredient-name {
+  flex: 1 1 auto;
+  font-weight: 600;
+  color: #212529;
+}
+
+.recipe-ingredient-amount {
+  flex: none;
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #f1f3f5;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+}
+
+/* Orders (list & detail) */
+.order-icon {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.order-icon-lg {
+  width: 60px;
+  height: 60px;
+  font-size: 1.4rem;
+}
+
+.product-badge.order-badge-pending,
+.order-icon.order-badge-pending {
+  color: #6c757d;
+  background-color: #eef0f2;
+}
+
+.product-badge.order-badge-pending {
+  border-color: #dfe3e6;
+}
+
+.product-badge.order-badge-doing,
+.order-icon.order-badge-doing {
+  color: #a3690a;
+  background-color: #fdf1de;
+}
+
+.product-badge.order-badge-doing {
+  border-color: #f3d9ac;
+}
+
+.product-badge.order-badge-done,
+.order-icon.order-badge-done {
+  color: #0d6cad;
+  background-color: #e4f1fb;
+}
+
+.product-badge.order-badge-done {
+  border-color: #b6ddf5;
+}
+
+.product-badge.order-badge-closed,
+.order-icon.order-badge-closed {
+  color: var(--cocinapp-brand);
+  background-color: var(--cocinapp-brand-soft);
+}
+
+.product-badge.order-badge-closed {
+  border-color: transparent;
+}
+
+.order-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 1rem;
+  color: #6c757d;
+  font-size: 0.82rem;
+  margin-top: 0.3rem;
+}
+
+.order-row-meta i {
+  color: var(--cocinapp-brand);
+  margin-right: 0.35rem;
+}
+
+.order-row-actions {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.order-row-waiting {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #6c757d;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.order-row-waiting i {
+  color: var(--cocinapp-brand);
+}
+
+.order-hero {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.order-hero-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.order-hero-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-hero-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #212529;
+  margin: 0;
+}
+
+.order-product-amount {
+  flex: none;
+  font-weight: 600;
+  color: #495057;
+  background-color: #f1f3f5;
+  padding: 0.25rem 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+}
+
+.order-total-card {
+  border: none;
+  border-radius: 0.9rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  margin-top: 1.5rem;
+}
+
+.order-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #212529;
+}
+
+.order-total-amount {
+  color: var(--cocinapp-brand);
+  font-size: 1.3rem;
+}
+
+/* Staff registration forms (waiter, cook, host) */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+}
+
+.auth-card-wrap {
+  width: 100%;
+  max-width: 440px;
+}
+
+.auth-card {
+  background-color: #fff;
+  border-radius: 1.1rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.auth-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--cocinapp-brand-soft);
+  color: var(--cocinapp-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 1.25rem;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #212529;
+  margin-bottom: 0.4rem;
+}
+
+.auth-subtitle {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.auth-field {
+  text-align: left;
+}
+
+.auth-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #343a40;
+  margin-bottom: 0.35rem;
+}
+
+.auth-card .form-control {
+  border-radius: 0.6rem;
+  border: 1px solid #e2e5e9;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+}
+
+.auth-card .form-control:focus {
+  border-color: var(--cocinapp-brand);
+  box-shadow: 0 0 0 0.2rem var(--cocinapp-brand-soft);
+}
+
+.auth-submit-btn {
+  width: 100%;
+  border-radius: 2rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  background-color: var(--cocinapp-brand);
+  border-color: var(--cocinapp-brand);
+  color: #fff;
+  margin-top: 0.5rem;
+}
+
+.auth-submit-btn:hover {
+  background-color: var(--cocinapp-brand-dark);
+  border-color: var(--cocinapp-brand-dark);
+  color: #fff;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.65;
+}
+
+/* Restaurant details card (chef) */
+.food-type-badge {
+  display: inline-block;
+  align-self: flex-start;
+  color: var(--cocinapp-brand);
+  background-color: var(--cocinapp-brand-soft);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  margin-bottom: 0.85rem;
+}
+
+.restaurant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #495057;
+  background-color: #f1f3f5;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.25rem 0.7rem;
+  border-radius: 1rem;
+}
+
+.tag-pill i {
+  color: var(--cocinapp-brand);
+  font-size: 0.7rem;
+}
+
+.restaurant-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.restaurant-contact-list span {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.restaurant-contact-list i {
+  color: var(--cocinapp-brand);
+  width: 16px;
+  text-align: center;
+}
+
+.restaurant-description {
+  color: #495057;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+:root {
+  --cocin-primary: #00665c;
+  --cocin-dark: #0f172b;
+  --cocin-light: #e6f2f0;
+}
+
+/* ===== About / Sobre Nosotros (Restoran-style) ===== */
+.about-page {
+  color: #212529;
+}
+
+/* Page header with breadcrumb */
+.page-header {
+  background:
+    linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
+    url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80")
+      center/cover no-repeat;
+  padding: 5rem 0;
+  color: #fff;
+}
+.page-header h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.page-header .breadcrumb {
+  background: transparent;
+  justify-content: center;
+  margin-bottom: 0;
+}
+.page-header .breadcrumb-item,
+.page-header .breadcrumb-item a {
+  color: #fff;
+  text-decoration: none;
+}
+.page-header .breadcrumb-item.active {
+  color: var(--cocin-primary);
+}
+.page-header .breadcrumb-item + .breadcrumb-item::before {
+  color: #fff;
+}
+
+/* Section title */
+.section-title {
+  color: var(--cocin-primary);
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.25rem;
+}
+.section-title::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--cocin-primary);
+}
+.section-title.text-center::after {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Image collage */
+.about-img img {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+.about-img .img-tall {
+  height: 100%;
+}
+
+/* Stats */
+.about-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+.about-stats .stat {
+  background: var(--cocin-light);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  flex: 1;
+}
+.about-stats .stat h1 {
+  color: var(--cocin-primary);
+  font-weight: 700;
+  margin: 0;
+}
+
+.btn-cocin {
+  background: var(--cocin-primary);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.6rem 1.75rem;
+  font-weight: 600;
+  border: none;
+}
+.btn-cocin:hover {
+  background: #004a42;
+  color: #fff;
+}
+
+/* Internal management feature cards */
+.feature-card {
+  border-radius: 8px;
+  background: var(--cocin-light);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(15, 23, 43, 0.08);
+}
+.feature-card i {
+  color: var(--cocin-primary);
+}
+.feature-card h5 {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+/* Chef / team cards */
+.team-card {
+  border: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(15, 23, 43, 0.08);
+  transition: transform 0.2s ease;
+}
+.team-card:hover {
+  transform: translateY(-6px);
+}
+.team-card img {
+  height: 260px;
+  object-fit: cover;
+}
+.team-card .card-body {
+  text-align: center;
+}
+.team-card .designation {
+  color: var(--cocin-primary);
+  font-size: 0.9rem;
+}
+.team-social a {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--cocin-primary);
+  color: #fff;
+  margin: 0 0.2rem;
+}
+.team-social a:hover {
+  background: var(--cocin-dark);
+}
+
+/* ===== Auth pages (Login - Colorlib "login-form-02" style: full-bleed photo + centered card) ===== */
+.auth-page {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+.auth-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(15, 23, 43, 0.65), rgba(15, 23, 43, 0.65));
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(15, 23, 43, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.auth-form-panel {
+  padding: 2.75rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+.auth-form-panel .brand {
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--cocin-dark);
+  margin-bottom: 0.25rem;
+}
+.auth-form-panel .subtitle {
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+.auth-form-panel .form-control {
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #dfe3e8;
+}
+.auth-form-panel .form-control:focus {
+  border-color: var(--cocin-primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 102, 92, 0.15);
+}
+.auth-form-panel .form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.auth-remember-forgot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+.auth-switch-link {
+  color: var(--cocin-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.auth-switch-link:hover {
+  text-decoration: underline;
 }

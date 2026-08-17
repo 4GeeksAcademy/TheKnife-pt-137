@@ -12,7 +12,7 @@ const LoadingComponent = () => {
                     <span className="visually-hidden">Loading...</span>
                 </div>
                 <div
-                    className="spinner-border text-danger position-absolute top-50 start-50 translate-middle"
+                    className="spinner-border text-success position-absolute top-50 start-50 translate-middle"
                     style={{ width: "2.5rem", height: "2.5rem" }}
                     role="status"
                 >

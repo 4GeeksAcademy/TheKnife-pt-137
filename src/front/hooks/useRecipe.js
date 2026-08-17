@@ -169,7 +169,7 @@ export function useRecipe() {
       const response = await chefEditRecipeService(restaurant_id, recipe_id, recipeData);
       const data = await response.json();
       console.log(data);
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/recipes`);
     } catch (error) {
       console.log(error);
     }

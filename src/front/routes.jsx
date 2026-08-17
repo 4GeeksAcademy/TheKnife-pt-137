@@ -10,6 +10,7 @@ import { Layout } from "./pages/Layout";
 import { Home } from "./pages/Home";
 import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
+import { About } from "./pages/About";
 
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
@@ -105,6 +106,7 @@ import EditChefForm from "./pages/chef/EditChefForm";
 import SingleChef from "./pages/chef/SingleChef";
 import ChefLogin from "./pages/chef/ChefLogin";
 import ChefDashboard from "./pages/chef/ChefDashboard";
+import ChefLayout from "./pages/chef/ChefLayout";
 import RegisterChef from "./pages/chef/RegisterChef";
 
 // INGREDIENTS imports
@@ -126,6 +128,7 @@ import SingleCook from "./pages/cook/SingleCook";
 import EditCookForm from "./pages/cook/EditCookForm";
 import CookLogin from "./pages/cook/CookLogin";
 import CookDashboard from "./pages/cook/CookDashboard";
+import CookLayout from "./pages/cook/CookLayout";
 import RegisterCook from "./pages/cook/actions/RegisterCook";
 import RestaurantCooks from "./pages/cook/actions/RestaurantCooks";
 
@@ -160,12 +163,12 @@ export const router = createBrowserRouter(
 
       {/* Nested Routes */}
       <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
 
       {/* Google Maps */}
         
-      <Route path="/maps/:restaurant_id" element={<RoleRoute role="chef"><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider></RoleRoute>} />
       <Route path="/restaurants/nearby_search" element={<ClientRoute><APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider></ClientRoute>} />
       <Route path="/restaurants/occasion_search" element={<ClientRoute><ClientSearchByOccasion /></ClientRoute>} />
       <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRoute><ClientRestaurantDishes /></ClientRoute>} />
@@ -177,20 +180,12 @@ export const router = createBrowserRouter(
       <Route path="/create_product" element={<ManagerRoute><CreateProductForm /></ManagerRoute>} />
       <Route path="/edit_product/:product_id" element={<ManagerRoute><EditProductForm /></ManagerRoute>} />
       <Route path="/single_product/:product_id" element={<ManagerRoute><SingleProduct /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/create_product" element={<RoleRoute role="chef"><ChefProductCreate /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/products" element={<RoleRoute role="chef"><ChefRestaurantProducts /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/edit_product/:product_id" element={<RoleRoute role="chef"><ChefEditProduct /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/single_product/:product_id" element={<RoleRoute role="chef"><ChefSingleProduct /></RoleRoute>} />
 
       {/* Recipes (CRUD genérico -> solo manager) */}
       <Route path="/recipes" element={<ManagerRoute><Recipes /></ManagerRoute>} />
       <Route path="/create_recipe" element={<ManagerRoute><CreateRecipeForm /></ManagerRoute>} />
       <Route path="/recipe/:recipe_id" element={<ManagerRoute><SingleRecipe /></ManagerRoute>} />
       <Route path="/edit_recipe/:recipe_id" element={<ManagerRoute><EditRecipeForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/recipes" element={<RoleRoute role="chef"><RestaurantRecipes /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/cook_recipes" element={<RoleRoute role="cook"><CookRecipes /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/create_recipe" element={<RoleRoute role="chef"><ChefCreateRecipe /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<RoleRoute role="chef"><ChefEditRecipe /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RoleRoute roles={["chef", "cook"]}><RestaurantSingleRecipe /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/recipe/:recipe_id/ingredients" element={<RoleRoute roles={["chef", "cook"]}><RecipeIngredientsGallery /></RoleRoute>} />
 
@@ -199,10 +194,6 @@ export const router = createBrowserRouter(
       <Route path="/create_restaurant" element={<ManagerRoute><CreateRestaurantForm /></ManagerRoute>} />
       <Route path="/single_restaurant/:restaurant_id" element={<ManagerRoute><SingleRestaurant /></ManagerRoute>} />
       <Route path="/edit_restaurant/:restaurant_id" element={<ManagerRoute><EditRestaurantForm /></ManagerRoute>} />
-      <Route path="/register_restaurant" element={<RoleRoute role="chef"><ChefCreateRestaurant /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<RoleRoute role="chef"><ChefEditRestaurant /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id" element={<RoleRoute role="chef"><ChefGetRestaurant /></RoleRoute>} />
-      
       {/* Managers (CRUD genérico -> solo manager; registro/login/dashboard públicos) */}
       <Route path="/managers" element={<ManagerRoute><Managers /></ManagerRoute>} />
       <Route path="/create_manager" element={<CreateManagerForm />} />
@@ -215,12 +206,6 @@ export const router = createBrowserRouter(
       <Route path="/ingredients/create" element={<ManagerRoute><CreateIngredientForm /></ManagerRoute>} />
       <Route path="/ingredients/:ingredient_id" element={<ManagerRoute><SingleIngredient /></ManagerRoute>} />
       <Route path="/ingredients/edit/:ingredient_id" element={<ManagerRoute><EditIngredientForm /></ManagerRoute>} />
-      <Route path="/chef_ingredients" element={<RoleRoute role="chef"><ChefIngredients /></RoleRoute>} />
-      <Route path="/chef_ingredients/inactive" element={<RoleRoute role="chef"><ChefInactiveIngredients /></RoleRoute>} />
-      <Route path="/chef_ingredients/create" element={<RoleRoute role="chef"><ChefCreateIngredient /></RoleRoute>} />
-      <Route path="/chef_ingredients/edit/:ingredient_id" element={<RoleRoute role="chef"><ChefEditIngredient /></RoleRoute>} />
-      <Route path="/cook_ingredients" element={<RoleRoute role="cook"><CookIngredients /></RoleRoute>} />
-      <Route path="/cook_ingredients/:ingredient_id" element={<RoleRoute role="cook"><CookSingleIngredient /></RoleRoute>} />
 
       {/* Waiters (CRUD genérico -> solo manager) */}
       <Route path="/waiters" element={<ManagerRoute><Waiters /></ManagerRoute>} />
@@ -229,16 +214,12 @@ export const router = createBrowserRouter(
       <Route path="/edit_waiter/:waiter_id" element={<ManagerRoute><EditWaiterForm /></ManagerRoute>} />
       <Route path="/waiter_login" element={<WaiterLogin />} />
       <Route path="/waiter_dashboard" element={<RoleRoute role="waiter"><WaiterDashboard /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/register_waiter" element={<RoleRoute role="chef"><RegisterWaiter /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/waiters" element={<RoleRoute role="chef"><RestaurantWaiters /></RoleRoute>} />
 
       {/* Orders (CRUD genérico -> solo manager) */}
       <Route path="/orders" element={<ManagerRoute><Orders /></ManagerRoute>} />
       <Route path="/create_order" element={<ManagerRoute><CreateOrderForm /></ManagerRoute>} />
       <Route path="/single_order/:order_id" element={<ManagerRoute><SingleOrder /></ManagerRoute>} />
       <Route path="/edit_order/:order_id" element={<ManagerRoute><EditOrderForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/orders" element={<RoleRoute role="chef"><RestaurantOrders /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/cook_orders" element={<RoleRoute role="cook"><CookOrders /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RoleRoute roles={["chef", "cook", "waiter"]}><RestaurantSingleOrder /></RoleRoute>} />
       <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<RoleRoute role="waiter"><WaiterAddProducts /></RoleRoute>} />
 
@@ -264,7 +245,6 @@ export const router = createBrowserRouter(
       <Route path="/single_chef/:chef_id" element={<ManagerRoute><SingleChef /></ManagerRoute>} />
       <Route path="/edit_chef/:chef_id" element={<ManagerRoute><EditChefForm /></ManagerRoute>} />
       <Route path="/chef_login" element={<ChefLogin />} />
-      <Route path="/chef_dashboard" element={<RoleRoute role="chef"><ChefDashboard /></RoleRoute>} />
 
       {/* Cooks (CRUD genérico -> solo manager) */}
       <Route path="/cooks" element={<ManagerRoute><Cooks /></ManagerRoute>} />
@@ -272,9 +252,6 @@ export const router = createBrowserRouter(
       <Route path="/single_cook/:cook_id" element={<ManagerRoute><SingleCook /></ManagerRoute>} />
       <Route path="/edit_cook/:cook_id" element={<ManagerRoute><EditCookForm /></ManagerRoute>} />
       <Route path="/cook_login" element={<CookLogin />} />
-      <Route path="/cook_dashboard" element={<RoleRoute role="cook"><CookDashboard /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/register_cook" element={<RoleRoute role="chef"><RegisterCook /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/cooks" element={<RoleRoute role="chef"><RestaurantCooks /></RoleRoute>} />
 
       {/* OrderProducts */}
       <Route path="/orders/:order_id/products" element={<ProductsListForOrder />} />
@@ -288,7 +265,6 @@ export const router = createBrowserRouter(
       <Route path="/host_reservations_history" element={<HostRoute><HostReservations history={true} /></HostRoute>} />
       <Route path="/host_create_reservation" element={<HostRoute><CreateHostReservation /></HostRoute>} />
       <Route path="/host_dashboard" element={<RoleRoute role="host"><HostDashboard /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/register_host" element={<RoleRoute role="chef"><RegisterHost /></RoleRoute>} />
 
       {/* Clients (CRUD genérico -> solo manager; login/dashboard aparte) */}
       <Route path="/clients" element={<ManagerRoute><Clients /></ManagerRoute>} />
@@ -300,6 +276,51 @@ export const router = createBrowserRouter(
       <Route path="/client_reservations" element={<ClientRoute><ClientReservations /></ClientRoute>} />
       <Route path="/edit_my_reservation/:reservation_id" element={<ClientRoute><EditMyReservation /></ClientRoute>} />
       <Route path="/booking_history" element={<ClientRoute><BookingHistory /></ClientRoute>} />
+
+      {/* Chef dashboard: persistent sidebar shell wrapping every chef-only page */}
+      <Route element={<RoleRoute role="chef"><ChefLayout /></RoleRoute>}>
+        <Route path="/chef_dashboard" element={<ChefDashboard />} />
+
+        <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
+        <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
+        <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
+        <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
+
+        <Route path="/restaurants/:restaurant_id/register_waiter" element={<RegisterWaiter />} />
+        <Route path="/restaurants/:restaurant_id/waiters" element={<RestaurantWaiters />} />
+
+        <Route path="/restaurants/:restaurant_id/register_cook" element={<RegisterCook />} />
+        <Route path="/restaurants/:restaurant_id/cooks" element={<RestaurantCooks />} />
+
+        <Route path="/restaurants/:restaurant_id/register_host" element={<RegisterHost />} />
+
+        <Route path="/restaurants/:restaurant_id/recipes" element={<RestaurantRecipes />} />
+        <Route path="/restaurants/:restaurant_id/create_recipe" element={<ChefCreateRecipe />} />
+        <Route path="/restaurants/:restaurant_id/edit_recipe/:recipe_id" element={<ChefEditRecipe />} />
+
+        <Route path="/restaurants/:restaurant_id/orders" element={<RestaurantOrders />} />
+
+        <Route path="/restaurants/:restaurant_id/products" element={<ChefRestaurantProducts />} />
+        <Route path="/restaurants/:restaurant_id/create_product" element={<ChefProductCreate />} />
+        <Route path="/restaurants/:restaurant_id/edit_product/:product_id" element={<ChefEditProduct />} />
+        <Route path="/restaurants/:restaurant_id/single_product/:product_id" element={<ChefSingleProduct />} />
+
+        <Route path="/chef_ingredients" element={<ChefIngredients />} />
+        <Route path="/chef_ingredients/inactive" element={<ChefInactiveIngredients />} />
+        <Route path="/chef_ingredients/create" element={<ChefCreateIngredient />} />
+        <Route path="/chef_ingredients/edit/:ingredient_id" element={<ChefEditIngredient />} />
+      </Route>
+
+      {/* Cook dashboard: persistent sidebar shell wrapping every cook-only page */}
+      <Route element={<RoleRoute role="cook"><CookLayout /></RoleRoute>}>
+        <Route path="/cook_dashboard" element={<CookDashboard />} />
+
+        <Route path="/restaurants/:restaurant_id/cook_recipes" element={<CookRecipes />} />
+        <Route path="/restaurants/:restaurant_id/cook_orders" element={<CookOrders />} />
+
+        <Route path="/cook_ingredients" element={<CookIngredients />} />
+        <Route path="/cook_ingredients/:ingredient_id" element={<CookSingleIngredient />} />
+      </Route>
 
     </Route>
   )

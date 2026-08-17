@@ -72,32 +72,38 @@ const Maps = () => {
     const longitude = store.singleRestaurant.longitude ?? 0
 
     return (
-        <div className="container my-4">
-            <form onSubmit={handleEdit} className="card shadow-sm p-4 mb-4">
-                <h4 className="card-title mb-3">Ubicación del restaurante</h4>
-                <div className="row g-3">
-                    <div className="col-md-6" style={{display: "none"}}>
-                        <label htmlFor="longitude" className="form-label">Longitude</label>
-                        <input type="number" name="longitude" id="longitude" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, longitude: e.target.value })} value={coordsData.longitude} />
+        <div>
+            <h1 className="chef-page-title mb-4">Ubicación del restaurante</h1>
+            <form onSubmit={handleEdit} className="card mb-4">
+                <div className="card-body">
+                    <div className="row g-3">
+                        <div className="col-md-6" style={{display: "none"}}>
+                            <label htmlFor="longitude" className="form-label">Longitude</label>
+                            <input type="number" name="longitude" id="longitude" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, longitude: e.target.value })} value={coordsData.longitude} />
+                        </div>
+                        <div className="col-md-6" style={{display: "none"}}>
+                            <label htmlFor="latitude" className="form-label">Latitude</label>
+                            <input type="number" name="latitude" id="latitude" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, latitude: e.target.value })} value={coordsData.latitude} />
+                        </div>
+                        <div className="col-12">
+                            <label htmlFor="address" className="form-label">Address</label>
+                            <input ref={addressRef} type="text" name="address" id="address" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, address: e.target.value })} value={coordsData.address} />
+                        </div>
                     </div>
-                    <div className="col-md-6" style={{display: "none"}}>
-                        <label htmlFor="latitude" className="form-label">Latitude</label>
-                        <input type="number" name="latitude" id="latitude" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, latitude: e.target.value })} value={coordsData.latitude} />
+                    <div className="text-end mt-4">
+                        <input type="submit" value="Submit" className="btn btn-primary" />
                     </div>
-                    <div className="col-12">
-                        <label htmlFor="address" className="form-label">Address</label>
-                        <input ref={addressRef} type="text" name="address" id="address" className="form-control" onChange={(e) => setCoordsData({ ...coordsData, address: e.target.value })} value={coordsData.address} />
-                    </div>
-                </div>
-                <div className="text-end mt-4">
-                    <input type="submit" value="Submit" className="btn btn-primary" />
                 </div>
             </form>
-            <GoogleMap
-                latitude={Number(coordsData.latitude)}
-                longitude={Number(coordsData.longitude)}
-                setCoordsData={setCoordsData}
-            />
+            <div className="card overflow-hidden">
+                <div className="card-body p-0">
+                    <GoogleMap
+                        latitude={Number(coordsData.latitude)}
+                        longitude={Number(coordsData.longitude)}
+                        setCoordsData={setCoordsData}
+                    />
+                </div>
+            </div>
         </div>
     )
 }

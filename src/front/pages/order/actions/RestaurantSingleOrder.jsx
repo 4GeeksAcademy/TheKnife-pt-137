@@ -5,6 +5,19 @@ import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import LoadingComponent from "../../../components/LoadingComponent"
 
+const STATE_INFO = {
+    pending: { label: "Pendiente", badgeClass: "order-badge-pending", icon: "fa-hourglass-half" },
+    doing: { label: "En preparación", badgeClass: "order-badge-doing", icon: "fa-fire-burner" },
+    done: { label: "Listo", badgeClass: "order-badge-done", icon: "fa-bell-concierge" },
+    closed: { label: "Cerrado", badgeClass: "order-badge-closed", icon: "fa-circle-check" },
+}
+
+const formatPrice = (price) =>
+    `${Number(price).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+
+const formatDateTime = (value) =>
+    value ? new Date(value).toLocaleString("es-ES", { dateStyle: "short", timeStyle: "short" }) : "—"
+
 const RestaurantSingleOrder = () => {
 
     const { store } = useGlobalReducer()
@@ -38,84 +51,117 @@ const RestaurantSingleOrder = () => {
 
     if (loading) return <LoadingComponent />
 
+    const order = store.singleOrder
+    const stateInfo = STATE_INFO[order.state] || STATE_INFO.pending
     const dishes = store.orderProducts.filter((orderProduct) => orderProduct.product_type === "dish")
     const drinks = store.orderProducts.filter((orderProduct) => orderProduct.product_type === "drink")
+    const total = store.orderProducts.reduce((sum, op) => sum + Number(op.unit_price) * op.amount, 0)
+
+    const backPath = isWaiter ? "/waiter_dashboard" : isCook ? `/restaurants/${restaurant_id}/cook_orders` : `/restaurants/${restaurant_id}/orders`
+    const backLabel = isWaiter ? "Volver al panel" : "Volver a pedidos"
+
+    function renderOrderProductRow(orderProduct) {
+        return (
+            <div className="product-row" key={orderProduct.id}>
+                <div className="product-row-info">
+                    <span className="product-row-name">{orderProduct.product_name}</span>
+                    {orderProduct.comment && <p className="product-row-desc">{orderProduct.comment}</p>}
+                </div>
+                <div className="product-row-price">{formatPrice(orderProduct.unit_price * orderProduct.amount)}</div>
+                {canEditProducts ? (
+                    <div className="product-row-order-controls">
+                        <div className="btn-group btn-group-sm" role="group">
+                            <button type="button" className="btn btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, -1)}>-</button>
+                            <span className="btn btn-outline-secondary disabled">{orderProduct.amount}</span>
+                            <button type="button" className="btn btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, 1)}>+</button>
+                        </div>
+                        <button type="button" className="btn btn-outline-danger btn-sm" onClick={() => deleteOrderProduct(orderProduct.id, order_id)}>
+                            <i className="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                ) : (
+                    <span className="order-product-amount">x{orderProduct.amount}</span>
+                )}
+            </div>
+        )
+    }
 
     return (
-        <div className="container py-4 d-flex flex-column align-items-center">
+        <div className="recipe-detail-page">
+            <Link to={backPath} className="page-back-link">
+                <i className="fa-solid fa-arrow-left"></i>{backLabel}
+            </Link>
 
-            <div className="card" style={{ maxWidth: "500px", width: "100%" }}>
-                <div className="card-body">
-                    <h1 className="h4">Order #{store.singleOrder.id}</h1>
-                    <ul className="list-group list-group-flush mb-3">
-                        <li className="list-group-item"><strong>Table:</strong> {store.singleOrder.table_id}</li>
-                        <li className="list-group-item"><strong>Waiter:</strong> {store.singleOrder.waiter_id}</li>
-                        <li className="list-group-item"><strong>State:</strong> {store.singleOrder.state}</li>
-                        <li className="list-group-item"><strong>Date and time:</strong> {store.singleOrder.date_time}</li>
-                        <li className="list-group-item"><strong>People:</strong> {store.singleOrder.people}</li>
-                    </ul>
-                    <div className="row mb-3">
-                        <div className="col-6">
-                            <h2 className="h6">Dishes</h2>
-                            <ul className="list-group list-group-flush">
-                                {dishes.length > 0 ? dishes.map((orderProduct) => (
-                                    <li key={orderProduct.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{orderProduct.product_name} — {orderProduct.amount}</span>
-                                        {canEditProducts && (
-                                            <div className="d-flex gap-1">
-                                                <button className="btn btn-sm btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, -1)}>-</button>
-                                                <button className="btn btn-sm btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, 1)}>+</button>
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteOrderProduct(orderProduct.id, order_id)}>Remove</button>
-                                            </div>
-                                        )}
-                                    </li>
-                                )) : <li className="list-group-item text-muted">No dishes</li>}
-                            </ul>
-                        </div>
-                        <div className="col-6">
-                            <h2 className="h6">Drinks</h2>
-                            <ul className="list-group list-group-flush">
-                                {drinks.length > 0 ? drinks.map((orderProduct) => (
-                                    <li key={orderProduct.id} className="list-group-item d-flex justify-content-between align-items-center">
-                                        <span>{orderProduct.product_name} — {orderProduct.amount}</span>
-                                        {canEditProducts && (
-                                            <div className="d-flex gap-1">
-                                                <button className="btn btn-sm btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, -1)}>-</button>
-                                                <button className="btn btn-sm btn-outline-secondary" onClick={() => handleChangeAmount(orderProduct, 1)}>+</button>
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => deleteOrderProduct(orderProduct.id, order_id)}>Remove</button>
-                                            </div>
-                                        )}
-                                    </li>
-                                )) : <li className="list-group-item text-muted">No drinks</li>}
-                            </ul>
-                        </div>
+            <div className="card order-hero">
+                <div className={`order-icon order-icon-lg ${stateInfo.badgeClass}`}>
+                    <i className={`fa-solid ${stateInfo.icon}`}></i>
+                </div>
+                <div className="order-hero-body">
+                    <div className="order-hero-title-row">
+                        <h1 className="order-hero-title">Pedido #{order.id}</h1>
+                        <span className={`product-badge ${stateInfo.badgeClass}`}>{stateInfo.label}</span>
                     </div>
-
-                    {canEditProducts && (
-                        <Link to={`/restaurants/${restaurant_id}/orders/${order_id}/products`} className="btn btn-success w-100 mb-2">Add products to order</Link>
-                    )}
-
-                    {isWaiter && store.singleOrder.state === "done" && (
-                        <button
-                            className="btn btn-success w-100 mb-2"
-                            onClick={() => closeOrder(restaurant_id, order_id)}
-                        >
-                            Close order
-                        </button>
-                    )}
-
-                    {isWaiter ? (
-                        <Link to="/waiter_dashboard" className="btn btn-outline-secondary">Back to dashboard</Link>
-                    ) : isCook ? (
-                        <Link to={`/restaurants/${restaurant_id}/cook_orders`} className="btn btn-outline-secondary">Back to orders</Link>
-                    ) : (
-                        <Link to={`/restaurants/${restaurant_id}/orders`} className="btn btn-outline-secondary">Back to orders</Link>
-                    )}
+                    <div className="recipe-meta">
+                        <span><i className="fa-solid fa-chair"></i>Mesa {order.table_number ?? order.table_id}</span>
+                        <span><i className="fa-solid fa-user"></i>{order.waiter_name || "Sin camarero"}</span>
+                        <span><i className="fa-solid fa-users"></i>{order.people} personas</span>
+                        <span><i className="fa-solid fa-clock"></i>{formatDateTime(order.date_time)}</span>
+                    </div>
+                    <div className="recipe-hero-actions">
+                        {canEditProducts && (
+                            <Link to={`/restaurants/${restaurant_id}/orders/${order_id}/products`} className="btn btn-outline-success btn-sm">
+                                <i className="fa-solid fa-plus me-1"></i>Añadir productos
+                            </Link>
+                        )}
+                        {isWaiter && order.state === "done" && (
+                            <button type="button" className="btn btn-success btn-sm" onClick={() => closeOrder(restaurant_id, order_id)}>
+                                <i className="fa-solid fa-circle-check me-1"></i>Cerrar pedido
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
+            <div className="recipe-detail-grid">
+                <div className="card recipe-detail-section">
+                    <div className="card-body">
+                        <div className="product-section-header">
+                            <i className="fa-solid fa-utensils"></i>
+                            <span>PLATOS</span>
+                            <span className="product-section-line"></span>
+                        </div>
+                        {dishes.length > 0 ? (
+                            <div className="product-list">{dishes.map(renderOrderProductRow)}</div>
+                        ) : (
+                            <p className="text-muted text-center py-3 mb-0">No hay platos en este pedido.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="card recipe-detail-section">
+                    <div className="card-body">
+                        <div className="product-section-header">
+                            <i className="fa-solid fa-martini-glass-citrus"></i>
+                            <span>BEBIDAS</span>
+                            <span className="product-section-line"></span>
+                        </div>
+                        {drinks.length > 0 ? (
+                            <div className="product-list">{drinks.map(renderOrderProductRow)}</div>
+                        ) : (
+                            <p className="text-muted text-center py-3 mb-0">No hay bebidas en este pedido.</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="card order-total-card">
+                <div className="card-body order-total-row">
+                    <span>Total del pedido</span>
+                    <span className="order-total-amount">{formatPrice(total)}</span>
+                </div>
+            </div>
         </div>
     )
 }
 
-export default RestaurantSingleOrder;
+export default RestaurantSingleOrder

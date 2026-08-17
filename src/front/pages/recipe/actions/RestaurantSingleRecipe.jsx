@@ -38,58 +38,115 @@ const RestaurantSingleRecipe = () => {
 
     if (loading) return <LoadingComponent />
 
+    const recipe = store.single_recipe
+    const ingredients = store.recipeIngredients || []
+    const stepLines = (recipe.steps || "").split("\n").map((line) => line.trim()).filter(Boolean)
+    const recipesPath = isChef ? `/restaurants/${restaurant_id}/recipes` : `/restaurants/${restaurant_id}/cook_recipes`
+
     return (
-        <div className="container py-4 d-flex flex-column align-items-center">
+        <div className="recipe-detail-page">
+            <Link to={recipesPath} className="page-back-link">
+                <i className="fa-solid fa-arrow-left"></i>Volver a recetas
+            </Link>
 
-            <div className="card" style={{ maxWidth: "500px" }}>
-                <img src={store.single_recipe.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
-                <div className="card-body">
-                    <h1 className="h4">{store.single_recipe.name}</h1>
-                    <ul className="list-group list-group-flush mb-3">
-                        <li className="list-group-item"><strong>Steps:</strong> {store.single_recipe.steps}</li>
-                    </ul>
-
-                    <h2 className="h6">Ingredients</h2>
-                    {store.recipeIngredients && store.recipeIngredients.length > 0 ? (
-                        <ul className="list-group list-group-flush mb-3">
-                            {store.recipeIngredients.map((ri) => (
-                                <li key={ri.id} className="list-group-item">
-                                    {ri.ingredient_name} — {ri.amount}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="text-muted">Esta receta todavía no tiene ingredientes.</p>
-                    )}
-
-                    <div className="mb-3">
-                        {store.single_recipe.calories ? (
-                            <p><strong>Calorías estimadas:</strong> {store.single_recipe.calories} kcal</p>
-                        ) : (
-                            isChef && store.recipeIngredients && store.recipeIngredients.length > 0 && (
-                                <button
-                                    type="button"
-                                    className="btn btn-outline-primary btn-sm"
-                                    disabled={caloriesLoading}
-                                    onClick={handleCalculateCalories}
-                                >
-                                    {caloriesLoading ? "Calculando..." : "Calcular calorías con IA"}
-                                </button>
-                            )
-                        )}
-                        {caloriesError && <div className="text-danger mt-2">{caloriesError}</div>}
+            <div className="recipe-hero card">
+                {recipe.img_url ? (
+                    <img src={recipe.img_url} className="recipe-hero-img" alt={recipe.name} />
+                ) : (
+                    <div className="recipe-hero-img recipe-card-img-placeholder">
+                        <i className="fa-solid fa-utensils"></i>
+                    </div>
+                )}
+                <div className="recipe-hero-body">
+                    <h1 className="recipe-hero-title">{recipe.name}</h1>
+                    <div className="recipe-divider">
+                        <span className="recipe-divider-line"></span>
+                        <i className="fa-solid fa-utensils recipe-divider-icon"></i>
+                        <span className="recipe-divider-line"></span>
                     </div>
 
-                    <div className="d-flex gap-2">
-                        {isChef && <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-warning">Edit recipe</Link>}
-                        <Link to={`/restaurants/${restaurant_id}/recipe/${recipe_id}/ingredients`} className="btn btn-info">View ingredients</Link>
-                        <Link to={isChef ? `/restaurants/${restaurant_id}/recipes` : `/restaurants/${restaurant_id}/cook_recipes`} className="btn btn-outline-secondary">Back to recipes</Link>
+                    <div className="recipe-meta">
+                        <span><i className="fa-solid fa-basket-shopping"></i>{ingredients.length} ingredientes</span>
+                        <span><i className="fa-solid fa-fire"></i>{recipe.calories ? `≈ ${recipe.calories} kcal` : "Sin calorías"}</span>
+                    </div>
+
+                    {!recipe.calories && isChef && ingredients.length > 0 && (
+                        <button
+                            type="button"
+                            className="btn btn-outline-success btn-sm recipe-hero-calories-btn"
+                            disabled={caloriesLoading}
+                            onClick={handleCalculateCalories}
+                        >
+                            <i className="fa-solid fa-wand-magic-sparkles me-1"></i>
+                            {caloriesLoading ? "Calculando..." : "Calcular calorías con IA"}
+                        </button>
+                    )}
+                    {caloriesError && <div className="text-danger small mt-2">{caloriesError}</div>}
+
+                    <div className="recipe-hero-actions">
+                        {isChef && (
+                            <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe_id}`} className="btn btn-outline-success btn-sm">
+                                <i className="fa-solid fa-pen me-1"></i>Editar receta
+                            </Link>
+                        )}
+                        <Link to={`/restaurants/${restaurant_id}/recipe/${recipe_id}/ingredients`} className="btn btn-outline-secondary btn-sm">
+                            <i className="fa-solid fa-images me-1"></i>Galería de ingredientes
+                        </Link>
                     </div>
                 </div>
             </div>
 
+            <div className="recipe-detail-grid">
+                <div className="card recipe-detail-section">
+                    <div className="card-body">
+                        <div className="product-section-header">
+                            <i className="fa-solid fa-list-ol"></i>
+                            <span>PASOS DE PREPARACIÓN</span>
+                            <span className="product-section-line"></span>
+                        </div>
+                        {stepLines.length > 0 ? (
+                            <ol className="recipe-steps-list">
+                                {stepLines.map((line, index) => (
+                                    <li key={index}>{line.replace(/^\d+[.)]\s*/, "")}</li>
+                                ))}
+                            </ol>
+                        ) : (
+                            <p className="text-muted mb-0">Esta receta todavía no tiene pasos.</p>
+                        )}
+                    </div>
+                </div>
+
+                <div className="card recipe-detail-section">
+                    <div className="card-body">
+                        <div className="product-section-header">
+                            <i className="fa-solid fa-basket-shopping"></i>
+                            <span>INGREDIENTES</span>
+                            <span className="product-section-line"></span>
+                        </div>
+                        {ingredients.length > 0 ? (
+                            <div className="recipe-ingredient-list">
+                                {ingredients.map((ri) => (
+                                    <div className="recipe-ingredient-row" key={ri.id}>
+                                        {ri.ingredient_img_url ? (
+                                            <img src={ri.ingredient_img_url} className="recipe-ingredient-img" alt={ri.ingredient_name} />
+                                        ) : (
+                                            <div className="recipe-ingredient-img recipe-ingredient-img-placeholder">
+                                                <i className="fa-solid fa-carrot"></i>
+                                            </div>
+                                        )}
+                                        <span className="recipe-ingredient-name">{ri.ingredient_name}</span>
+                                        <span className="recipe-ingredient-amount">{ri.amount}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-muted mb-0">Esta receta todavía no tiene ingredientes.</p>
+                        )}
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
 
-export default RestaurantSingleRecipe;
+export default RestaurantSingleRecipe

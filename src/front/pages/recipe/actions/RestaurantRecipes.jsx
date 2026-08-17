@@ -4,6 +4,26 @@ import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import { Link, useParams } from "react-router-dom"
 import LoadingComponent from "../../../components/LoadingComponent"
 
+const RecipeActionsMenu = ({ menuId, restaurant_id, recipe, onDelete }) => (
+    <ul className="dropdown-menu dropdown-menu-end recipe-menu" aria-labelledby={menuId}>
+        <li>
+            <Link className="dropdown-item" to={`/restaurants/${restaurant_id}/edit_recipe/${recipe.id}`}>
+                <i className="fa-solid fa-pen me-2"></i>Editar receta
+            </Link>
+        </li>
+        <li>
+            <Link className="dropdown-item" to={`/restaurants/${restaurant_id}/recipe/${recipe.id}`}>
+                <i className="fa-solid fa-eye me-2"></i>Ver información
+            </Link>
+        </li>
+        <li>
+            <button type="button" className="dropdown-item text-danger" onClick={onDelete}>
+                <i className="fa-solid fa-trash-can me-2"></i>Eliminar receta
+            </button>
+        </li>
+    </ul>
+)
+
 const RestaurantRecipes = () => {
 
     const { getAllRestaurantRecipes, deleteRestaurantRecipe } = useRecipe()
@@ -19,17 +39,43 @@ const RestaurantRecipes = () => {
     if (loading) return <LoadingComponent />
 
     const recipeList = store.recipes.map((recipe) => {
+        const topMenuId = `recipe-menu-top-${recipe.id}`
+        const bottomMenuId = `recipe-menu-bottom-${recipe.id}`
+        const handleDelete = () => deleteRestaurantRecipe(restaurant_id, recipe.id)
+
         return (
-            <div key={recipe.id} className="col-md-4">
-                <div className="card h-100">
-                    <img src={recipe.img_url} className="card-img-top" height="180" style={{ objectFit: "cover" }} />
+            <div className="col" key={recipe.id}>
+                <div className="recipe-card card h-100">
+                    <div className="recipe-card-media">
+                        {recipe.img_url ? (
+                            <img src={recipe.img_url} className="recipe-card-img" alt={recipe.name} />
+                        ) : (
+                            <div className="recipe-card-img recipe-card-img-placeholder">
+                                <i className="fa-solid fa-utensils"></i>
+                            </div>
+                        )}
+                    </div>
                     <div className="card-body d-flex flex-column">
-                        <h2 className="h5">{recipe.name}</h2>
-                        <p className="card-text flex-grow-1">{recipe.steps}</p>
-                        <div className="d-flex gap-2 mt-2">
-                            <button className="btn btn-danger btn-sm" onClick={() => deleteRestaurantRecipe(restaurant_id, recipe.id)}>Delete</button>
-                            <Link to={`/restaurants/${restaurant_id}/edit_recipe/${recipe.id}`}><button className="btn btn-warning btn-sm">Edit</button></Link>
-                            <Link to={`/restaurants/${restaurant_id}/recipe/${recipe.id}`}><button className="btn btn-secondary btn-sm">View</button></Link>
+                        <h2 className="recipe-card-title">{recipe.name}</h2>
+                        <div className="recipe-divider">
+                            <span className="recipe-divider-line"></span>
+                            <i className="fa-solid fa-utensils recipe-divider-icon"></i>
+                            <span className="recipe-divider-line"></span>
+                        </div>
+                        <div className="recipe-meta">
+                            <span><i className="fa-solid fa-basket-shopping"></i>{recipe.ingredients_count} ingredientes</span>
+                            <span><i className="fa-solid fa-fire"></i>{recipe.calories ? `≈ ${recipe.calories} kcal` : "Sin calorías"}</span>
+                        </div>
+                        <div className="recipe-card-footer">
+                            <Link className="recipe-view-link" to={`/restaurants/${restaurant_id}/recipe/${recipe.id}`}>
+                                Ver receta <i className="fa-solid fa-arrow-right"></i>
+                            </Link>
+                            <div className="dropdown">
+                                <button id={bottomMenuId} type="button" className="recipe-menu-btn recipe-menu-btn-inline" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i className="fa-solid fa-ellipsis"></i>
+                                </button>
+                                <RecipeActionsMenu menuId={bottomMenuId} restaurant_id={restaurant_id} recipe={recipe} onDelete={handleDelete} />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,13 +84,20 @@ const RestaurantRecipes = () => {
     })
 
     return (
-        <div className="recipes_page container py-4">
-            <Link to={`/restaurants/${restaurant_id}/create_recipe`}><button className="btn btn-primary mb-4">Add recipe</button></Link>
-            <h1 className="h4 mb-3">Recipes</h1>
-            <div className="recipes row g-3">
-                {recipeList}
+        <div className="recipes_page">
+            <div className="chef-page-header">
+                <h1 className="chef-page-title">Recetas</h1>
+                <Link to={`/restaurants/${restaurant_id}/create_recipe`} className="btn btn-primary">Añadir receta</Link>
             </div>
-            <Link to="/chef_dashboard" className="d-inline-block mt-3">Back to dashboard</Link>
+            {store.recipes.length > 0 ? (
+                <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {recipeList}
+                </div>
+            ) : (
+                <div className="card">
+                    <p className="text-muted text-center py-4 mb-0">Todavía no hay recetas.</p>
+                </div>
+            )}
         </div>
     )
 }

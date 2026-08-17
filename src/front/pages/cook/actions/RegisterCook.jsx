@@ -1,47 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useCook } from "../../../hooks/useCook";
 import { Link, useParams } from "react-router-dom";
-import useGlobalReducer from "../../../hooks/useGlobalReducer";
-
 
 const RegisterCook = () => {
 
-    const { store } = useGlobalReducer()
     const { restaurant_id } = useParams()
-    const [cookData, setCookData] = useState({name: "", email: "", password: ""})
+    const [cookData, setCookData] = useState({ name: "", email: "", password: "" })
     const { cookRegister } = useCook()
 
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
+        <div className="auth-page">
+            <div className="auth-card-wrap">
+                <Link to={`/restaurants/${restaurant_id}/cooks`} className="page-back-link">
+                    <i className="fa-solid fa-arrow-left"></i>Volver a cocineros
+                </Link>
+                <div className="auth-card">
+                    <div className="auth-icon">
+                        <i className="fa-solid fa-kitchen-set"></i>
+                    </div>
+                    <h1 className="auth-title">Registrar cocinero</h1>
+                    <p className="auth-subtitle">Da de alta a un nuevo cocinero.</p>
 
-            <div className="card">
-                <div className="card-header text-center">Create new cook</div>
-                <div className="card-body">
-
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="name">Name</label>
-                        <input className="form-control" onChange={(e)=>setCookData({...cookData, name: e.target.value})} value={cookData.name} type="text" name="name" id="name" />
+                    <div className="auth-field mb-3">
+                        <label className="auth-label" htmlFor="name">Nombre</label>
+                        <input className="form-control" onChange={(e) => setCookData({ ...cookData, name: e.target.value })} value={cookData.name} type="text" name="name" id="name" placeholder="Nombre del cocinero" />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="email">Email</label>
-                        <input className="form-control" onChange={(e)=>setCookData({...cookData, email: e.target.value})} value={cookData.email} type="text" name="email" id="email" />
+                    <div className="auth-field mb-3">
+                        <label className="auth-label" htmlFor="email">Email</label>
+                        <input className="form-control" onChange={(e) => setCookData({ ...cookData, email: e.target.value })} value={cookData.email} type="text" name="email" id="email" placeholder="cocinero@restaurante.com" />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label" htmlFor="password">Password</label>
-                        <input className="form-control" onChange={(e)=>setCookData({...cookData, password: e.target.value})} value={cookData.password} type="password" name="password" id="password" />
+                    <div className="auth-field mb-4">
+                        <label className="auth-label" htmlFor="password">Contraseña</label>
+                        <input className="form-control" onChange={(e) => setCookData({ ...cookData, password: e.target.value })} value={cookData.password} type="password" name="password" id="password" placeholder="Contraseña" />
                     </div>
 
-                    <button onClick={()=>cookRegister(restaurant_id, cookData)} className="btn btn-primary w-100 mb-3">Create new cook</button>
-
-                    <div className="text-center">
-                        <Link to="/chef_dashboard">Go back to dashboard</Link>
-                    </div>
-
+                    <button onClick={() => cookRegister(restaurant_id, cookData)} className="btn auth-submit-btn">
+                        <i className="fa-solid fa-user-plus me-2"></i>Registrar cocinero
+                    </button>
                 </div>
             </div>
-
         </div>
     )
 }

@@ -10,7 +10,7 @@ const ChefCreateIngredient = () => {
     const { chefCreateIngredient } = useIngredient()
 
     return (
-        <div className="container py-5" style={{ maxWidth: "500px" }}>
+        <div className="mx-auto" style={{ maxWidth: "500px" }}>
 
             <div className="card">
                 <div className="card-header text-center">Create new ingredient</div>
