@@ -3,8 +3,21 @@ from sqlalchemy import String, Boolean, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 db = SQLAlchemy()
+
+# The app has no multi-timezone concept (single restaurant, all times entered as plain
+# wall-clock by whoever's browser). reservation_time is stored naive, as the restaurant's
+# own local time — but the server process itself may run in a different OS timezone (e.g.
+# UTC on most cloud hosts). Comparing it against a naive datetime.now() would silently use
+# the server's clock instead, which is wrong whenever the two differ. This computes "now"
+# in the restaurant's timezone explicitly, regardless of what timezone the server runs in.
+RESTAURANT_TZ = ZoneInfo("Europe/Madrid")
+
+
+def restaurant_now():
+    return datetime.now(RESTAURANT_TZ).replace(tzinfo=None)
 
 # Association table: a restaurant can have many occasion tags and viceversa
 restaurant_tag = db.Table(
@@ -264,7 +277,7 @@ class Table(db.Model):
         # without blocking walk-ins on tables reserved days out. A reservation whose time has
         # already passed no longer counts as "upcoming" — it's on the host to seat it or mark it
         # cancelled/completed.
-        now = datetime.now()
+        now = restaurant_now()
         upcoming_reservations = sorted(
             (r for r in self.reservations
              if r.status in ("waiting", "confirmed") and r.reservation_time
