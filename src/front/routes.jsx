@@ -15,6 +15,7 @@ import { About } from "./pages/About";
 // CocinApp imports
 import { ManagerRoute } from "./components/ManagerRoute";
 import { RoleRoute } from "./components/RoleRoute";
+import { RoleAwareLayout } from "./components/RoleAwareLayout";
 import Maps from "./pages/Maps";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import ClientSearchNearbyRestaurants from "./pages/restaurant/actions/ClientSearchNearbyRestaurants";
@@ -170,11 +171,6 @@ export const router = createBrowserRouter(
       <Route path="/single/:theId" element={<Single />} />
       <Route path="/demo" element={<Demo />} />
 
-      {/* Google Maps */}
-
-      <Route path="/restaurants/:restaurant_id/dishes" element={<RoleRoute role="client"><ClientRestaurantDishes /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/reserve" element={<RoleRoute role="client"><ClientCreateReservation /></RoleRoute>} />
-
       {/* Products (CRUD genérico -> solo manager) */}
       <Route path="/products" element={<ManagerRoute><Products /></ManagerRoute>} />
       <Route path="/create_product" element={<ManagerRoute><CreateProductForm /></ManagerRoute>} />
@@ -186,8 +182,6 @@ export const router = createBrowserRouter(
       <Route path="/create_recipe" element={<ManagerRoute><CreateRecipeForm /></ManagerRoute>} />
       <Route path="/recipe/:recipe_id" element={<ManagerRoute><SingleRecipe /></ManagerRoute>} />
       <Route path="/edit_recipe/:recipe_id" element={<ManagerRoute><EditRecipeForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RoleRoute roles={["chef", "cook"]}><RestaurantSingleRecipe /></RoleRoute>} />
-      <Route path="/restaurants/:restaurant_id/recipe/:recipe_id/ingredients" element={<RoleRoute roles={["chef", "cook"]}><RecipeIngredientsGallery /></RoleRoute>} />
 
       {/* Restaurants (CRUD genérico -> solo manager) */}
       <Route path="/restaurants" element={<ManagerRoute><Restaurants /></ManagerRoute>} />
@@ -219,7 +213,6 @@ export const router = createBrowserRouter(
       <Route path="/create_order" element={<ManagerRoute><CreateOrderForm /></ManagerRoute>} />
       <Route path="/single_order/:order_id" element={<ManagerRoute><SingleOrder /></ManagerRoute>} />
       <Route path="/edit_order/:order_id" element={<ManagerRoute><EditOrderForm /></ManagerRoute>} />
-      <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RoleRoute roles={["chef", "cook", "waiter"]}><RestaurantSingleOrder /></RoleRoute>} />
 
       {/* Tables (CRUD genérico -> solo manager) */}
       <Route path="/tables" element={<ManagerRoute><Tables /></ManagerRoute>} />
@@ -268,7 +261,7 @@ export const router = createBrowserRouter(
       <Route element={<RoleRoute role="chef"><ChefLayout /></RoleRoute>}>
         <Route path="/chef_dashboard" element={<ChefDashboard />} />
 
-        <Route path="/register_restaurant" element={<ChefCreateRestaurant />} />
+        <Route path="/register_restaurant" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ChefCreateRestaurant /></APIProvider>} />
         <Route path="/restaurants/:restaurant_id" element={<ChefGetRestaurant />} />
         <Route path="/restaurants/:restaurant_id/edit_restaurant" element={<ChefEditRestaurant />} />
         <Route path="/maps/:restaurant_id" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><Maps /></APIProvider>} />
@@ -323,6 +316,17 @@ export const router = createBrowserRouter(
         <Route path="/restaurants/:restaurant_id/orders/:order_id/products" element={<WaiterAddProducts />} />
       </Route>
 
+      {/* Páginas compartidas por chef y cook: RoleAwareLayout elige el sidebar del rol logueado */}
+      <Route element={<RoleAwareLayout roles={["chef", "cook"]} />}>
+        <Route path="/restaurants/:restaurant_id/recipe/:recipe_id" element={<RestaurantSingleRecipe />} />
+        <Route path="/restaurants/:restaurant_id/recipe/:recipe_id/ingredients" element={<RecipeIngredientsGallery />} />
+      </Route>
+
+      {/* Página compartida por chef, cook y waiter: RoleAwareLayout elige el sidebar del rol logueado */}
+      <Route element={<RoleAwareLayout roles={["chef", "cook", "waiter"]} />}>
+        <Route path="/restaurants/:restaurant_id/orders/:order_id" element={<RestaurantSingleOrder />} />
+      </Route>
+
       {/* Host dashboard: persistent sidebar shell wrapping every host-only page */}
       <Route element={<RoleRoute role="host"><HostLayout /></RoleRoute>}>
         <Route path="/host_dashboard" element={<HostDashboard />} />
@@ -340,6 +344,8 @@ export const router = createBrowserRouter(
         <Route path="/restaurants/nearby_search" element={<APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}><ClientSearchNearbyRestaurants /></APIProvider>} />
         <Route path="/restaurants/occasion_search" element={<ClientSearchByOccasion />} />
         <Route path="/restaurants/view_all" element={<ViewAllRestaurants />} />
+        <Route path="/restaurants/:restaurant_id/dishes" element={<ClientRestaurantDishes />} />
+        <Route path="/restaurants/:restaurant_id/reserve" element={<ClientCreateReservation />} />
       </Route>
 
     </Route>

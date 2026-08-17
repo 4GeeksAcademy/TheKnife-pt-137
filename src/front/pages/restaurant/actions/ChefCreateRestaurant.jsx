@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRestaurant } from "../../../hooks/useRestaurant";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import {useCloudinary} from "../../../hooks/useCloudinary"
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
 
 const ChefCreateRestaurant = () => {
 
@@ -9,10 +10,25 @@ const ChefCreateRestaurant = () => {
     const { chefCreateRestaurant, getTags } = useRestaurant()
     const { store } = useGlobalReducer()
     const { uploadImage } = useCloudinary()
+    const addressRef = useRef(null)
+    const places = useMapsLibrary("places")
 
     useEffect(() => {
         getTags()
     }, [])
+
+    useEffect(() => {
+        if (!places || !addressRef.current) return
+        const autocomplete = new places.Autocomplete(addressRef.current, {
+            fields: ["formatted_address"]
+        })
+        autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace()
+            if (place.formatted_address) {
+                setRestaurantData((prev) => ({ ...prev, address: place.formatted_address }))
+            }
+        })
+    }, [places])
 
     const toggleTag = (tagId) => {
         setRestaurantData((prev) => ({
@@ -47,7 +63,7 @@ const ChefCreateRestaurant = () => {
 
                     <div className="mb-3">
                         <label className="form-label" htmlFor="address">Address</label>
-                        <input className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
+                        <input ref={addressRef} className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
                     </div>
 
                     <div className="mb-3">

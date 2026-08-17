@@ -103,7 +103,7 @@ const ClientSearchNearbyRestaurants = () => {
                                     key={restaurant.id}
                                     position={{ lat: Number(restaurant.latitude), lng: Number(restaurant.longitude) }}
                                     onClick={() => setSelectedRestaurant(restaurant)}
-                                ><div style={{ fontSize: "32px" }}>🍽️</div></AdvancedMarker>
+                                ><i className="fa-solid fa-location-dot" style={{ fontSize: "30px", color: "#00483F"}}></i></AdvancedMarker>
                             })}
 
                             {selectedRestaurant && (
