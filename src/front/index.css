@@ -1,5 +1,265 @@
+/* The Knife — landing page theme (scoped with tk- prefix, does not affect other pages) */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Pacifico&display=swap");
+
 :root {
-  --cocinapp-brand: #00665C;
+  --tk-primary: #00665c;
+  --tk-primary-dark: #00483f;
+  --tk-dark: #0f172b;
+  --tk-light: #f1f8ff;
+}
+
+/* Navbar */
+.tk-navbar {
+  background: var(--tk-primary-dark) !important;
+}
+
+.tk-navbar .navbar-brand i {
+  color: var(--tk-primary);
+}
+
+.tk-btn-primary {
+  background: var(--tk-primary);
+  border-color: var(--tk-primary);
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.tk-btn-primary:hover {
+  background: var(--tk-primary-dark);
+  border-color: var(--tk-primary-dark);
+  color: #fff;
+}
+
+/* Hero */
+.tk-hero {
+  background:
+    linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
+    url("https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1600&q=80");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.tk-flip-card {
+  display: inline-block;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 4 / 5;
+  perspective: 1000px;
+}
+
+.tk-flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.tk-flip-card:hover .tk-flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.tk-flip-card-front,
+.tk-flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 0;
+  border: 2px solid #000000;
+  background-size: cover;
+  background-position: center;
+}
+
+.tk-flip-card-back {
+  transform: rotateY(180deg);
+}
+
+/* Feature / role cards */
+.tk-card-item {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+  border-radius: 0.5rem;
+  transition: 0.35s;
+  height: 100%;
+}
+
+.tk-card-item:hover {
+  background: var(--tk-primary);
+}
+
+.tk-card-item:hover * {
+  color: #fff !important;
+}
+
+/* Role cards */
+.tk-roles-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2.5rem;
+}
+
+.tk-role-card {
+  background: var(--tk-primary);
+  border-radius: 0.75rem;
+  color: #fff;
+  height: 100%;
+  transition: 0.3s;
+}
+
+.tk-role-card:hover {
+  background: var(--tk-primary-dark);
+  transform: translateY(-4px);
+}
+
+/* Plates carousel */
+.tk-plates-section {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 0 90px;
+  background: #ffffff;
+}
+
+.tk-plates-title {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.tk-plates-viewport {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tk-plates-clip {
+  --tk-carousel-step: 25%;
+  overflow: hidden;
+  flex: 1 1 auto;
+}
+
+.tk-plates-track {
+  display: flex;
+  transition: transform 0.45s ease;
+}
+
+.tk-plates-item {
+  flex: 0 0 var(--tk-carousel-step);
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.tk-plate-flip {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  perspective: 1000px;
+}
+
+.tk-plate-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.tk-plate-flip:hover .tk-plate-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.tk-plate-flip-front,
+.tk-plate-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 50%;
+  border: 8px solid #1a1a19;
+}
+
+.tk-plate-flip-front {
+  background-size: cover;
+  background-position: center;
+}
+
+.tk-plate-flip-back {
+  transform: rotateY(180deg);
+  background: var(--tk-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+.tk-plate-flip-back span {
+  font-family: "Times New Roman", Times, serif;
+  color: #ffffff;
+  font-size: 1.15rem;
+}
+
+.tk-plates-arrow {
+  flex: 0 0 auto;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.tk-plates-arrow:hover:not(:disabled) {
+  background: var(--tk-primary);
+}
+
+.tk-plates-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (max-width: 991.98px) {
+  .tk-plates-clip { --tk-carousel-step: 33.3333%; }
+}
+
+@media (max-width: 767.98px) {
+  .tk-plates-clip { --tk-carousel-step: 50%; }
+  .tk-plate-flip-front,
+  .tk-plate-flip-back { border-width: 6px; }
+}
+
+@media (max-width: 575.98px) {
+  .tk-plates-clip { --tk-carousel-step: 100%; }
+}
+
+/* Footer */
+.tk-footer {
+  background: var(--tk-dark);
+}
+
+.tk-footer a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.tk-footer a:hover {
+  color: var(--tk-primary);
+}
+
+.tk-footer .tk-footer-title {
+  color: var(--tk-primary);
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+}
+
+:root {
+  --cocinapp-brand: #00665c;
   --cocinapp-brand-dark: #00483f;
   --cocinapp-brand-soft: rgba(0, 102, 92, 0.12);
   --chef-sidebar-bg: #14181b;
@@ -1747,6 +2007,9 @@
   font-size: 0.92rem;
   line-height: 1.6;
   margin-bottom: 1rem;
+}
+
+:root {
   --cocin-primary: #00665c;
   --cocin-dark: #0f172b;
   --cocin-light: #e6f2f0;
@@ -1766,7 +2029,8 @@
 
 /* Page header with breadcrumb */
 .page-header {
-  background: linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
+  background:
+    linear-gradient(rgba(15, 23, 43, 0.85), rgba(15, 23, 43, 0.85)),
     url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80")
       center/cover no-repeat;
   padding: 5rem 0;
@@ -1863,7 +2127,9 @@
 .feature-card {
   border-radius: 8px;
   background: var(--cocin-light);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .feature-card:hover {
   transform: translateY(-6px);
@@ -1929,10 +2195,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    rgba(15, 23, 43, 0.65),
-    rgba(15, 23, 43, 0.65)
-  );
+  background: linear-gradient(rgba(15, 23, 43, 0.65), rgba(15, 23, 43, 0.65));
 }
 
 .auth-card {
