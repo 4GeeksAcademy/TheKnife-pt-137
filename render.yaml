@@ -25,6 +25,20 @@ services:
             fromDatabase:
                 name: the-knife-db
                 property: connectionString
+          - key: JWT_SECRET_KEY
+            sync: false
+          - key: CLOUDINARY_API_KEY
+            sync: false
+          - key: CLOUDINARY_API_SECRET
+            sync: false
+          - key: CLOUDINARY_CLOUD_NAME
+            sync: false
+          - key: VITE_CLOUD_NAME
+            sync: false
+          - key: VITE_GOOGLE_MAPS_API_KEY
+            sync: false
+          - key: VITE_BACKEND_URL
+            sync: false
 
 databases: # Render PostgreSQL database
     - name: the-knife-db
