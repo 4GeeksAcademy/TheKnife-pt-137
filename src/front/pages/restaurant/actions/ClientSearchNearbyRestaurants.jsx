@@ -17,7 +17,7 @@ const ClientSearchNearbyRestaurants = () => {
     const [selectedRestaurant, setSelectedRestaurant] = useState(null)
 
     useEffect(() => {
-        if (!places || !locationRef.current || !map) return
+        if (!places || !locationRef.current) return
         const autoComplete = new places.Autocomplete(locationRef.current)
         autoComplete.addListener("place_changed", () => {
             const place = autoComplete.getPlace()
@@ -29,8 +29,12 @@ const ClientSearchNearbyRestaurants = () => {
                 longitude: longitude
             }))
         })
-        map.setZoom(12)
     }, [places])
+
+    useEffect(() => {
+        if (!map) return
+        map.setZoom(12)
+    }, [map])
 
     useEffect(() => {
         if (!map || !startPointData.latitude || !startPointData.longitude) return
