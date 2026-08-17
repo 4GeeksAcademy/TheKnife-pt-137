@@ -24,65 +24,84 @@ const ClientCreateReservation = () => {
     }
 
     return (
-        <div className="container py-4" style={{ maxWidth: "500px" }}>
-            <h1 className="h4 mb-3">Reservar mesa</h1>
+        <div className="simple-form-page">
+            <div className="simple-form-wrap">
+                <button
+                    type="button"
+                    className="page-back-link"
+                    style={{ background: "none", border: "none", padding: 0 }}
+                    onClick={() => navigate(-1)}
+                >
+                    <i className="fa-solid fa-arrow-left"></i>Volver
+                </button>
+                <div className="simple-form-card">
+                    <div className="simple-form-icon">
+                        <i className="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <h1 className="simple-form-title">Reservar mesa</h1>
+                    <p className="simple-form-subtitle">Completa tus datos para reservar una mesa.</p>
 
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label className="form-label" htmlFor="customer_name">Nombre</label>
-                    <input
-                        className="form-control"
-                        type="text"
-                        id="customer_name"
-                        name="customer_name"
-                        value={reservationData.customer_name}
-                        onChange={(e) => setReservationData({ ...reservationData, customer_name: e.target.value })}
-                        required
-                    />
+                    <form onSubmit={handleSubmit}>
+                        <div className="simple-form-field mb-3">
+                            <label className="simple-form-label" htmlFor="customer_name">Nombre</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                id="customer_name"
+                                name="customer_name"
+                                value={reservationData.customer_name}
+                                onChange={(e) => setReservationData({ ...reservationData, customer_name: e.target.value })}
+                                placeholder="Tu nombre"
+                                required
+                            />
+                        </div>
+
+                        <div className="simple-form-field mb-3">
+                            <label className="simple-form-label" htmlFor="phone">Teléfono</label>
+                            <input
+                                className="form-control"
+                                type="text"
+                                id="phone"
+                                name="phone"
+                                value={reservationData.phone}
+                                onChange={(e) => setReservationData({ ...reservationData, phone: e.target.value })}
+                                placeholder="Teléfono de contacto"
+                            />
+                        </div>
+
+                        <div className="simple-form-field mb-3">
+                            <label className="simple-form-label" htmlFor="party_size">Número de personas</label>
+                            <input
+                                className="form-control"
+                                type="number"
+                                min="1"
+                                id="party_size"
+                                name="party_size"
+                                value={reservationData.party_size}
+                                onChange={(e) => setReservationData({ ...reservationData, party_size: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <div className="simple-form-field mb-4">
+                            <label className="simple-form-label" htmlFor="reservation_time">Fecha y hora</label>
+                            <input
+                                className="form-control"
+                                type="datetime-local"
+                                id="reservation_time"
+                                name="reservation_time"
+                                value={reservationData.reservation_time}
+                                onChange={(e) => setReservationData({ ...reservationData, reservation_time: e.target.value })}
+                                required
+                            />
+                        </div>
+
+                        <button type="submit" className="btn simple-form-submit-btn">
+                            <i className="fa-solid fa-calendar-check me-2"></i>Confirmar reserva
+                        </button>
+                    </form>
                 </div>
-
-                <div className="mb-3">
-                    <label className="form-label" htmlFor="phone">Teléfono</label>
-                    <input
-                        className="form-control"
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value={reservationData.phone}
-                        onChange={(e) => setReservationData({ ...reservationData, phone: e.target.value })}
-                    />
-                </div>
-
-                <div className="mb-3">
-                    <label className="form-label" htmlFor="party_size">Número de personas</label>
-                    <input
-                        className="form-control"
-                        type="number"
-                        min="1"
-                        id="party_size"
-                        name="party_size"
-                        value={reservationData.party_size}
-                        onChange={(e) => setReservationData({ ...reservationData, party_size: e.target.value })}
-                        required
-                    />
-                </div>
-
-                <div className="mb-3">
-                    <label className="form-label" htmlFor="reservation_time">Fecha y hora</label>
-                    <input
-                        className="form-control"
-                        type="datetime-local"
-                        id="reservation_time"
-                        name="reservation_time"
-                        value={reservationData.reservation_time}
-                        onChange={(e) => setReservationData({ ...reservationData, reservation_time: e.target.value })}
-                        required
-                    />
-                </div>
-
-                <button type="submit" className="btn btn-primary">Confirm reservation</button>
-                <button type="button" onClick={() => navigate(-1)} className="btn btn-link d-inline-block mt-3 ms-2">Cancel</button>
-            </form>
+            </div>
         </div>
     )
 }

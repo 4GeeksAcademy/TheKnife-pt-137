@@ -117,7 +117,7 @@ export function useProduct() {
     try {
       const data = await chefCreateProductService(restaurant_id, productData);
       console.log(data);
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/products`);
     } catch (error) {
       console.log(error);
     }
