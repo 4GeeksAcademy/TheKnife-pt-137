@@ -3,12 +3,13 @@ import GoogleMap from "./GoogleMap";
 import { useParams } from "react-router-dom";
 import { useRestaurant } from "../hooks/useRestaurant";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import { useMapsLibrary } from "@vis.gl/react-google-maps";
+import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import LoadingComponent from "../components/LoadingComponent";
 
 const Maps = () => {
 
     const places = useMapsLibrary("places")
+    const map = useMap()
     const addressRef = useRef(null)
     const [placeAutocomplete, setPlaceAutocomplete] = useState(null)
     const { store } = useGlobalReducer()
@@ -65,6 +66,17 @@ const Maps = () => {
             })
         })
     }, [placeAutocomplete])
+
+    // defaultCenter del <Map> solo aplica en el montaje inicial: sin este efecto,
+    // el mapa no se movía ni al cargar las coordenadas reales del restaurante ni
+    // al elegir una dirección nueva en el autocomplete.
+    useEffect(() => {
+        if (!map || !coordsData.latitude || !coordsData.longitude) return
+        map.panTo({
+            lat: Number(coordsData.latitude),
+            lng: Number(coordsData.longitude)
+        })
+    }, [map, coordsData.latitude, coordsData.longitude])
 
     if (loading) return <LoadingComponent />
 
