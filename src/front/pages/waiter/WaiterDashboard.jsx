@@ -4,8 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useWaiter } from "../../hooks/useWaiter";
 import { useTable } from "../../hooks/useTable";
 import { useOrder } from "../../hooks/useOrder";
+import { useInterval } from "../../hooks/useInterval";
 
 const FIXED_TABLE_COUNT = 7
+const POLL_INTERVAL_MS = 5000
 
 const WaiterDashboard = () => {
 
@@ -31,6 +33,13 @@ const WaiterDashboard = () => {
             getAllRestaurantTables(currentWaiter.restaurant_id)
         }
     }, [currentWaiter.restaurant_id])
+
+    // Refresca en segundo plano para que sala vea las mesas ocupadas/liberadas en tiempo real.
+    useInterval(() => {
+        if (currentWaiter.restaurant_id) {
+            getAllRestaurantTables(currentWaiter.restaurant_id)
+        }
+    }, POLL_INTERVAL_MS)
 
     function handleTableClick(table) {
         if (table.status === "free") {

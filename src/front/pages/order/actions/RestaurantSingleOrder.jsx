@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react"
 import { useOrder } from "../../../hooks/useOrder"
 import { useOrderProduct } from "../../../hooks/useOrderProduct"
+import { useInterval } from "../../../hooks/useInterval"
 import { useParams, Link } from "react-router-dom"
 import useGlobalReducer from "../../../hooks/useGlobalReducer"
 import LoadingComponent from "../../../components/LoadingComponent"
+
+const POLL_INTERVAL_MS = 5000
 
 const STATE_INFO = {
     pending: { label: "Pendiente", badgeClass: "order-badge-pending", icon: "fa-hourglass-half" },
@@ -37,6 +40,12 @@ const RestaurantSingleOrder = () => {
             getProductsOfAnOrder(order_id)
         ]).finally(() => setLoading(false))
     }, [restaurant_id, order_id])
+
+    // Refresca en segundo plano para reflejar el estado y los productos del pedido en tiempo real.
+    useInterval(() => {
+        getSingleRestaurantOrder(restaurant_id, order_id)
+        getProductsOfAnOrder(order_id)
+    }, POLL_INTERVAL_MS)
 
     function handleChangeAmount(orderProduct, delta) {
         const newAmount = orderProduct.amount + delta

@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import useGlobalReducer from "../../../hooks/useGlobalReducer";
 import { Link, useParams } from "react-router-dom";
 import { useOrder } from "../../../hooks/useOrder";
+import { useInterval } from "../../../hooks/useInterval";
 import LoadingComponent from "../../../components/LoadingComponent";
 
 const OPEN_STATES = "pending,doing,done"
+const POLL_INTERVAL_MS = 5000
 
 const STATE_INFO = {
     pending: { label: "Pendiente", badgeClass: "order-badge-pending", icon: "fa-hourglass-half" },
@@ -28,6 +30,11 @@ const CookOrders = () => {
         setLoading(true)
         getAllRestaurantOrders(restaurant_id, showClosed ? "closed" : OPEN_STATES).finally(() => setLoading(false))
     }, [showClosed])
+
+    // Refresca en segundo plano para que la cocina vea los pedidos nuevos sin recargar la página.
+    useInterval(() => {
+        getAllRestaurantOrders(restaurant_id, showClosed ? "closed" : OPEN_STATES)
+    }, POLL_INTERVAL_MS)
 
     if (loading) return <LoadingComponent />
 
