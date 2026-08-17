@@ -10,16 +10,17 @@ const getVisiblePlateCount = () => {
 };
 
 const RESTAURANT_NAME = "Casa Pepe";
+const RESTAURANT_IMG = "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813797/yvssasqy8t5qoxqakig3.jpg";
 
 const plates = [
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812567/tshq2m7w0nczwfuypfch.jpg", alt: "Paella de Mariscos" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812831/gaikhrzlntyehlypmewy.jpg", alt: "Tortilla Española" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812845/wlwwonh26eyxywdpe9t6.jpg", alt: "Gazpacho Andaluz" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813111/fe8vsryi3brosrxcjenl.jpg", alt: "Pulpo a la Gallega" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813340/q23kjgqnj9atjtezeqzw.jpg", alt: "Jamón Ibérico con Pan de Cristal" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813353/cb0wzfzue0oqi6wifgri.jpg", alt: "Ensaladilla Rusa" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813704/evhjtku6wyhfocxkznux.jpg", alt: "Chuletillas de Cordero" },
-    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786954337/jk8jbpxwmbvb5ksou5da.avif", alt: "Ensalada con aguacate" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812567/tshq2m7w0nczwfuypfch.jpg", alt: "Paella de Mariscos", position: "center" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812831/gaikhrzlntyehlypmewy.jpg", alt: "Tortilla Española", position: "center 45%" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786812845/wlwwonh26eyxywdpe9t6.jpg", alt: "Gazpacho Andaluz", position: "center" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813111/fe8vsryi3brosrxcjenl.jpg", alt: "Pulpo a la Gallega", position: "center" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813340/q23kjgqnj9atjtezeqzw.jpg", alt: "Jamón Ibérico con Pan de Cristal", position: "center", zoom: 108 },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813353/cb0wzfzue0oqi6wifgri.jpg", alt: "Ensaladilla Rusa", position: "32% 45%" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786813704/evhjtku6wyhfocxkznux.jpg", alt: "Chuletillas de Cordero", position: "44% 42%" },
+    { src: "https://res.cloudinary.com/r2lk2eps/image/upload/v1786954337/jk8jbpxwmbvb5ksou5da.avif", alt: "Ensalada con aguacate", position: "center 45%" },
 ];
 
 const features = [
@@ -148,11 +149,18 @@ export const Home = () => {
                                                     className="tk-plate-flip-front"
                                                     role="img"
                                                     aria-label={plate.alt}
-                                                    style={{ backgroundImage: `url(${plate.src})` }}
+                                                    style={{
+                                                        backgroundImage: `url(${plate.src})`,
+                                                        backgroundPosition: plate.position || "center",
+                                                        backgroundSize: `auto ${plate.zoom || 130}%`,
+                                                    }}
                                                 ></div>
-                                                <div className="tk-plate-flip-back">
-                                                    <span>{RESTAURANT_NAME}</span>
-                                                </div>
+                                                <div
+                                                    className="tk-plate-flip-back"
+                                                    role="img"
+                                                    aria-label={RESTAURANT_NAME}
+                                                    style={{ backgroundImage: `url(${RESTAURANT_IMG})` }}
+                                                ></div>
                                             </div>
                                         </div>
                                     </div>

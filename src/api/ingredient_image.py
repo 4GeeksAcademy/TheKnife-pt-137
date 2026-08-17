@@ -6,6 +6,7 @@ import anthropic
 import cloudinary.uploader
 
 THEMEALDB_INGREDIENT_IMAGE = "https://www.themealdb.com/images/ingredients/{}.png"
+THEMEALDB_INGREDIENT_LIST = "https://www.themealdb.com/api/json/v1/1/list.php?i=list"
 
 # El cliente lee la variable de entorno ANTHROPIC_API_KEY automáticamente
 client = anthropic.Anthropic()
@@ -38,6 +39,35 @@ def _remote_image_exists(url):
         return False
 
 
+_themealdb_names_cache = None
+
+
+def _get_themealdb_ingredient_names():
+    global _themealdb_names_cache
+    if _themealdb_names_cache is not None:
+        return _themealdb_names_cache
+    try:
+        with urllib.request.urlopen(THEMEALDB_INGREDIENT_LIST, timeout=5) as response:
+            data = json.loads(response.read())
+    except Exception:
+        return []
+    names = [meal["strIngredient"] for meal in (data.get("meals") or []) if meal.get("strIngredient")]
+    _themealdb_names_cache = names
+    return names
+
+
+# TheMealDB no indexa muchos ingredientes crudos por su nombre simple (por ejemplo
+# no tiene "Plum", pero sí "Plum Sauce" o "Plum Tomatoes"). Si la traducción exacta
+# no encuentra imagen, buscamos en su catálogo completo un nombre que la contenga
+# como palabra completa y usamos esa imagen como aproximación.
+def _find_partial_match(translated_name):
+    target = translated_name.strip().lower()
+    for name in _get_themealdb_ingredient_names():
+        if target in name.lower().split():
+            return name
+    return None
+
+
 # TheMealDB solo tiene su catálogo de ingredientes en inglés. Si el nombre tal
 # cual no encuentra imagen, le pedimos a Claude que lo traduzca para reintentar.
 def _translate_to_english(ingredient_name):
@@ -67,7 +97,12 @@ def generate_ingredient_image_url(ingredient_name):
             return None
         themealdb_url = build_themealdb_image_url(translated_name)
         if not _remote_image_exists(themealdb_url):
-            return None
+            partial_match = _find_partial_match(translated_name)
+            if not partial_match:
+                return None
+            themealdb_url = build_themealdb_image_url(partial_match)
+            if not _remote_image_exists(themealdb_url):
+                return None
     try:
         upload_result = cloudinary.uploader.upload(themealdb_url, folder="cocinapp_ingredients")
     except Exception:

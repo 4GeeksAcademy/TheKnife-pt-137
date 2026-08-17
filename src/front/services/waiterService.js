@@ -33,6 +33,7 @@ export async function createWaiterService(waiterData) {
         name: waiterData.name,
         email: waiterData.email,
         password: waiterData.password,
+        img_url: waiterData.img_url,
         restaurant_id: waiterData.restaurant_id
     }
     const response = await fetch(`${backendURL}/waiters`, {
@@ -92,7 +93,8 @@ export async function editWaiterService(waiterId, waiterData) {
     const editedWaiter = {
         name: waiterData.name,
         email: waiterData.email,
-        password: waiterData.password
+        password: waiterData.password,
+        img_url: waiterData.img_url
     }
     const response = await fetch(`${backendURL}/waiters/${waiterId}`, {
         method: "PUT",
@@ -113,7 +115,8 @@ export async function waiterRegisterService(restaurant_id, waiterData) {
     const newWaiter = {
         name: waiterData.name,
         email: waiterData.email,
-        password: waiterData.password
+        password: waiterData.password,
+        img_url: waiterData.img_url
     }
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/waiter_register`, {
         method: "POST",

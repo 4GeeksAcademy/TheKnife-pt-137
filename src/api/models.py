@@ -137,6 +137,7 @@ class Waiter(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
@@ -148,6 +149,7 @@ class Waiter(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
+            "img_url": self.img_url,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name
         }
@@ -163,6 +165,7 @@ class Cook(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="CASCADE"))
 
     # Relationships
@@ -173,6 +176,7 @@ class Cook(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
+            "img_url": self.img_url,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name
         }
@@ -216,6 +220,7 @@ class Host(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
+    img_url: Mapped[str] = mapped_column(String(500), nullable=True)
     # Foreign columns
     restaurant_id: Mapped[int] = mapped_column(ForeignKey("restaurant.id", ondelete="SET NULL"), nullable=True)
 
@@ -227,6 +232,7 @@ class Host(db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
+            "img_url": self.img_url,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name if self.restaurant else None
         }

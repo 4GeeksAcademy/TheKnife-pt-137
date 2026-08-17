@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useHost } from "../../../hooks/useHost";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import { useCloudinary } from "../../../hooks/useCloudinary";
 
 const RegisterHost = () => {
 
     const { restaurant_id } = useParams();
     const navigate = useNavigate();
     const { hostRegister } = useHost();
-    const [hostData, setHostData] = useState({ name: "", email: "", password: "" });
+    const [hostData, setHostData] = useState({ name: "", email: "", password: "", img_url: "" });
     const [error, setError] = useState("");
+    const { uploadImage } = useCloudinary()
 
     const noRestaurant = !restaurant_id || restaurant_id === "undefined";
 
@@ -54,6 +56,11 @@ const RegisterHost = () => {
                     <div className="simple-form-field mb-4">
                         <label className="simple-form-label" htmlFor="password">Contraseña</label>
                         <input className="form-control" onChange={(e) => setHostData({ ...hostData, password: e.target.value })} value={hostData.password} type="password" name="password" id="password" placeholder="Contraseña" />
+                    </div>
+
+                    <div className="simple-form-field mb-4">
+                        <label className="simple-form-label" htmlFor="image">Foto</label>
+                        <input type="file" className="form-control" name="image" id="image" onChange={(e) => uploadImage(e, "cocinapp_images", setHostData, hostData)} />
                     </div>
 
                     <button onClick={handleRegister} className="btn simple-form-submit-btn">

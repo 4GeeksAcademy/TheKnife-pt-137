@@ -20,6 +20,9 @@ const SingleWaiter = () => {
         <div className="container py-4 d-flex flex-column align-items-center">
 
             <div className="card" style={{ maxWidth: "500px" }}>
+                {store.singleWaiter.img_url && (
+                    <img src={store.singleWaiter.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
+                )}
                 <div className="card-body">
                     <h1 className="h4">{store.singleWaiter.name}</h1>
                     <ul className="list-group list-group-flush mb-3">

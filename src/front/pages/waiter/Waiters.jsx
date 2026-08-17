@@ -21,6 +21,7 @@ const Waiters = () => {
 
     const waitersList = store.waiters.map((waiter) => {
         return <tr key={waiter.id}>
+            <td><img src={waiter.img_url} height="50" width="50" style={{ objectFit: "cover", borderRadius: "50%" }} /></td>
             <td>{waiter.name}</td>
             <td>{waiter.email}</td>
             <td>{waiter.restaurant_name}</td>
@@ -43,6 +44,7 @@ const Waiters = () => {
             <table className="table table-striped align-middle">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Restaurant name</th>

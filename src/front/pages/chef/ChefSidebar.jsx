@@ -36,6 +36,7 @@ const NAV_GROUPS = (restaurantId) => ([
         label: "Host",
         icon: "fa-door-open",
         items: [
+            { to: `/restaurants/${restaurantId}/host`, label: "Ver host" },
             { to: `/restaurants/${restaurantId}/register_host`, label: "Registrar host" },
         ],
     },

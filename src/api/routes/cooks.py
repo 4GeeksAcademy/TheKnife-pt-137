@@ -61,6 +61,7 @@ def cook_register():
         name=body.get("name"),
         email=body.get("email"),
         password=body.get("password"),
+        img_url=body.get("img_url"),
         restaurant_id=body.get("restaurant_id")
     )
     db.session.add(new_cook)
@@ -159,6 +160,7 @@ def chef_register_cook(restaurant_id):
         name=body.get("name"),
         email=body.get("email"),
         password=body.get("password"),
+        img_url=body.get("img_url"),
         restaurant_id=restaurant_id
     )
     db.session.add(new_cook)

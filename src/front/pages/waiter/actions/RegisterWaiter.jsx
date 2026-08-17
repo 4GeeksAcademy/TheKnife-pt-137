@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useWaiter } from "../../../hooks/useWaiter";
 import { Link, useParams } from "react-router-dom";
+import { useCloudinary } from "../../../hooks/useCloudinary";
 
 const RegisterWaiter = () => {
 
     const { restaurant_id } = useParams()
-    const [waiterData, setWaiterData] = useState({ name: "", email: "", password: "" })
+    const [waiterData, setWaiterData] = useState({ name: "", email: "", password: "", img_url: "" })
     const { waiterRegister } = useWaiter()
+    const { uploadImage } = useCloudinary()
 
     return (
         <div className="simple-form-page">
@@ -34,6 +36,11 @@ const RegisterWaiter = () => {
                     <div className="simple-form-field mb-4">
                         <label className="simple-form-label" htmlFor="password">Contraseña</label>
                         <input className="form-control" onChange={(e) => setWaiterData({ ...waiterData, password: e.target.value })} value={waiterData.password} type="password" name="password" id="password" placeholder="Contraseña" />
+                    </div>
+
+                    <div className="simple-form-field mb-4">
+                        <label className="simple-form-label" htmlFor="image">Foto</label>
+                        <input type="file" className="form-control" name="image" id="image" onChange={(e) => uploadImage(e, "cocinapp_images", setWaiterData, waiterData)} />
                     </div>
 
                     <button onClick={() => waiterRegister(restaurant_id, waiterData)} className="btn simple-form-submit-btn">
