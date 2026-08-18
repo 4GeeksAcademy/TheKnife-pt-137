@@ -18,6 +18,5 @@ flask db heads
 
 echo "=== Running migrations ==="
 flask db upgrade
-flask insert-test-data
 
 echo "=== Migrations finished ==="
