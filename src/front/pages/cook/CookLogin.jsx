@@ -19,7 +19,7 @@ const CookLogin = () => {
         >
             <div className="auth-card">
                 <div className="auth-form-panel">
-                    <p className="brand">The Knife 🔪</p>
+                    <p className="brand">The Knife <img src="/logobueno.png" alt="The Knife" className="brand-icon" /></p>
                     <p className="subtitle">Inicia sesión como Cocinero</p>
 
                     <div className="mb-3">

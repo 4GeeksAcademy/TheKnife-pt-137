@@ -2239,6 +2239,12 @@
   color: var(--cocin-dark);
   margin-bottom: 0.25rem;
 }
+.auth-form-panel .brand-icon {
+  height: 2.3rem;
+  width: auto;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+}
 .auth-form-panel .subtitle {
   text-align: center;
   color: #6c757d;
