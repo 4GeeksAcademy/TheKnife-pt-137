@@ -101,7 +101,7 @@ export const About = () => {
               <i className="fa-solid fa-receipt fa-2x mb-3"></i>
               <h5>Gestión de Pedidos</h5>
               <p className="mb-0">
-                Meseros y cocina siguen cada pedido en tiempo real, desde que
+                Camareros y cocina siguen cada pedido en tiempo real, desde que
                 se toma en la mesa hasta que sale el plato.
               </p>
             </div>
@@ -121,7 +121,7 @@ export const About = () => {
               <i className="fa-solid fa-chair fa-2x mb-3"></i>
               <h5>Mesas y Reservas</h5>
               <p className="mb-0">
-                El anfitrión organiza mesas y reservas por ocasión para que
+                El host organiza mesas y reservas por ocasión para que
                 cada cliente tenga un lugar listo al llegar.
               </p>
             </div>
@@ -131,7 +131,7 @@ export const About = () => {
               <i className="fa-solid fa-users fa-2x mb-3"></i>
               <h5>Equipo y Roles</h5>
               <p className="mb-0">
-                Cada rol (chef, cocinero, mesero, anfitrión, manager) tiene su
+                Cada rol (chef, cocinero, camarero, host, manager) tiene su
                 propio espacio de trabajo dentro de la plataforma.
               </p>
             </div>
