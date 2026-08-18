@@ -145,7 +145,6 @@ export const About = () => {
       {/* Team / chefs */}
       <div className="container py-5">
         <div className="text-center mb-5">
-          <p className="section-title text-center">Nuestro Equipo</p>
           <h1 className="display-6">Nuestros Desarrolladores</h1>
         </div>
 

@@ -61,9 +61,6 @@ export const Navbar = () => {
 			<div className="container">
 				<Logo to={logoDestination} />
 				<div className="ml-auto d-flex gap-4 align-items-center">
-					<Link to="/" className="text-white text-decoration-none">
-						<span>Inicio</span>
-					</Link>
 					<Link to="/about" className="text-white text-decoration-none">
 						<span>Sobre Nosotros</span>
 					</Link>
