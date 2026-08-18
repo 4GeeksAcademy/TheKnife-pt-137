@@ -110,7 +110,7 @@ export function useCook() {
     try {
       const data = await cookRegisterService(restaurant_id, cookData);
       console.log(data);
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/cooks`);
       await getRestaurantCooks(restaurant_id)
     } catch (error) {
       console.log(error);
