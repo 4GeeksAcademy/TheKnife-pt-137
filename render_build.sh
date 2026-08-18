@@ -7,5 +7,3 @@ npm run build
 
 pip install pipenv
 pipenv install --system --deploy
-
-flask db upgrade
