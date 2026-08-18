@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from sqlalchemy import select, func
 from datetime import datetime
-from api.models import db, Reservation, Manager, Client, Host
+from api.models import db, Reservation, Manager, Client, Host, Table, Order
 
 reservation = Blueprint("reservationbp", __name__)
 
@@ -284,6 +284,58 @@ def host_update_reservation_status(reservation_id):
         return jsonify({"message": "The body must have a 'status'"}), 400
     if status not in ALLOWED_STATUSES:
         return jsonify({"message": f"Invalid status. Allowed: {', '.join(ALLOWED_STATUSES)}"}), 400
+
+    previous_status = reservation_to_edit.status
+
+    if status == "seated":
+        # A reservation can only seat guests at a specific table, so one must be
+        # assigned (either already on the reservation, or passed in this request).
+        table_id = body.get("table_id", reservation_to_edit.table_id)
+        if not table_id:
+            return jsonify({"message": "Assign a table before marking the reservation as seated"}), 400
+        table = db.session.scalar(select(Table).where(Table.id == table_id))
+        if not table or table.restaurant_id != current_user.restaurant_id:
+            return jsonify({"message": "Table not found"}), 404
+        reservation_to_edit.table_id = table.id
+        table.status = "occupied"
+    elif previous_status == "seated" and status in ("completed", "cancelled") and reservation_to_edit.table_id:
+        # Free the table when the visit ends, unless the waiter already has an active
+        # order running on it (that order's own close flow will free the table instead).
+        active_order = db.session.scalar(
+            select(Order).where(Order.table_id == reservation_to_edit.table_id, Order.state != "closed"))
+        if not active_order:
+            table = db.session.scalar(select(Table).where(Table.id == reservation_to_edit.table_id))
+            if table:
+                table.status = "free"
+
     reservation_to_edit.status = status
+    db.session.commit()
+    return jsonify(reservation_to_edit.serialize()), 200
+
+# Host assigns/reassigns a table to a reservation of his own restaurant, independently of
+# its status (e.g. planning ahead which table a confirmed reservation will use, before
+# the guests actually arrive and it gets marked "seated").
+@reservation.route("/host/reservations/<int:reservation_id>/table", methods=["PATCH"])
+@jwt_required()
+def host_assign_reservation_table(reservation_id):
+    current_user, role = get_current_user()
+    if not current_user:
+        return jsonify({"message": "User not found"}), 404
+    if role != "host":
+        return jsonify({"message": "Access forbidden"}), 403
+    reservation_to_edit = db.session.scalar(
+        select(Reservation).where(Reservation.id == reservation_id))
+    if not reservation_to_edit:
+        return jsonify({"message": "Reservation not found"}), 404
+    if reservation_to_edit.restaurant_id != current_user.restaurant_id:
+        return jsonify({"message": "Access forbidden"}), 403
+    body = request.get_json()
+    table_id = body.get("table_id")
+    if not table_id:
+        return jsonify({"message": "The body must have a 'table_id'"}), 400
+    table = db.session.scalar(select(Table).where(Table.id == table_id))
+    if not table or table.restaurant_id != current_user.restaurant_id:
+        return jsonify({"message": "Table not found"}), 404
+    reservation_to_edit.table_id = table.id
     db.session.commit()
     return jsonify(reservation_to_edit.serialize()), 200

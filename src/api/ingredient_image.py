@@ -60,12 +60,69 @@ def _get_themealdb_ingredient_names():
 # no tiene "Plum", pero sí "Plum Sauce" o "Plum Tomatoes"). Si la traducción exacta
 # no encuentra imagen, buscamos en su catálogo completo un nombre que la contenga
 # como palabra completa y usamos esa imagen como aproximación.
+#
+# Cuando la traducción son varias palabras (habitual traduciendo del español, p.
+# ej. "pimiento rojo" -> "red bell pepper"), ninguna palabra suelta del catálogo
+# puede ser igual a la frase completa, así que ahí buscamos la frase como
+# substring en vez de como palabra exacta.
 def _find_partial_match(translated_name):
     target = translated_name.strip().lower()
+    target_is_single_word = " " not in target
     for name in _get_themealdb_ingredient_names():
-        if target in name.lower().split():
+        lowered_name = name.lower()
+        if target_is_single_word:
+            if target in lowered_name.split():
+                return name
+        elif target in lowered_name:
             return name
     return None
+
+
+# Último recurso cuando ni la coincidencia exacta ni la parcial encuentran nada
+# (p. ej. la traducción no calza palabra por palabra con el catálogo, como "carne
+# picada" -> "ground meat" cuando TheMealDB solo tiene "Ground Beef"/"Minced Beef").
+# Una similitud de texto pura (difflib) confunde ingredientes sin relación con
+# formas parecidas (p. ej. emparejaría "ground meat" con "ground oats"), así que
+# le pedimos a Claude que elija el nombre del catálogo semánticamente más cercano,
+# restringiendo la respuesta al catálogo real mediante un enum del schema.
+def _find_closest_match(ingredient_name):
+    catalog_names = _get_themealdb_ingredient_names()
+    if not catalog_names:
+        return None
+    schema = {
+        "type": "object",
+        "properties": {
+            "matched_name": {
+                "type": "string",
+                "enum": catalog_names + ["NONE"],
+                "description": (
+                    "El nombre de este catálogo de ingredientes de cocina que mejor "
+                    "corresponde al ingrediente dado (aunque no sea una traducción "
+                    "exacta, con que sea el mismo ingrediente o muy similar vale), "
+                    "o 'NONE' si ninguno se parece razonablemente"
+                )
+            }
+        },
+        "required": ["matched_name"],
+        "additionalProperties": False
+    }
+    try:
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=200,
+            thinking={"type": "disabled"},
+            output_config={"format": {"type": "json_schema", "schema": schema}},
+            messages=[{
+                "role": "user",
+                "content": f"Ingrediente de cocina: {ingredient_name}"
+            }]
+        )
+    except Exception:
+        return None
+    if response.stop_reason == "refusal":
+        return None
+    matched_name = json.loads(response.content[0].text)["matched_name"]
+    return None if matched_name == "NONE" else matched_name
 
 
 # TheMealDB solo tiene su catálogo de ingredientes en inglés. Si el nombre tal
@@ -97,10 +154,10 @@ def generate_ingredient_image_url(ingredient_name):
             return None
         themealdb_url = build_themealdb_image_url(translated_name)
         if not _remote_image_exists(themealdb_url):
-            partial_match = _find_partial_match(translated_name)
-            if not partial_match:
+            best_match = _find_partial_match(translated_name) or _find_closest_match(ingredient_name)
+            if not best_match:
                 return None
-            themealdb_url = build_themealdb_image_url(partial_match)
+            themealdb_url = build_themealdb_image_url(best_match)
             if not _remote_image_exists(themealdb_url):
                 return None
     try:

@@ -80,7 +80,7 @@ export const Home = () => {
                     <div className="row align-items-center g-5">
                         <div className="col-lg-6 text-center text-lg-start">
                             <h1 className="display-4 text-white mb-3">
-                                Disfruta de Buena Comida,<br />Gestionada de Forma Simple
+                                Disfruta de buena comida,<br />gestionada de forma simple
                             </h1>
                             <p className="text-white-50 mb-4 pb-2">
                                 The Knife reúne a chefs, cocineros, camareros, hosts y clientes
@@ -210,7 +210,7 @@ export const Home = () => {
                             <h4 className="tk-footer-title mb-3">The Knife</h4>
                             <p className="text-white-50">
                                 Una plataforma de gestión de restaurantes que conecta a chefs, cocineros, camareros,
-                                hosts y clientes — creada como proyecto de estudiante de 4Geeks Academy.
+                                hosts y clientes — creada por Juan, Graziele y Emmanuel como proyecto final de curso de 4Geeks Academy.
                             </p>
                         </div>
                         <div className="col-lg-4 col-md-6">
@@ -234,7 +234,7 @@ export const Home = () => {
                 </div>
                 <div className="container">
                     <div className="border-top py-4 text-center text-white-50" style={{ borderColor: "rgba(255,255,255,.1)" }}>
-                        &copy; {new Date().getFullYear()} The Knife. Creado como proyecto de estudiante de 4Geeks Academy.
+                        &copy; {new Date().getFullYear()} The Knife
                     </div>
                 </div>
             </footer>

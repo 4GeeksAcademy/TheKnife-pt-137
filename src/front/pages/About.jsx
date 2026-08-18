@@ -10,18 +10,21 @@ const chefs = [
     designation: "Desarrolladora",
     img: grazzielImg,
     github: "https://github.com/Grazziel",
+    linkedin: "https://www.linkedin.com/in/graziele-gomes-de-macedo-59a92a200/",
   },
   {
     name: "Juan Donday Rodríguez",
     designation: "Desarrollador",
     img: juanImg,
     github: "https://github.com/jdondayr",
+    linkedin: "https://www.linkedin.com/in/juan-donday-rodriguez-aa44a9207/",
   },
   {
     name: "Emmanuel Rodríguez",
     designation: "Desarrollador",
     img: emmanuelImg,
     github: "https://github.com/Ejrodriguez3636",
+    linkedin: "https://www.linkedin.com/in/emmanuel-rodriguez-83a304195/",
   },
 ];
 
@@ -101,7 +104,7 @@ export const About = () => {
               <i className="fa-solid fa-receipt fa-2x mb-3"></i>
               <h5>Gestión de Pedidos</h5>
               <p className="mb-0">
-                Meseros y cocina siguen cada pedido en tiempo real, desde que
+                Camareros y cocina siguen cada pedido en tiempo real, desde que
                 se toma en la mesa hasta que sale el plato.
               </p>
             </div>
@@ -121,7 +124,7 @@ export const About = () => {
               <i className="fa-solid fa-chair fa-2x mb-3"></i>
               <h5>Mesas y Reservas</h5>
               <p className="mb-0">
-                El anfitrión organiza mesas y reservas por ocasión para que
+                El host organiza mesas y reservas por ocasión para que
                 cada cliente tenga un lugar listo al llegar.
               </p>
             </div>
@@ -131,7 +134,7 @@ export const About = () => {
               <i className="fa-solid fa-users fa-2x mb-3"></i>
               <h5>Equipo y Roles</h5>
               <p className="mb-0">
-                Cada rol (chef, cocinero, mesero, anfitrión, manager) tiene su
+                Cada rol (chef, cocinero, camarero, host, manager) tiene su
                 propio espacio de trabajo dentro de la plataforma.
               </p>
             </div>
@@ -157,6 +160,9 @@ export const About = () => {
                   <div className="team-social">
                     <a href={chef.github} target="_blank" rel="noreferrer" aria-label="GitHub">
                       <i className="fab fa-github"></i>
+                    </a>
+                    <a href={chef.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                      <i className="fab fa-linkedin"></i>
                     </a>
                   </div>
                 </div>

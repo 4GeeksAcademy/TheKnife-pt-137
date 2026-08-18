@@ -146,12 +146,13 @@ export async function createHostReservationService(reservationData) {
     return await response.json();
 }
 
-// Host updates the status of a reservation of his restaurant
-export async function updateHostReservationStatusService(reservationId, status) {
+// Host updates the status of a reservation of his restaurant (optionally assigning/changing its table in the same request)
+export async function updateHostReservationStatusService(reservationId, status, tableId = null) {
     const hostToken = localStorage.getItem("hosttoken");
+    const body = tableId ? { status, table_id: Number(tableId) } : { status };
     const response = await fetch(`${backendURL}/host/reservations/${reservationId}/status`, {
         method: "PATCH",
-        body: JSON.stringify({ status }),
+        body: JSON.stringify(body),
         headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${hostToken}`
@@ -160,6 +161,24 @@ export async function updateHostReservationStatusService(reservationId, status) 
     if (!response.ok) {
         const data = await response.json();
         throw new Error(data.message || "Error updating reservation status");
+    }
+    return await response.json();
+}
+
+// Host assigns/reassigns a table to a reservation, independently of its status
+export async function assignHostReservationTableService(reservationId, tableId) {
+    const hostToken = localStorage.getItem("hosttoken");
+    const response = await fetch(`${backendURL}/host/reservations/${reservationId}/table`, {
+        method: "PATCH",
+        body: JSON.stringify({ table_id: Number(tableId) }),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${hostToken}`
+        }
+    });
+    if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Error assigning table");
     }
     return await response.json();
 }

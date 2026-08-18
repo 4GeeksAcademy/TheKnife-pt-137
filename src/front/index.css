@@ -260,6 +260,9 @@
   --table-occupied-strong: #c65a5a;
   --table-occupied-soft: #fbecec;
   --table-occupied-text: #a13c3c;
+  --table-reserved-strong: #3d6fc6;
+  --table-reserved-soft: #eaf0fb;
+  --table-reserved-text: #2c4f92;
 }
 
 /* Chef dashboard shell */
@@ -2197,7 +2200,7 @@
 
 /* ===== Auth pages (Login - Colorlib "login-form-02" style: full-bleed photo + centered card) ===== */
 .auth-page {
-  min-height: calc(100vh - 56px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2235,6 +2238,12 @@
   font-size: 1.4rem;
   color: var(--cocin-dark);
   margin-bottom: 0.25rem;
+}
+.auth-form-panel .brand-icon {
+  height: 2.3rem;
+  width: auto;
+  vertical-align: middle;
+  margin-left: 0.25rem;
 }
 .auth-form-panel .subtitle {
   text-align: center;
@@ -2389,6 +2398,10 @@
   background-color: var(--table-occupied-soft);
 }
 
+.waiter-table-tile-reserved {
+  background-color: var(--table-reserved-soft);
+}
+
 .waiter-table-illustration {
   position: relative;
   width: 100px;
@@ -2420,6 +2433,16 @@
   fill: var(--table-occupied-strong);
 }
 
+.waiter-table-tile-reserved .waiter-table-svg circle {
+  fill: rgba(61, 111, 198, 0.18);
+  stroke: var(--table-reserved-strong);
+  stroke-width: 3;
+}
+
+.waiter-table-tile-reserved .waiter-table-svg rect {
+  fill: var(--table-reserved-strong);
+}
+
 .waiter-table-number {
   position: absolute;
   top: 50%;
@@ -2445,6 +2468,10 @@
   color: var(--table-occupied-text);
 }
 
+.waiter-table-tile-reserved .waiter-table-number {
+  color: var(--table-reserved-text);
+}
+
 .waiter-table-status-pill {
   display: inline-flex;
   align-items: center;
@@ -2464,6 +2491,10 @@
   color: var(--table-occupied-text);
 }
 
+.waiter-table-tile-reserved .waiter-table-status-pill {
+  color: var(--table-reserved-text);
+}
+
 .waiter-table-status-dot {
   width: 8px;
   height: 8px;
@@ -2478,17 +2509,7 @@
   background-color: var(--table-occupied-strong);
 }
 
-.waiter-order-form-card {
-  max-width: 360px;
-  margin-top: 2rem;
-  background-color: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 1.5rem;
+.waiter-table-tile-reserved .waiter-table-status-dot {
+  background-color: var(--table-reserved-strong);
 }
 
-.waiter-order-form-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}

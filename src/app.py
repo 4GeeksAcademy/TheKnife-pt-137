@@ -2,7 +2,9 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
+from datetime import date
 from flask import Flask, request, jsonify, url_for, send_from_directory
+from flask.json.provider import DefaultJSONProvider
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_swagger import swagger
@@ -38,6 +40,22 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 CORS(app)
 app.url_map.strict_slashes = False
+
+# All datetimes in this app (reservation_time, date_time, created_at...) are stored and
+# read back as naive wall-clock time (there's no per-restaurant timezone concept). Flask's
+# default JSON encoder serializes them with http_date(), which stamps them "GMT" — the
+# frontend's `new Date(...)` then reads that as real UTC and re-converts to the browser's
+# local timezone, shifting times that were never UTC to begin with. Emitting plain ISO
+# format (no timezone suffix) makes `new Date(...)` parse it as local time, matching what
+# was actually stored, with no shift.
+class NaiveDateTimeJSONProvider(DefaultJSONProvider):
+    @staticmethod
+    def default(o):
+        if isinstance(o, date):
+            return o.isoformat()
+        return DefaultJSONProvider.default(o)
+
+app.json = NaiveDateTimeJSONProvider(app)
 
 # database configuration
 db_url = os.getenv("DATABASE_URL")

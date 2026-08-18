@@ -2,9 +2,22 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, Numeric, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 db = SQLAlchemy()
+
+# The app has no multi-timezone concept (single restaurant, all times entered as plain
+# wall-clock by whoever's browser). reservation_time is stored naive, as the restaurant's
+# own local time — but the server process itself may run in a different OS timezone (e.g.
+# UTC on most cloud hosts). Comparing it against a naive datetime.now() would silently use
+# the server's clock instead, which is wrong whenever the two differ. This computes "now"
+# in the restaurant's timezone explicitly, regardless of what timezone the server runs in.
+RESTAURANT_TZ = ZoneInfo("Europe/Madrid")
+
+
+def restaurant_now():
+    return datetime.now(RESTAURANT_TZ).replace(tzinfo=None)
 
 # Association table: a restaurant can have many occasion tags and viceversa
 restaurant_tag = db.Table(
@@ -110,7 +123,7 @@ class Client(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=True)
@@ -134,7 +147,7 @@ class Waiter(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -162,7 +175,7 @@ class Cook(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -190,7 +203,7 @@ class Chef(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     # Foreign columns
@@ -217,7 +230,7 @@ class Host(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -252,8 +265,33 @@ class Table(db.Model):
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="tables")
     orders: Mapped[list["Order"]] = relationship(back_populates="table")
+    reservations: Mapped[list["Reservation"]] = relationship(back_populates="table")
+
+    # How far ahead of its reservation_time a table starts showing as "reserved" to the waiter.
+    # A reservation made days in advance shouldn't sit a table out of walk-in use until then.
+    RESERVATION_HEADS_UP = timedelta(hours=1)
 
     def serialize(self):
+        # Soonest reservation for this table that's due within the heads-up window (not yet seated,
+        # not overdue), so the waiter board can flag a "free" table that's about to be claimed
+        # without blocking walk-ins on tables reserved days out. A reservation whose time has
+        # already passed no longer counts as "upcoming" — it's on the host to seat it or mark it
+        # cancelled/completed.
+        now = restaurant_now()
+        upcoming_reservations = sorted(
+            (r for r in self.reservations
+             if r.status in ("waiting", "confirmed") and r.reservation_time
+             and now <= r.reservation_time <= now + self.RESERVATION_HEADS_UP),
+            key=lambda r: r.reservation_time
+        )
+        next_reservation = upcoming_reservations[0] if upcoming_reservations else None
+        # The reservation that got this table seated (host already knows the party size from
+        # booking time), so the waiter doesn't have to ask the guests again when opening the order.
+        seated_reservations = sorted(
+            (r for r in self.reservations if r.status == "seated"),
+            key=lambda r: r.created_at, reverse=True
+        )
+        seated_reservation = seated_reservations[0] if seated_reservations else None
         return {
             "id": self.id,
             "number": self.number,
@@ -262,7 +300,19 @@ class Table(db.Model):
             "active": self.active,
             "restaurant_id": self.restaurant_id,
             "restaurant_name": self.restaurant.name,
-            "current_order_id": next((o.id for o in self.orders if o.state != "closed"), None)
+            "current_order_id": next((o.id for o in self.orders if o.state != "closed"), None),
+            "next_reservation": {
+                "id": next_reservation.id,
+                "customer_name": next_reservation.customer_name,
+                "party_size": next_reservation.party_size,
+                "reservation_time": next_reservation.reservation_time,
+                "status": next_reservation.status
+            } if next_reservation else None,
+            "seated_reservation": {
+                "id": seated_reservation.id,
+                "customer_name": seated_reservation.customer_name,
+                "party_size": seated_reservation.party_size
+            } if seated_reservation else None
         }
 
 # Product
@@ -396,7 +446,7 @@ class Reservation(db.Model):
 
     # Relationships
     restaurant: Mapped["Restaurant"] = relationship(back_populates="reservations")
-    table: Mapped["Table"] = relationship()
+    table: Mapped["Table"] = relationship(back_populates="reservations")
     client: Mapped["Client"] = relationship(back_populates="reservations")
 
     def serialize(self):

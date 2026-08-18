@@ -151,8 +151,12 @@ def waiter_create_restaurant_order(restaurant_id):
         return jsonify({"message": "Table not found"}), 404
     if table.restaurant_id != restaurant_id:
         return jsonify({"message": "Access forbidden"}), 403
-    if table.status != "free":
-        return jsonify({"message": "Table is not free"}), 400
+    # A table can be "occupied" with guests already seated by the host (from a reservation)
+    # but with no order yet, so the real guard is "no active order", not "status == free".
+    active_order = db.session.scalar(
+        select(Order).where(Order.table_id == table.id, Order.state != "closed"))
+    if active_order:
+        return jsonify({"message": "Table already has an active order"}), 400
     new_order = Order(
         table_id=table.id,
         waiter_id=current_user.id,
