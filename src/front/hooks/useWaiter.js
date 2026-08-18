@@ -90,7 +90,7 @@ export function useWaiter() {
         try {
             const data = await waiterRegisterService(restaurant_id, waiterData)
             console.log(data)
-            navigate("/chef_dashboard")
+            navigate(`/restaurants/${restaurant_id}/waiters`)
         } catch (error) {console.log(error)}
     }
 
