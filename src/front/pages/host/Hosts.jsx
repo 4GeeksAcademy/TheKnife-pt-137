@@ -25,6 +25,7 @@ const Hosts = () => {
 
     const hostsList = store.hosts.map((host) => (
         <tr key={host.id}>
+            <td><img src={host.img_url} height="50" width="50" style={{ objectFit: "cover", borderRadius: "50%" }} /></td>
             <td>{host.name}</td>
             <td>{host.email}</td>
             <td>{host.restaurant_id}</td>
@@ -50,6 +51,7 @@ const Hosts = () => {
                 <table className="table table-striped align-middle">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Restaurant ID</th>

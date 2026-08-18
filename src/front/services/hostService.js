@@ -65,7 +65,8 @@ export async function editHostService(hostId, hostData) {
     const editedHost = {
         name: hostData.name,
         email: hostData.email,
-        password: hostData.password
+        password: hostData.password,
+        img_url: hostData.img_url
     };
     const response = await fetch(`${backendURL}/hosts/${hostId}`, {
         method: "PUT",
@@ -86,7 +87,8 @@ export async function hostRegisterService(restaurant_id, hostData) {
     const newHost = {
         name: hostData.name,
         email: hostData.email,
-        password: hostData.password
+        password: hostData.password,
+        img_url: hostData.img_url
     };
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/host_register`, {
         method: "POST",

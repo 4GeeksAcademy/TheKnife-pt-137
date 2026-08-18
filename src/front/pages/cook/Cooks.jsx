@@ -21,6 +21,7 @@ const Cooks = () => {
 
     const cooksList = store.cooks.map((cook) => {
         return <tr key={cook.id}>
+            <td><img src={cook.img_url} height="50" width="50" style={{ objectFit: "cover", borderRadius: "50%" }} /></td>
             <td>{cook.name}</td>
             <td>{cook.email}</td>
             <td className="d-flex gap-2">
@@ -42,6 +43,7 @@ const Cooks = () => {
             <table className="table table-striped align-middle">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Name</th>
                         <th>Email</th>
                         <th></th>

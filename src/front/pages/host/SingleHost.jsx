@@ -17,6 +17,9 @@ const SingleHost = () => {
         <div className="container py-4 d-flex flex-column align-items-center">
 
             <div className="card" style={{ maxWidth: "500px" }}>
+                {store.singleHost.img_url && (
+                    <img src={store.singleHost.img_url} className="card-img-top" height="300" style={{ objectFit: "cover" }} />
+                )}
                 <div className="card-body">
                     <h1 className="h4">{store.singleHost.name}</h1>
                     <ul className="list-group list-group-flush mb-3">

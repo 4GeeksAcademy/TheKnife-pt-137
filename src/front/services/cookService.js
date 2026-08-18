@@ -34,6 +34,7 @@ export async function createCookService(cookData) {
     name: cookData.name,
     email: cookData.email,
     password: cookData.password,
+    img_url: cookData.img_url,
     restaurant_id: cookData.restaurant_id,
   };
   const response = await fetch(`${backendURL}/cooks`, {
@@ -90,6 +91,7 @@ export async function editCookService(cookId, cookData) {
     name: cookData.name,
     email: cookData.email,
     password: cookData.password,
+    img_url: cookData.img_url,
   };
   const response = await fetch(`${backendURL}/cooks/${cookId}`, {
     method: "PUT",
@@ -110,7 +112,8 @@ export async function cookRegisterService(restaurant_id, cookData) {
     const newCook = {
         name: cookData.name,
         email: cookData.email,
-        password: cookData.password
+        password: cookData.password,
+        img_url: cookData.img_url
     }
     const response = await fetch(`${backendURL}/restaurants/${restaurant_id}/cook_register`, {
         method: "POST",

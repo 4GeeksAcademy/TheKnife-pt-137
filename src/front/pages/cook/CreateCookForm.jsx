@@ -3,13 +3,15 @@ import { useCook } from "../../hooks/useCook";
 import { Link } from "react-router-dom";
 import { useRestaurant } from "../../hooks/useRestaurant";
 import useGlobalReducer from "../../hooks/useGlobalReducer";
+import { useCloudinary } from "../../hooks/useCloudinary";
 
 const CreateCookForm = () => {
 
     const { store } = useGlobalReducer();
-    const [cookData, setCookData] = useState({ name: "", email: "", password: "", restaurant_id: "" });
+    const [cookData, setCookData] = useState({ name: "", email: "", password: "", img_url: "", restaurant_id: "" });
     const { createCook } = useCook();
     const { getRestaurants } = useRestaurant();
+    const { uploadImage } = useCloudinary();
 
     useEffect(() => {
         getRestaurants();
@@ -39,6 +41,10 @@ const CreateCookForm = () => {
                     <div className="mb-3">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input className="form-control" onChange={(e) => setCookData({ ...cookData, password: e.target.value })} value={cookData.password} type="password" name="password" id="password" />
+                    </div>
+
+                    <div className="mb-3">
+                        <input type="file" className="form-control" onChange={(e) => uploadImage(e, "cocinapp_images", setCookData, cookData)} />
                     </div>
 
                     <div className="mb-3">
