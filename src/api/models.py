@@ -123,7 +123,7 @@ class Client(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str] = mapped_column(String(20), nullable=True)
@@ -147,7 +147,7 @@ class Waiter(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -175,7 +175,7 @@ class Cook(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -203,7 +203,7 @@ class Chef(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     # Foreign columns
@@ -230,7 +230,7 @@ class Host(db.Model):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(20), nullable=False)
+    name: Mapped[str] = mapped_column(String(40), nullable=False)
     email: Mapped[str] = mapped_column(String(30), nullable=False)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     img_url: Mapped[str] = mapped_column(String(500), nullable=True)
