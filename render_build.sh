@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# exit on error
 set -o errexit
 
 npm install
@@ -10,6 +9,12 @@ pipenv install --system --deploy
 
 echo "=== DATABASE_URL present? ==="
 python -c "import os; print(bool(os.getenv('DATABASE_URL')))"
+
+echo "=== Current migration ==="
+flask db current
+
+echo "=== Migration heads ==="
+flask db heads
 
 echo "=== Running migrations ==="
 flask db upgrade
