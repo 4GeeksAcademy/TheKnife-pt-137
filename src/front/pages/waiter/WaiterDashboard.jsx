@@ -137,11 +137,18 @@ const WaiterDashboard = () => {
         <div className="waiter-dashboard">
 
             <div className="waiter-page-header">
-                <div>
-                    <h1 className="dashboard-welcome-title">Bienvenido, {currentWaiter.name}</h1>
-                    <div className="dashboard-welcome-subtitle">
-                        <i className="fa-solid fa-store"></i>
-                        Restaurante: {currentWaiter.restaurant_name}
+                <div className="d-flex align-items-center gap-3">
+                    {currentWaiter.img_url ? (
+                        <img src={currentWaiter.img_url} alt={currentWaiter.name} className="waiter-avatar" />
+                    ) : (
+                        <div className="waiter-avatar">{currentWaiter.name?.charAt(0).toUpperCase()}</div>
+                    )}
+                    <div>
+                        <h1 className="dashboard-welcome-title">Bienvenido, {currentWaiter.name}</h1>
+                        <div className="dashboard-welcome-subtitle">
+                            <i className="fa-solid fa-store"></i>
+                            Restaurante: {currentWaiter.restaurant_name}
+                        </div>
                     </div>
                 </div>
             </div>
