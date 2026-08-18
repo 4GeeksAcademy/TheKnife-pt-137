@@ -2200,7 +2200,7 @@
 
 /* ===== Auth pages (Login - Colorlib "login-form-02" style: full-bleed photo + centered card) ===== */
 .auth-page {
-  min-height: calc(100vh - 56px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
