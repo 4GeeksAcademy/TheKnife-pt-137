@@ -51,9 +51,16 @@ const CookDashboard = () => {
     return (
         <div className="cook-overview">
 
-            <div className="mb-4">
-                <h1 className="h3 mb-1">Bienvenido, {currentCook.name}</h1>
-                {currentCook.restaurant_name && <p className="text-muted mb-0">{currentCook.restaurant_name}</p>}
+            <div className="mb-4 d-flex align-items-center gap-3">
+                {currentCook.img_url ? (
+                    <img src={currentCook.img_url} alt={currentCook.name} className="waiter-avatar" />
+                ) : (
+                    <div className="waiter-avatar">{currentCook.name?.charAt(0).toUpperCase()}</div>
+                )}
+                <div>
+                    <h1 className="h3 mb-1">Bienvenido, {currentCook.name}</h1>
+                    {currentCook.restaurant_name && <p className="text-muted mb-0">{currentCook.restaurant_name}</p>}
+                </div>
             </div>
 
             {loadingStats ? (

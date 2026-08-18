@@ -20,11 +20,18 @@ const HostDashboard = () => {
         <div className="host-dashboard">
 
             <div className="host-page-header">
-                <div>
-                    <h1 className="dashboard-welcome-title">Bienvenido, {currentHost.name}</h1>
-                    <div className="dashboard-welcome-subtitle">
-                        <i className="fa-solid fa-store"></i>
-                        Restaurante: {currentHost.restaurant_name}
+                <div className="d-flex align-items-center gap-3">
+                    {currentHost.img_url ? (
+                        <img src={currentHost.img_url} alt={currentHost.name} className="waiter-avatar" />
+                    ) : (
+                        <div className="waiter-avatar">{currentHost.name?.charAt(0).toUpperCase()}</div>
+                    )}
+                    <div>
+                        <h1 className="dashboard-welcome-title">Bienvenido, {currentHost.name}</h1>
+                        <div className="dashboard-welcome-subtitle">
+                            <i className="fa-solid fa-store"></i>
+                            Restaurante: {currentHost.restaurant_name}
+                        </div>
                     </div>
                 </div>
             </div>
