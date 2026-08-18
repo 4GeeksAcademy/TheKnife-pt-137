@@ -10,18 +10,21 @@ const chefs = [
     designation: "Desarrolladora",
     img: grazzielImg,
     github: "https://github.com/Grazziel",
+    linkedin: "https://www.linkedin.com/in/graziele-gomes-de-macedo-59a92a200/",
   },
   {
     name: "Juan Donday Rodríguez",
     designation: "Desarrollador",
     img: juanImg,
     github: "https://github.com/jdondayr",
+    linkedin: "https://www.linkedin.com/in/juan-donday-rodriguez-aa44a9207/",
   },
   {
     name: "Emmanuel Rodríguez",
     designation: "Desarrollador",
     img: emmanuelImg,
     github: "https://github.com/Ejrodriguez3636",
+    linkedin: "https://www.linkedin.com/in/emmanuel-rodriguez-83a304195/",
   },
 ];
 
@@ -157,6 +160,9 @@ export const About = () => {
                   <div className="team-social">
                     <a href={chef.github} target="_blank" rel="noreferrer" aria-label="GitHub">
                       <i className="fab fa-github"></i>
+                    </a>
+                    <a href={chef.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                      <i className="fab fa-linkedin"></i>
                     </a>
                   </div>
                 </div>
