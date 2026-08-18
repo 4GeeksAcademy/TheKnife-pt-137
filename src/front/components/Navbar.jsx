@@ -29,7 +29,7 @@ const getLogoDestination = () => {
 const Logo = ({ to }) => (
 	<Link to={to} className="text-decoration-none">
 		<span className="navbar-brand mb-0 h1 text-white">
-			<span className="me-2">🔪</span>The Knife
+			<span className="me-2"><img src="/logobueno.png" alt="theknifelogo" height="50" width="50" /></span>The Knife
 		</span>
 	</Link>
 );
@@ -67,41 +67,6 @@ export const Navbar = () => {
 					<Link to="/about" className="text-white text-decoration-none">
 						<span>Sobre Nosotros</span>
 					</Link>
-					{!isLoggedIn && (
-						<div className="dropdown">
-							<button
-								id="tk-identify-menu"
-								type="button"
-								className="btn tk-btn-primary dropdown-toggle"
-								data-bs-toggle="dropdown"
-								aria-expanded="false"
-							>
-								¡Identifícate!
-							</button>
-							<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="tk-identify-menu">
-								{identifyOptions.map((option, index) => (
-									<Fragment key={option.title}>
-										{index > 0 && (
-											<li>
-												<hr className="dropdown-divider" />
-											</li>
-										)}
-										<li>
-											<h6 className="dropdown-header">{option.title}</h6>
-										</li>
-										{option.register && (
-											<li>
-												<Link className="dropdown-item" to={option.register}>Registrarse</Link>
-											</li>
-										)}
-										<li>
-											<Link className="dropdown-item" to={option.login}>Iniciar Sesión</Link>
-										</li>
-									</Fragment>
-								))}
-							</ul>
-						</div>
-					)}
 				</div>
 			</div>
 		</nav>
