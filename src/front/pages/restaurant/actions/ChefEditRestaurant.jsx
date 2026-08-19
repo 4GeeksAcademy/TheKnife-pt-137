@@ -41,8 +41,8 @@ const ChefEditRestaurant = () => {
     }
 
     async function handleDeleteRestaurant() {
-        const confirmation = window.prompt("If you delete the restaurant, all items related to it will be deleted also\n Enter 'DELETE' to delete the restaurant.")
-        if (confirmation != "DELETE") return
+        const confirmation = window.prompt("Si eliminas el restaurante, todos los elementos relacionados con él también se eliminarán\n Escribe 'ELIMINAR' para eliminar el restaurante.")
+        if (confirmation != "ELIMINAR") return
         chefDeleteRestaurant(restaurant_id)
     }
 
@@ -50,11 +50,11 @@ const ChefEditRestaurant = () => {
         <div className="mx-auto" style={{ maxWidth: "500px" }}>
 
             <div className="card">
-                <div className="card-header text-center">Edit restaurant</div>
+                <div className="card-header text-center">Editar restaurante</div>
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="name">Name</label>
+                        <label className="form-label" htmlFor="name">Nombre</label>
                         <input className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, name: e.target.value})} value={restaurantData.name} type="text" name="name" id="name" />
                     </div>
 
@@ -64,27 +64,27 @@ const ChefEditRestaurant = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="phone">Phone</label>
+                        <label className="form-label" htmlFor="phone">Teléfono</label>
                         <input className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, phone: e.target.value})} value={restaurantData.phone} type="text" name="phone" id="phone" />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="address">Address</label>
+                        <label className="form-label" htmlFor="address">Dirección</label>
                         <input className="form-control" type="text" onChange={(e)=>setRestaurantData({...restaurantData, address: e.target.value})} value={restaurantData.address} name="address" id="address" />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="description">Description</label>
+                        <label className="form-label" htmlFor="description">Descripción</label>
                         <textarea className="form-control" onChange={(e)=>setRestaurantData({...restaurantData, description: e.target.value})} value={restaurantData.description} name="description" id="description" />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="food_type">Food type</label>
-                        <input className="form-control" type="text" placeholder="e.g. Italian, Mexican, Mediterranean..." onChange={(e)=>setRestaurantData({...restaurantData, food_type: e.target.value})} value={restaurantData.food_type} name="food_type" id="food_type" />
+                        <label className="form-label" htmlFor="food_type">Tipo de cocina</label>
+                        <input className="form-control" type="text" placeholder="ej. Italiana, Mexicana, Mediterránea..." onChange={(e)=>setRestaurantData({...restaurantData, food_type: e.target.value})} value={restaurantData.food_type} name="food_type" id="food_type" />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label d-block">Occasion tags</label>
+                        <label className="form-label d-block">Etiquetas de ocasión</label>
                         <div className="d-flex flex-wrap gap-2">
                             {store.tags.map((tag) => {
                                 const active = restaurantData.tag_ids.includes(tag.id)
@@ -103,16 +103,16 @@ const ChefEditRestaurant = () => {
                         <input type="file" className="form-control" name="image" id="image" onChange={(e)=>uploadImage(e,"cocinapp_images",setRestaurantData,restaurantData)} />
                     </div>
 
-                    <button onClick={()=>chefEditRestaurant(restaurant_id, restaurantData)} className="btn btn-primary w-100 mb-3">Edit restaurant</button>
+                    <button onClick={()=>chefEditRestaurant(restaurant_id, restaurantData)} className="btn btn-primary w-100 mb-3">Editar restaurante</button>
 
                 </div>
             </div>
 
             <div className="card border-danger mt-4">
-                <div className="card-header text-danger">Danger zone</div>
+                <div className="card-header text-danger">Zona de peligro</div>
                 <div className="card-body">
-                    <p className="text-muted small mb-3">Deleting the restaurant also deletes every item related to it (waiters, cooks, recipes, orders, products).</p>
-                    <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger w-100">Delete restaurant</button>
+                    <p className="text-muted small mb-3">Al eliminar el restaurante también se eliminan todos los elementos relacionados con él (camareros, cocineros, recetas, comandas, productos).</p>
+                    <button onClick={handleDeleteRestaurant} className="btn btn-outline-danger w-100">Eliminar restaurante</button>
                 </div>
             </div>
 

@@ -22,32 +22,32 @@ const Reservations = () => {
             <td>{reservation.customer_name}</td>
             <td>{reservation.phone}</td>
             <td>{reservation.party_size}</td>
-            <td>{reservation.reservation_time ? new Date(reservation.reservation_time).toLocaleString() : "Waitlist"}</td>
+            <td>{reservation.reservation_time ? new Date(reservation.reservation_time).toLocaleString() : "Lista de espera"}</td>
             <td>{reservation.status}</td>
             <td>{reservation.restaurant_name}</td>
             <td>{reservation.table_number ?? "-"}</td>
             <td className="d-flex gap-2">
-                <button className="btn btn-danger btn-sm" onClick={() => deleteReservation(reservation.id)}>Delete</button>
-                <Link to={`/edit_reservation/${reservation.id}`}><button className="btn btn-warning btn-sm">Edit</button></Link>
-                <Link to={`/single_reservation/${reservation.id}`}><button className="btn btn-primary btn-sm">View</button></Link>
+                <button className="btn btn-danger btn-sm" onClick={() => deleteReservation(reservation.id)}>Eliminar</button>
+                <Link to={`/edit_reservation/${reservation.id}`}><button className="btn btn-warning btn-sm">Editar</button></Link>
+                <Link to={`/single_reservation/${reservation.id}`}><button className="btn btn-primary btn-sm">Ver</button></Link>
             </td>
         </tr>
     })
 
     return (
         <div className="reservation_page container py-4">
-            <Link to="/create_reservation"><button className="btn btn-primary mb-4">Add reservation</button></Link>
-            <h1 className="h4 mb-3">Reservations</h1>
+            <Link to="/create_reservation"><button className="btn btn-primary mb-4">Añadir reserva</button></Link>
+            <h1 className="h4 mb-3">Reservas</h1>
             <table className="table table-striped align-middle">
                 <thead>
                     <tr>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Party size</th>
-                        <th>Time</th>
-                        <th>Status</th>
-                        <th>Restaurant</th>
-                        <th>Table</th>
+                        <th>Cliente</th>
+                        <th>Teléfono</th>
+                        <th>Número de personas</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Restaurante</th>
+                        <th>Mesa</th>
                         <th></th>
                     </tr>
                 </thead>

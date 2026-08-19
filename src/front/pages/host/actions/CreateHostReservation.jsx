@@ -46,25 +46,25 @@ const CreateHostReservation = () => {
         <div className="container py-5" style={{ maxWidth: "500px" }}>
 
             <div className="card">
-                <div className="card-header text-center">New reservation (walk-in / guest)</div>
+                <div className="card-header text-center">Nueva reserva (sin reserva previa / invitado)</div>
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="customer_name">Customer name</label>
+                        <label className="form-label" htmlFor="customer_name">Nombre del cliente</label>
                         <input className="form-control" type="text" name="customer_name" id="customer_name"
                             value={reservationData.customer_name}
                             onChange={(e) => setReservationData({ ...reservationData, customer_name: e.target.value })} />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="phone">Phone (optional)</label>
+                        <label className="form-label" htmlFor="phone">Teléfono (opcional)</label>
                         <input className="form-control" type="text" name="phone" id="phone"
                             value={reservationData.phone}
                             onChange={(e) => setReservationData({ ...reservationData, phone: e.target.value })} />
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="party_size">Party size</label>
+                        <label className="form-label" htmlFor="party_size">Número de personas</label>
                         <input className="form-control" type="number" min="1" name="party_size" id="party_size"
                             value={reservationData.party_size}
                             onChange={(e) => setReservationData({ ...reservationData, party_size: e.target.value })} />
@@ -72,13 +72,13 @@ const CreateHostReservation = () => {
 
                     <div className="row mb-3">
                         <div className="col">
-                            <label className="form-label" htmlFor="reservation_date">Date (optional)</label>
+                            <label className="form-label" htmlFor="reservation_date">Fecha (opcional)</label>
                             <input className="form-control" type="date" name="reservation_date" id="reservation_date"
                                 value={reservationDate}
                                 onChange={(e) => setReservationDate(e.target.value)} />
                         </div>
                         <div className="col">
-                            <label className="form-label" htmlFor="reservation_time">Time (optional)</label>
+                            <label className="form-label" htmlFor="reservation_time">Hora (opcional)</label>
                             <input className="form-control" type="time" name="reservation_time" id="reservation_time"
                                 value={reservationTime}
                                 onChange={(e) => setReservationTime(e.target.value)} />
@@ -86,38 +86,38 @@ const CreateHostReservation = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="table_id">Table (optional)</label>
+                        <label className="form-label" htmlFor="table_id">Mesa (opcional)</label>
                         <select className="form-select" name="table_id" id="table_id"
                             value={reservationData.table_id}
                             onChange={(e) => setReservationData({ ...reservationData, table_id: e.target.value })}>
-                            <option value="">No table assigned</option>
+                            <option value="">Sin mesa asignada</option>
                             {store.tables.map((table) => (
                                 <option key={table.id} value={table.id}>
-                                    Table {table.number} — {table.location}
+                                    Mesa {table.number} — {table.location}
                                 </option>
                             ))}
                         </select>
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="status">Status</label>
+                        <label className="form-label" htmlFor="status">Estado</label>
                         <select className="form-select" name="status" id="status"
                             value={reservationData.status}
                             onChange={(e) => setReservationData({ ...reservationData, status: e.target.value })}>
-                            <option value="waiting">Waiting</option>
-                            <option value="confirmed">Confirmed</option>
-                            <option value="seated">Seated</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="waiting">En espera</option>
+                            <option value="confirmed">Confirmada</option>
+                            <option value="seated">En mesa</option>
+                            <option value="completed">Completada</option>
+                            <option value="cancelled">Cancelada</option>
                         </select>
                     </div>
 
                     <button onClick={handleCreate} className="btn btn-primary w-100 mb-3">
-                        Create reservation
+                        Crear reserva
                     </button>
 
                     <div className="text-center">
-                        <Link to="/host_reservations">Back to reservations</Link>
+                        <Link to="/host_reservations">Volver a reservas</Link>
                     </div>
 
                 </div>

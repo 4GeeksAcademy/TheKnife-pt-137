@@ -30,19 +30,19 @@ const CreateReservationForm = () => {
         <div className="container py-5" style={{ maxWidth: "500px" }}>
 
             <div className="card">
-                <div className="card-header text-center">Create new reservation</div>
+                <div className="card-header text-center">Crear nueva reserva</div>
                 <div className="card-body">
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="restaurantid">Restaurant</label>
+                        <label className="form-label" htmlFor="restaurantid">Restaurante</label>
                         <select className="form-select" onChange={(e) => setReservationData({ ...reservationData, restaurant_id: e.target.value })} value={reservationData.restaurant_id} name="restaurantid" id="restaurantid">
-                            <option value="">Select a restaurant</option>
+                            <option value="">Selecciona un restaurante</option>
                             {restaurantsList}
                         </select>
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="customer_name">Customer name</label>
+                        <label className="form-label" htmlFor="customer_name">Nombre del cliente</label>
                         <input
                             className="form-control"
                             onChange={(e) => setReservationData({ ...reservationData, customer_name: e.target.value })}
@@ -54,7 +54,7 @@ const CreateReservationForm = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="phone">Phone</label>
+                        <label className="form-label" htmlFor="phone">Teléfono</label>
                         <input
                             className="form-control"
                             onChange={(e) => setReservationData({ ...reservationData, phone: e.target.value })}
@@ -66,7 +66,7 @@ const CreateReservationForm = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="party_size">Party size</label>
+                        <label className="form-label" htmlFor="party_size">Número de personas</label>
                         <input
                             className="form-control"
                             onChange={(e) => setReservationData({ ...reservationData, party_size: e.target.value })}
@@ -79,7 +79,7 @@ const CreateReservationForm = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="reservation_time">Reservation time (leave empty for waitlist)</label>
+                        <label className="form-label" htmlFor="reservation_time">Hora de la reserva (déjalo vacío para lista de espera)</label>
                         <input
                             className="form-control"
                             onChange={(e) => setReservationData({ ...reservationData, reservation_time: e.target.value })}
@@ -91,7 +91,7 @@ const CreateReservationForm = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label" htmlFor="status">Status</label>
+                        <label className="form-label" htmlFor="status">Estado</label>
                         <select
                             className="form-select"
                             onChange={(e) => setReservationData({ ...reservationData, status: e.target.value })}
@@ -99,18 +99,18 @@ const CreateReservationForm = () => {
                             name="status"
                             id="status"
                         >
-                            <option value="waiting">waiting</option>
-                            <option value="notified">notified</option>
-                            <option value="checked_in">checked_in</option>
-                            <option value="seated">seated</option>
-                            <option value="cancelled">cancelled</option>
+                            <option value="waiting">En espera</option>
+                            <option value="notified">Notificado</option>
+                            <option value="checked_in">Registrado</option>
+                            <option value="seated">En mesa</option>
+                            <option value="cancelled">Cancelada</option>
                         </select>
                     </div>
 
-                    <button onClick={() => createReservation(reservationData)} className="btn btn-primary w-100 mb-3">Create new reservation</button>
+                    <button onClick={() => createReservation(reservationData)} className="btn btn-primary w-100 mb-3">Crear nueva reserva</button>
 
                     <div className="text-center">
-                        <Link to="/reservations">Back to reservations</Link>
+                        <Link to="/reservations">Volver a reservas</Link>
                     </div>
 
                 </div>
