@@ -42,6 +42,22 @@ const WaiterDashboard = () => {
         return () => el.removeEventListener("hidden.bs.modal", handleHidden)
     }, [selectedTable])
 
+    // Al crear la comanda navegamos fuera de esta página con el modal aún abierto,
+    // así que React lo desmonta sin que Bootstrap llegue a limpiar el backdrop ni
+    // las clases que añade a <body>. Lo forzamos aquí para que no quede tapando la
+    // siguiente pantalla en negro.
+    useEffect(() => {
+        return () => {
+            const el = document.getElementById("waiterOrderModal")
+            if (el && window.bootstrap) {
+                window.bootstrap.Modal.getOrCreateInstance(el).dispose()
+            }
+            document.body.classList.remove("modal-open")
+            document.body.style.removeProperty("padding-right")
+            document.querySelectorAll(".modal-backdrop").forEach((backdrop) => backdrop.remove())
+        }
+    }, [])
+
     const currentWaiter = store.loggedWaiter.waiter
 
     useEffect(() => {
