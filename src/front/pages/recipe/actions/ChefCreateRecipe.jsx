@@ -64,6 +64,14 @@ function ChefCreateRecipe() {
         setManualIngredients(manualIngredients.filter((_, i) => i !== index))
     }
 
+    function handleEditAiIngredientAmount(index, newAmount) {
+        setAiIngredients(aiIngredients.map((ing, i) => i === index ? { ...ing, amount: newAmount } : ing))
+    }
+
+    function handleRemoveAiIngredient(index) {
+        setAiIngredients(aiIngredients.filter((_, i) => i !== index))
+    }
+
     async function handleGenerateWithAI() {
         if (!img_url.img_url) return
         setAiLoading(true)
@@ -152,9 +160,25 @@ function ChefCreateRecipe() {
                                 <label className="form-label">Ingredientes sugeridos por la IA</label>
                                 <ul className="list-group">
                                     {aiIngredients.map((ing, index) => (
-                                        <li className="list-group-item d-flex justify-content-between" key={index}>
+                                        <li className="list-group-item d-flex justify-content-between align-items-center gap-2" key={index}>
                                             <span>{ing.name}</span>
-                                            <span className="text-muted">{ing.amount}</span>
+                                            <div className="d-flex gap-2 align-items-center">
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    className="form-control form-control-sm"
+                                                    style={{ width: "80px" }}
+                                                    value={ing.amount}
+                                                    onChange={(e) => handleEditAiIngredientAmount(index, e.target.value)}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={() => handleRemoveAiIngredient(index)}
+                                                >
+                                                    Eliminar
+                                                </button>
+                                            </div>
                                         </li>
                                     ))}
                                 </ul>
