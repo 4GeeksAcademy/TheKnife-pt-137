@@ -147,7 +147,7 @@ export function useRecipe() {
         }
       }
 
-      navigate("/chef_dashboard");
+      navigate(`/restaurants/${restaurant_id}/recipes`);
     } catch (error) {
       console.log(error);
     }
