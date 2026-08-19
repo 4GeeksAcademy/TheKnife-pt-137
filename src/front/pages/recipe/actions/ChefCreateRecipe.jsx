@@ -100,6 +100,7 @@ function ChefCreateRecipe() {
                             <label className="form-label" htmlFor="steps">Pasos</label>
                             <textarea
                                 className="form-control"
+                                style={{height: "150px"}}
                                 id="steps"
                                 value={steps}
                                 onChange={(e) => setSteps(e.target.value)}
