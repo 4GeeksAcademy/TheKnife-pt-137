@@ -1,53 +1,79 @@
-# WebApp boilerplate with React JS and Flask API
+# "The Knife"
 
-Build web applications using React.js for the front end and python/flask for your backend API.
+The Knife es una plataforma de gestión de restaurantes que nace de la necesidad que tuvimos sus desarrolladores como ex-hosteleros en sitios donde hemos trabajado anteriormente. Los problemas que solucionamos han sido vividos en nuestras carnes intensamente, por lo que tenemos una amplia visión para ofrecer unas eficaces medidas de acción.
+SPA en React (frontend) más una API REST en Flask (backend), con PostgreSQL como base de datos vía SQLAlchemy. El idioma de la interfaz es español.
 
-- Documentation can be found here: https://4geeks.com/docs/start/react-flask-template
-- Here is a video on [how to use this template](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
-- Integrated with Pipenv for package managing.
-- Fast deployment to Render [in just a few steps here](https://4geeks.com/docs/start/deploy-to-render-com).
-- Use of .env file.
-- SQLAlchemy integration for database abstraction.
+La aplicación define seis roles de usuario, cada uno con su propio login y dashboard privado:
 
-### 1) Installation:
+- **Manager**: administración de la plataforma (alta de restaurantes, CRUD genérico de todas las entidades).
+- **Chef**: dueño/responsable de un restaurante — gestiona su carta, recetas, ingredientes, mesas, y da de alta a su equipo (camareros, cocineros, host).
+- **Cook** (Cocinero): visualiza y actualiza el estado de los pedidos en cocina.
+- **Waiter** (Camarero): gestiona mesas y cierra pedidos en el salón.
+- **Host**: gestiona el libro de reservas del restaurante.
+- **Client** (Cliente): cuenta pública para comensales — busca restaurantes cercanos y crea reservas.
 
-> If you use Github Codespaces (recommended) or Gitpod this template will already come with Python, Node and the Posgres Database installed. If you are working locally make sure to install Python 3.10, Node 
+## Stack tecnológico
 
-It is recomended to install the backend first, make sure you have Python 3.10, Pipenv and a database engine (Posgress recomended)
+**Frontend**
+- React 18 (SPA) + Vite como bundler/dev server
+- React Router v6 (`createBrowserRouter`) para el ruteo y los guards por rol
+- Estado global con React Context + `useReducer` (store propio en `store.js`, sin Redux/Zustand)
+- `@vis.gl/react-google-maps` (Google Maps JS API) para geolocalización de restaurantes y búsqueda por cercanía
+- Cloudinary (`@cloudinary/react`, `@cloudinary/url-gen`) para subida de imágenes directamente desde el navegador
+- ESLint para linting
 
-1. Install the python packages: `$ pipenv install`
-2. Create a .env file based on the .env.example: `$ cp .env.example .env`
-3. Install your database engine and create your database, depending on your database you have to create a DATABASE_URL variable with one of the possible values, make sure you replace the valudes with your database information:
+**Backend**
+- Python 3.13 + Flask, organizado en Blueprints por dominio (`src/api/routes/*.py`)
+- SQLAlchemy + Flask-SQLAlchemy como ORM, Flask-Migrate/Alembic para migraciones
+- PostgreSQL como base de datos (vía `psycopg2-binary`)
+- Autenticación con JWT (`flask-jwt-extended`), un token por rol
+- Flask-CORS, Flask-Admin, Flask-Swagger
+- Integración con la API de Anthropic (Claude) para generar recetas a partir de una foto de un plato y estimar sus calorías (`src/api/routes/ai_recipe.py`)
+- Cloudinary (SDK de Python) y Gunicorn para producción
 
-| Engine    | DATABASE_URL                                        |
-| --------- | --------------------------------------------------- |
-| SQLite    | sqlite:////test.db                                  |
-| MySQL     | mysql://username:password@localhost:port/example    |
-| Postgress | postgres://username:password@localhost:5432/example |
+**Infraestructura / herramientas**
+- Pipenv para la gestión de dependencias de Python
+- `.env` para variables de entorno (ver sección de instalación)
+- Pensado para desplegar en Render.com
 
-4. Migrate the migrations: `$ pipenv run migrate` (skip if you have not made changes to the models on the `./src/api/models.py`)
-5. Run the migrations: `$ pipenv run upgrade`
-6. Run the application: `$ pipenv run start`
+## Instalación
 
-> Note: Codespaces users can connect to psql by typing: `psql -h localhost -U gitpod example`
+> Si usas Github Codespaces (recomendado) o Gitpod, el entorno ya viene con Python, Node y PostgreSQL instalados. Si trabajas en local, asegúrate de instalar Python 3.13 y Node 20.
 
-### Undo a migration
+Se recomienda instalar primero el backend. Asegúrate de tener Python 3.13, Pipenv y PostgreSQL.
 
-You are also able to undo a migration by running
+1. Instala los paquetes de Python: `$ pipenv install`
+2. Crea un archivo `.env` a partir de `.env.example`: `$ cp .env.example .env`
+3. Completa las variables de entorno necesarias en `.env`:
+
+| Variable | Descripción |
+| --- | --- |
+| `DATABASE_URL` | Cadena de conexión a PostgreSQL, ej. `postgres://username:password@localhost:5432/example` |
+| `JWT_SECRET_KEY` | Clave secreta para firmar los tokens JWT (`flask_jwt_extended`) |
+| `ANTHROPIC_API_KEY` | API key de Anthropic, usada por `src/api/routes/ai_recipe.py` para generar recetas y estimar calorías con Claude |
+| `VITE_BACKEND_URL` | URL del backend que consume el frontend (sin esta variable, la app muestra una pantalla de error en vez del sitio) |
+| `VITE_GOOGLE_MAPS_API_KEY` | API key de Google Maps JS (selector de ubicación del restaurante, búsqueda de restaurantes cercanos) |
+| `VITE_CLOUD_NAME` | Cloud name de Cloudinary (subida de imágenes desde el navegador, `upload_preset` sin firmar) |
+
+4. Genera las migraciones si modificaste `./src/api/models.py`: `$ pipenv run migrate`
+5. Aplica las migraciones: `$ pipenv run upgrade`
+6. Levanta el backend: `$ pipenv run start` (queda escuchando en el puerto 3001)
+
+> Nota: en Codespaces puedes conectarte a psql con: `psql -h localhost -U gitpod example`
+
+### Deshacer una migración
 
 ```sh
 $ pipenv run downgrade
 ```
 
-### Backend Populate Table Users
-
-To insert test users in the database execute the following command:
+### Poblar la tabla de usuarios (datos de prueba)
 
 ```sh
 $ flask insert-test-users 5
 ```
 
-And you will see the following message:
+Verás un mensaje como:
 
 ```
   Creating test users
@@ -59,23 +85,28 @@ And you will see the following message:
   Users created successfully!
 ```
 
-### **Important note for the database and the data inside it**
+Para poblar otras entidades de prueba (restaurantes, recetas, etc.), edita la función `insert_test_data` en `src/api/commands.py` y luego ejecuta `$ pipenv run insert-test-data`.
 
-Every Github codespace environment will have **its own database**, so if you're working with more people eveyone will have a different database and different records inside it. This data **will be lost**, so don't spend too much time manually creating records for testing, instead, you can automate adding records to your database by editing ```commands.py``` file inside ```/src/api``` folder. Edit line 32 function ```insert_test_data``` to insert the data according to your model (use the function ```insert_test_users``` above as an example). Then, all you need to do is run ```pipenv run insert-test-data```.
+### **Nota importante sobre la base de datos**
 
-### Front-End Manual Installation:
+Cada entorno de Github Codespace tiene **su propia base de datos**: si trabajan varias personas, cada una tendrá registros distintos, y esos datos **se perderán** al cerrar el entorno. Evita perder tiempo creando registros a mano; automatiza la carga de datos de prueba editando `commands.py` como se indica arriba.
 
--   Make sure you are using node version 20 and that you have already successfully installed and runned the backend.
+### Instalación manual del frontend
 
-1. Install the packages: `$ npm install`
-2. Start coding! start the webpack dev server `$ npm run start`
+- Asegúrate de usar Node 20 y de haber instalado y levantado el backend antes.
 
-## Publish your website!
+1. Instala los paquetes: `$ npm install`
+2. Levanta el servidor de desarrollo de Vite: `$ npm run dev` (puerto 3000)
 
-This boilerplate it's 100% read to deploy with Render.com and Heroku in a matter of minutes. Please read the [official documentation about it](https://4geeks.com/docs/start/deploy-to-render-com).
+Otros comandos útiles del frontend:
 
-### Contributors
+- `$ npm run build` — build de producción en `dist/`
+- `$ npm run lint` — ESLint (`.js`/`.jsx`, cero warnings permitidos)
 
-This template was built as part of the 4Geeks Academy [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about our [Full Stack Developer Course](https://4geeksacademy.com/us/coding-bootcamps/part-time-full-stack-developer), and [Data Science Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning).
+## Despliegue
 
-You can find other templates and resources like this at the [school github page](https://github.com/4geeksacademy/).
+El proyecto está pensado para desplegarse en [Render.com](https://4geeks.com/docs/start/deploy-to-render-com).
+
+### Créditos
+
+CocinApp está construido sobre el [boilerplate de React/Flask de 4Geeks Academy](https://github.com/4geeksacademy/), creado originalmente por [Alejandro Sanchez](https://twitter.com/alesanchezr) y colaboradores del [Coding Bootcamp](https://4geeksacademy.com/us/coding-bootcamp) de 4Geeks Academy.
